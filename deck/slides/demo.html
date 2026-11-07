@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engine demo · Big D or little d?</title>
+<link rel="stylesheet" href="../engine/deck.css">
+<link rel="stylesheet" href="demo.css">
+<script type="application/json" id="deck-config">
+{
+  "title": "Big D or little d? (engine demo)",
+  "lateTolerance": 20,
+  "checkpoints": [
+    { "slide": "s04", "by": "1:30", "label": "Decision #2" },
+    { "slide": "s06", "by": "3:00", "label": "Apply" }
+  ]
+}
+</script>
+<script src="../engine/deck.js" defer></script>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 1 · title: static, morphs into S02 -->
+  <section class="slide" id="s01" data-transition="fade" data-title="Big D or little d?">
+    <p class="kicker" data-morph="crumb">ENGINE DEMO · CROSS-CULTURAL COMMUNICATION</p>
+    <h1 class="title" data-morph="title">Big D or little d?</h1>
+    <p class="sub">Who decides, and how?</p>
+    <p class="route">Definition · Countries · Recommendations · Our cultures · Management implications</p>
+    <div class="glyph glyph-D" data-morph="D">D</div>
+    <div class="glyph glyph-d" data-morph="d">d</div>
+    <div class="axis" data-morph="axis"></div>
+    <div class="axis-labels"><span>Consensual</span><span>Top-down</span></div>
+    <div class="tile tile-ny" data-morph="tileNY"></div>
+    <div class="tile tile-mu" data-morph="tileMU"></div>
+  </section>
+
+  <!-- 2 · decision #1, New York first (default). The chip jumps to the hidden Munich variant. -->
+  <section class="slide" id="s02" data-transition="morph" data-title="Decision #1: one person decides">
+    <p class="crumb" data-morph="crumb">I · DECISION #1</p>
+    <h2 class="headline" data-morph="title">Whose story first?</h2>
+    <div class="tile tile-ny" data-morph="tileNY"><span>NEW YORK</span><small>a New York City financial firm</small></div>
+    <div class="tile tile-mu" data-morph="tileMU"><span>MUNICH</span><small>its German merger partner</small></div>
+    <div class="ceo" data-step="1" data-build="slam">CEO</div>
+    <div class="sliver" data-step="1" data-build="wipe" data-delay="120" data-morph="clockTD">#1 ≈ 3 s</div>
+    <div class="card card-ln" data-step="2" data-build="rise" data-morph="cardLN"><b>LN</b>Larry Nicoli · New York<q>Incredible! These Germans are incredibly hierarchical.</q></div>
+    <div class="banner" data-step="3" data-build="wipe">REVISED · new data from Munich ↺</div>
+    <div class="card card-mw" data-step="3" data-build="rise" data-delay="150" data-morph="cardMW"><b>MW</b>Matthias Wulf · Munich<q>Don’t be fooled. They are much more hierarchical than we are!</q></div>
+    <div class="arrows" data-step="4" data-build="wipe-left">← ← ← ← ←</div>
+    <div class="qmark" data-step="4" data-delay="200">?</div>
+    <p class="who" data-step="4" data-delay="300">Who is more hierarchical?</p>
+    <button class="chip chip-goto" data-goto="s02m" data-set="decision1.first=Munich" data-print="hide">MUNICH → 3</button>
+  </section>
+
+  <!-- 3 · hidden variant: Munich first. Starts with the CEO badge and sliver placed. Next → S03. -->
+  <section class="slide" id="s02m" data-hidden data-transition="fade" data-next="s03" data-title="Decision #1: Munich first">
+    <p class="crumb" data-morph="crumb">I · DECISION #1</p>
+    <h2 class="headline" data-morph="title">Whose story first?</h2>
+    <div class="tile tile-ny" data-morph="tileNY"><span>NEW YORK</span><small>a New York City financial firm</small></div>
+    <div class="tile tile-mu" data-morph="tileMU"><span>MUNICH</span><small>its German merger partner</small></div>
+    <div class="ceo">CEO</div>
+    <div class="sliver" data-morph="clockTD">#1 ≈ 3 s</div>
+    <div class="card card-mw" data-step="1" data-build="rise" data-morph="cardMW"><b>MW</b>Matthias Wulf · Munich<q>Don’t be fooled. They are much more hierarchical than we are!</q></div>
+    <div class="banner" data-step="2" data-build="wipe">REVISED · new data from New York ↺</div>
+    <div class="card card-ln" data-step="2" data-build="rise" data-delay="150" data-morph="cardLN"><b>LN</b>Larry Nicoli · New York<q>Incredible! These Germans are incredibly hierarchical.</q></div>
+    <div class="arrows" data-step="3" data-build="wipe-left">← ← ← ← ←</div>
+    <div class="qmark" data-step="3" data-delay="200">?</div>
+    <p class="who" data-step="3" data-delay="300">Who is more hierarchical?</p>
+  </section>
+
+  <!-- 4 · the cards shrink into monogram chips (morph) -->
+  <section class="slide" id="s03" data-transition="morph" data-title="One word, two rulebooks: decision">
+    <p class="crumb" data-morph="crumb">I · CASE · MERGER</p>
+    <h2 class="headline" data-morph="title">One word, two rulebooks: decision</h2>
+    <div class="mono mono-ln" data-morph="cardLN">LN</div>
+    <div class="mono mono-mw" data-morph="cardMW">MW</div>
+    <div class="sliver parked" data-morph="clockTD">#1 ≈ 3 s</div>
+    <div class="col col-D" data-step="1" data-build="zoom"><div class="big">DECISION</div><q>A commitment. A promise.</q><cite>M. Müller · German director</cite></div>
+    <div class="col col-d" data-step="2" data-build="wipe"><div class="big">decision</div><q>…a ‘decision’ is simply an agreement to continue discussions.</q><cite>M. Wulf · Munich</cite></div>
+  </section>
+
+  <!-- 5 · decision #2: timer, four grouped trigger stamps that stop the timer and set state -->
+  <section class="slide" id="s04" data-transition="morph" data-title="Decision #2: the room decides">
+    <p class="crumb" data-morph="crumb">I · DECISION #2</p>
+    <div class="rules" data-morph="rules">
+      <h3>HOW WE DECIDE</h3>
+      <ol>
+        <li>All agree → stand up</li>
+        <li>Seated = a concern, not a veto</li>
+        <li>Deadline: 2:00</li>
+        <li>No unanimity? Majority vote.</li>
+        <li>Then: no reopening.</li>
+      </ol>
+    </div>
+    <div class="mail" data-enter="drop"><small>our email · Per-style</small>Hey class, I thought we could practise SCENARIO T at the end of Part I. What do you think?</div>
+    <div class="scard scard-t" data-morph="cardT">
+      <b>SCENARIO T</b>Your proposal needs approval at Tokyo HQ. In four weeks.
+      <div class="chips" data-print="hide">
+        <button class="chip" data-trigger="dT" data-trigger-group="d2" data-set="decision2.result=D;decision2.scenario=T" data-stop-timer="clock2">D</button>
+        <button class="chip" data-trigger="vT" data-trigger-group="d2" data-set="decision2.result=V;decision2.scenario=T" data-stop-timer="clock2">vote</button>
+      </div>
+      <div class="stamp stamp-d" data-triggered="dT" data-build="slam">D<small>no more discussion!</small></div>
+      <div class="stamp stamp-v" data-triggered="vT" data-build="slam">VOTE<small>a top-down technique (Meyer, p. 159)</small></div>
+    </div>
+    <div class="scard scard-m" data-morph="cardM">
+      <b>SCENARIO M</b>Your German–American team must pick a supplier. By Friday.
+      <div class="chips" data-print="hide">
+        <button class="chip" data-trigger="dM" data-trigger-group="d2" data-set="decision2.result=D;decision2.scenario=M" data-stop-timer="clock2">D</button>
+        <button class="chip" data-trigger="vM" data-trigger-group="d2" data-set="decision2.result=V;decision2.scenario=M" data-stop-timer="clock2">vote</button>
+      </div>
+      <div class="stamp stamp-d" data-triggered="dM" data-build="slam">D<small>no more discussion!</small></div>
+      <div class="stamp stamp-v" data-triggered="vM" data-build="slam">VOTE<small>a top-down technique (Meyer, p. 159)</small></div>
+    </div>
+    <div class="clocks">
+      <div class="sliver" data-morph="clockTD">#1 ≈ 3 s</div>
+      <div class="timer-cons" id="clock2" data-timer="120" data-step="1" data-build="wipe" data-timer-store="decision2.elapsed" data-morph="clockCons" data-print="2:00"></div>
+      <div class="decided" data-triggered="dT dM vT vM">decided</div>
+    </div>
+    <div class="stamp-outline" data-print-only>D or VOTE? Decided live by the room.</div>
+    <div class="flip" data-step="2">← new data?</div>
+    <p class="mueller" data-step="3"><q>They casually change the decision every week…</q><cite>M. Müller · German director</cite></p>
+    <p class="live-line" data-print="hide">STAND = agree · SEATED = concern</p>
+  </section>
+
+  <!-- 6 · auto bridge: only the clocks and the two cards, so S05 morphs from a clean state -->
+  <section class="slide" id="s04z" data-transition="fade" data-auto="400" data-title="Bridge to S05">
+    <div class="clocks">
+      <div class="sliver" data-morph="clockTD">#1 ≈ 3 s</div>
+      <div class="bar-full" data-morph="clockCons">2:00</div>
+    </div>
+    <div class="scard scard-t" data-morph="cardT"><b>SCENARIO T</b>Your proposal needs approval at Tokyo HQ. In four weeks.</div>
+    <div class="scard scard-m" data-morph="cardM"><b>SCENARIO M</b>Your German–American team must pick a supplier. By Friday.</div>
+  </section>
+
+  <!-- 7 · the signature morph; binds the live outcome of decision #2 -->
+  <section class="slide" id="s05" data-transition="morph" data-title="What you just felt has a name">
+    <p class="crumb">I · DEFINITION</p>
+    <h2 class="headline">What you just felt has a name.</h2>
+    <div class="tl tl-top">
+      <div class="seg-disc amber" data-morph="clockTD">Discussion</div>
+      <div class="glyph-sm">d</div>
+      <div class="seg-impl amber" data-step="1" data-build="wipe">Implementation ↺ ↺ ↺</div>
+    </div>
+    <div class="tl tl-cons">
+      <div class="seg-disc teal" data-morph="clockCons">Discussion</div>
+      <div class="glyph-sm">D</div>
+      <div class="seg-impl teal" data-step="1" data-build="wipe" data-delay="150">Implementation</div>
+    </div>
+    <p class="def def-top" data-step="2"><b>TOP-DOWN</b>: decisions are made by individuals (usually the boss).</p>
+    <p class="def def-cons" data-step="3"><b>CONSENSUAL</b>: decisions are made in groups through unanimous agreement.</p>
+    <div class="outcome" data-step="4">
+      <p>Decision #2 took <b class="bind-elapsed" data-bind="decision2.elapsed" data-print="2:00">–:––</b> · scenario <b class="bind-scenario" data-bind="decision2.scenario" data-print="T or M">?</b></p>
+      <p class="pill teal" data-show-if="decision2.result==D">You reached a capital D: rule ⑤ held.</p>
+      <p class="pill amber" data-show-if="decision2.result==V">Vote: Meyer lists it among top-down techniques.</p>
+      <p class="pill" data-show-if="!decision2.result">No stamp yet: say the result aloud.</p>
+      <p class="pill dashed" data-print-only>Outcome: decided live by the room</p>
+    </div>
+  </section>
+
+  <!-- 8 · apply; shows the T card unless the room chose M; chip jumps to the hidden M variant -->
+  <section class="slide" id="s06" data-transition="fade" data-title="Your scenario. Your three moves.">
+    <p class="crumb">I · RECOMMENDATIONS</p>
+    <h2 class="headline">Your scenario. Your three moves.</h2>
+    <div class="scard scard-t" data-show-if="decision2.scenario!=M" data-print="show"><b>SCENARIO T</b>Tokyo HQ approval in four weeks.<span class="stamp-outline dashed">decided by you</span></div>
+    <p class="hint" data-show-if="decision2.scenario==M">The room chose M: click “M → 9”.</p>
+    <ol class="moves" data-step="1" data-build="right">
+      <li>Root-bind early (nemawashi)</li>
+      <li>Budget the time; expect buy-in</li>
+      <li>Then: no reopening</li>
+    </ol>
+    <button class="chip chip-corner" data-goto="s06m" data-print="hide">M → 9</button>
+  </section>
+
+  <!-- 9 · hidden variant: scenario M. Next → S07. -->
+  <section class="slide" id="s06m" data-hidden data-transition="fade" data-next="s07" data-title="Your scenario (M). Your three moves.">
+    <p class="crumb">I · RECOMMENDATIONS</p>
+    <h2 class="headline">Your scenario. Your three moves.</h2>
+    <div class="scard scard-m"><b>SCENARIO M</b>German–American supplier by Friday.<span class="stamp-outline dashed">decided by you</span></div>
+    <ol class="moves" data-step="1" data-build="right">
+      <li>Agree the method first</li>
+      <li>Label it: small d or big D?</li>
+      <li>Deadline, then flexibility</li>
+    </ol>
+  </section>
+
+  <!-- 10 · close: a non-grouped trigger stamp that sets state; tiny corner chip to the hidden hub -->
+  <section class="slide" id="s07" data-transition="fade" data-title="So, was that a big D or a little d?">
+    <p class="crumb">II · CLOSE</p>
+    <h2 class="headline">So, was that a big D or a little d?</h2>
+    <div class="mail"><small>our proposal</small>Stand up if this talk was a big D for you.</div>
+    <button class="chip chip-stamp" data-trigger="dS20" data-set="close.result=D" data-print="hide">D</button>
+    <div class="stamp stamp-d" data-triggered="dS20" data-build="slam">D</div>
+    <div class="stamp-outline" data-print-only>stand-up: decided live</div>
+    <p class="stand" data-step="1">Stand up and show us: D or d?</p>
+    <div class="pair" data-step="2" data-build="zoom"><span class="D">D</span> ? <span class="d">d</span></div>
+    <p class="summary" data-step="3">Decision #2 took <b class="bind-elapsed" data-bind="decision2.elapsed" data-print="2:00">–:––</b> · the close was a <b class="bind-close" data-bind="close.result" data-print="(live)">–</b></p>
+    <button class="chip chip-tiny" data-goto="h1" data-print="hide">→ 11</button>
+  </section>
+
+  <!-- 11 · hidden backup hub: tiles jump, "← back" returns to the last slide viewed -->
+  <section class="slide" id="h1" data-hidden="backup" data-transition="fade" data-title="Q&amp;A hub">
+    <p class="crumb">BACKUP</p>
+    <h2 class="headline">Q&amp;A hub</h2>
+    <div class="tiles">
+      <button class="tile" data-goto="s05">Definition<br>→ 7</button>
+      <button class="tile" data-goto="s03/2">Merger case<br>→ 4</button>
+    </div>
+    <p class="summary">Live outcome: <b class="bind-result" data-bind="decision2.result" data-print="D or V">–</b></p>
+    <button class="chip chip-back" data-goto="@back" data-print="hide">← back</button>
+    <button class="chip chip-end" data-goto="s07" data-print="hide">← end</button>
+  </section>
+
+  <!-- 12 · visible copy of the close, catches a stray clicker press during Q&A -->
+  <section class="slide" id="s07e" data-transition="none" data-title="So, was that a big D or a little d? (end)">
+    <p class="crumb">II · CLOSE</p>
+    <h2 class="headline">So, was that a big D or a little d?</h2>
+    <div class="mail"><small>our proposal</small>Stand up if this talk was a big D for you.</div>
+    <p class="stand">Stand up and show us: D or d?</p>
+    <div class="pair"><span class="D">D</span> ? <span class="d">d</span></div>
+    <p class="summary">Questions? Q&amp;A runs on little d.</p>
+  </section>
+
+</div>
+</body>
+</html>

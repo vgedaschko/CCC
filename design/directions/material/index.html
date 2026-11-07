@@ -1,0 +1,1157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big D or little d? · Stone &amp; Pencil</title>
+<style>
+/* ==========================================================================
+   STONE & PENCIL  ·  design direction "material"
+   Big D is carved (stone, inscription, teal patina).
+   little d is pencil (hand-drawn strokes, amber graphite, erasable).
+   Hanko are inked (vermilion, slightly imperfect).
+   Fonts (SIL OFL, from @fontsource-variable 5.3.0): Cinzel, Newsreader, Archivo, Caveat.
+   ========================================================================== */
+@font-face { font-family: "Cinzel"; src: url("fonts/cinzel-latin-wght-normal.woff2") format("woff2"); font-weight: 400 900; font-display: block; }
+@font-face { font-family: "Newsreader"; src: url("fonts/newsreader-latin-opsz-normal.woff2") format("woff2"); font-weight: 200 800; font-style: normal; font-display: block; }
+@font-face { font-family: "Newsreader"; src: url("fonts/newsreader-latin-opsz-italic.woff2") format("woff2"); font-weight: 200 800; font-style: italic; font-display: block; }
+@font-face { font-family: "Archivo"; src: url("fonts/archivo-latin-wght-normal.woff2") format("woff2"); font-weight: 100 900; font-display: block; }
+@font-face { font-family: "Caveat"; src: url("fonts/caveat-latin-wght-normal.woff2") format("woff2"); font-weight: 400 700; font-display: block; }
+
+:root {
+  /* stone */
+  --stone: #16171a; --slab: #25272b; --slab-2: #2c2e33; --ledge: #0c0d0f;
+  /* ink on stone */
+  --ink: #f1ece2; --ink-2: #d0c9bc; --ink-3: #bab3a7;
+  /* Big D / consensual: teal patina */
+  --teal: #55cbb9; --teal-fill: #2c9d8f; --teal-carve: #3fb8a6; --teal-deep: #155f56; --teal-ink: #0a645a;
+  /* little d / top-down: amber graphite */
+  --amber: #f5ae45; --amber-2: #e2961f; --amber-ink: #875200;
+  /* hanko only */
+  --verm: #dc4528;
+  /* paper */
+  --paper: #ece6d8; --paper-ink: #1f1e1c; --paper-ink-2: #4c4740;
+
+  --f-stone: "Cinzel", "Trajan Pro", Georgia, serif;
+  --f-serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --f-sans: "Archivo", "Segoe UI", system-ui, sans-serif;
+  --f-pencil: "Caveat", "Segoe Print", "Comic Sans MS", cursive;
+
+  --deck-build-duration: 520ms;
+  --deck-build-ease: cubic-bezier(.2,.7,.2,1);
+  --deck-morph-duration: 780ms;
+  --deck-fade-duration: 420ms;
+  --vt-dur: 780ms;
+
+  /* textures: SVG noise only (no photos) */
+  --n-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' seed='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .5 -.24'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23f)'/%3E%3C/svg%3E");
+  --n-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' seed='5' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 .6 -.26'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23f)'/%3E%3C/svg%3E");
+  --n-mottle: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080'%3E%3Cfilter id='f' x='0' y='0' width='100%25' height='100%25'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0026 .0042' numOctaves='3' seed='8'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .13 -.045'/%3E%3C/filter%3E%3Crect width='1920' height='1080' filter='url(%23f)'/%3E%3C/svg%3E");
+  --n-paper: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='f'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8 .55' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .25 0 0 0 0 .18 0 0 0 .42 -.17'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23f)'/%3E%3C/svg%3E");
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+body { font-family: var(--f-sans); color: var(--ink); -webkit-font-smoothing: antialiased; text-rendering: geometricPrecision; }
+svg.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+#stage {
+  position: absolute; left: 0; top: 0; width: 1920px; height: 1080px; overflow: hidden;
+  transform-origin: 0 0;
+  background-color: var(--stone);
+  background-image: var(--n-light), var(--n-dark), var(--n-mottle),
+    radial-gradient(120% 95% at 28% 18%, #222429 0%, #18191c 52%, #111214 100%);
+  background-repeat: repeat, repeat, no-repeat, no-repeat;
+  background-size: 300px 300px, 300px 300px, 1920px 1080px, 100% 100%;
+}
+.slide { position: absolute; inset: 0; display: none; }
+.slide.is-active, .slide.is-leaving { display: block; }
+.slide.is-active { z-index: 2; } .slide.is-leaving { z-index: 1; }
+.slide > * { position: absolute; margin: 0; }
+blockquote, figure { margin: 0; }
+
+/* builds are entrance-only: hidden until revealed / triggered */
+[data-step]:not(.is-revealed), [data-triggered]:not(.is-triggered) { visibility: hidden; }
+
+/* pencil strokes get sketched while their entrance plays */
+.deck-anim .sk, .sk.deck-anim { stroke-dasharray: 1 1; animation: sk var(--sk-dur, 700ms) cubic-bezier(.55,.08,.25,1) calc(var(--enter-delay, 0ms) + var(--sk-at, 0ms)) both; }
+@keyframes sk { 0% { stroke-dashoffset: 1; visibility: hidden; } 1% { visibility: visible; } 100% { stroke-dashoffset: 0; visibility: visible; } }
+/* carved glyphs inside a build are cut in from the top, like a chisel line */
+.deck-anim .gD { animation: carve-in 640ms cubic-bezier(.5,.1,.2,1) var(--enter-delay, 0ms) both; }
+@keyframes carve-in { from { clip-path: inset(-40px -40px 100% -40px); } to { clip-path: inset(-40px -40px -40px -40px); } }
+
+/* ---------- shared materials ---------- */
+.paper {
+  background-color: var(--paper); background-image: var(--n-paper), linear-gradient(170deg, rgba(255,255,255,.35), rgba(255,255,255,0) 45%, rgba(0,0,0,.05));
+  color: var(--paper-ink); border-radius: 3px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 2px 0 rgba(0,0,0,.35), 0 28px 50px -18px rgba(0,0,0,.85), 0 8px 18px rgba(0,0,0,.35);
+}
+.slab {
+  background-color: var(--slab); background-image: var(--n-light), var(--n-dark), linear-gradient(180deg, rgba(255,255,255,.035), rgba(0,0,0,.12));
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.10), inset 0 -3px 0 rgba(0,0,0,.45), inset 1px 0 0 rgba(255,255,255,.03), 0 2px 0 rgba(0,0,0,.65), 0 26px 44px -20px rgba(0,0,0,.9);
+}
+.carved { text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 1px 0 rgba(255,255,255,.10); }
+.teal-stone {
+  background-color: var(--teal-fill);
+  background-image: repeating-linear-gradient(90deg, transparent 0 calc(25% - 3px), rgba(8,40,36,.75) calc(25% - 3px) calc(25% - 1px), rgba(255,255,255,.18) calc(25% - 1px) 25%),
+    var(--n-dark), linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0) 45%, rgba(0,0,0,.22));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.3), inset 0 -2px 0 rgba(0,0,0,.35), 0 3px 0 rgba(0,0,0,.4);
+  border-radius: 3px;
+}
+.amber-hatch {
+  background-image: repeating-linear-gradient(-58deg, var(--amber) 0 3px, rgba(245,174,69,0) 3px 9px);
+  border: 3px solid var(--amber); border-radius: 3px 5px 2px 4px; filter: url(#pencil-fine);
+}
+.i { width: 1em; height: 1em; vertical-align: -.12em; fill: none; stroke: currentColor; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; overflow: visible; }
+.i.wide { width: 1.6em; }
+
+/* ---------- letterbox (story mode) + breadcrumb ---------- */
+.lb { left: 0; right: 0; height: 0; z-index: 6; background-color: var(--ledge); background-image: var(--n-light); }
+.lb.top { top: 0; } .lb.bot { bottom: 0; }
+.story .lb { height: 56px; }
+.story .lb.top { box-shadow: 0 1px 0 rgba(255,255,255,.07), 0 10px 24px rgba(0,0,0,.5); }
+.story .lb.bot { box-shadow: 0 -1px 0 rgba(255,255,255,.07), 0 -10px 24px rgba(0,0,0,.5); }
+.crumb { left: 80px; top: 42px; z-index: 7; font: 600 28px/1 var(--f-sans); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); white-space: nowrap; }
+.story .crumb { top: 14px; }
+.kicker { font: 600 28px/1.2 var(--f-sans); letter-spacing: .13em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+.kicker i { font: italic 400 32px/1 var(--f-serif); letter-spacing: 0; text-transform: none; color: var(--ink-2); }
+.h-xl { font: 600 88px/1.02 var(--f-serif); font-variation-settings: "opsz" 72; letter-spacing: -.012em; color: var(--ink); }
+.h-l { font: 600 72px/1.05 var(--f-serif); font-variation-settings: "opsz" 72; letter-spacing: -.01em; color: var(--ink); }
+.c-teal { color: var(--teal); } .c-amber { color: var(--amber); }
+.pencil { font-family: var(--f-pencil); font-weight: 600; }
+
+/* glyphs */
+.gD { overflow: visible; }
+.gD text { font-family: var(--f-stone); font-weight: 800; font-size: 1000px; fill: var(--teal-carve); }
+.gd { overflow: visible; }
+.gd .ln { fill: none; stroke: var(--amber); stroke-linecap: round; stroke-linejoin: round; }
+.gd .guide { fill: none; stroke: var(--ink-3); stroke-width: 1.6; opacity: .45; }
+
+/* quotes */
+.q { font: italic 400 46px/1.18 var(--f-serif); font-variation-settings: "opsz" 36; color: var(--ink); }
+.who { display: flex; align-items: center; gap: 14px; margin-top: 14px; font: 500 28px/1.2 var(--f-sans); color: var(--ink-2); font-style: normal; }
+.mono { display: inline-grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; border: 2px solid var(--ink-3); font: 700 28px/1 var(--f-sans); letter-spacing: .02em; color: var(--ink); }
+
+/* chips (presenter controls) */
+.chip {
+  font: 700 28px/1 var(--f-sans); color: var(--ink); background: rgba(255,255,255,.04); cursor: pointer;
+  height: 52px; min-width: 64px; padding: 0 20px; border-radius: 26px; border: 2px solid var(--ink-3);
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  transition: background .2s, transform .15s;
+}
+.chip:hover { background: rgba(255,255,255,.1); }
+.chip:active { transform: translateY(1px); }
+.chip.d { border-color: var(--teal); color: var(--teal); font-family: var(--f-stone); font-weight: 800; font-size: 30px; }
+.chip.v { border-color: var(--amber); color: var(--amber); }
+.chip.is-fired { background: rgba(255,255,255,.14); box-shadow: 0 0 0 4px rgba(255,255,255,.08); }
+.chip:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+
+/* stamps (ink impressions) */
+.stamp { pointer-events: none; mix-blend-mode: multiply; }
+.scen h4, .scen p { transition: opacity .35s ease .12s; }
+.scen:has(.stamp.is-triggered) p { opacity: .16; }
+.stamp svg { width: 100%; height: 100%; overflow: visible; display: block; }
+.stamp text { font-family: var(--f-stone); font-weight: 900; }
+.stamp .small { font-family: var(--f-sans); font-weight: 700; }
+
+/* =================================== S01 =================================== */
+#s01 .gD { left: 70px; top: 150px; height: 570px; width: 620px; }
+#s01 .gd { left: 650px; top: 402px; height: 326px; width: 251px; }
+#s01 .gd .ln.p { stroke-width: 12; } #s01 .gd .ln.s { stroke-width: 5; opacity: .55; }
+#s01 .title { left: 980px; top: 140px; width: 880px; }
+#s01 h1 { margin: 0; font-weight: 400; line-height: 1; }
+#s01 .t-big { display: inline-block; font: 800 150px/1 var(--f-stone); color: var(--ink); letter-spacing: .02em; }
+#s01 .t-or { font: italic 400 84px/1 var(--f-serif); color: var(--ink-2); margin-left: 18px; }
+#s01 .t-little { display: block; margin-top: 2px; font: 600 178px/.95 var(--f-pencil); color: var(--amber); letter-spacing: -.01em; }
+#s01 .sub { margin: 22px 0 0; font: italic 400 60px/1.1 var(--f-serif); font-variation-settings: "opsz" 60; color: var(--ink); }
+#s01 .meta { margin: 36px 0 0; font: 400 30px/1.35 var(--f-sans); color: var(--ink-2); }
+#s01 .meta em { font-family: var(--f-serif); font-size: 34px; color: var(--ink); }
+#s01 .members { margin: 18px 0 0; font: 600 30px/1.3 var(--f-sans); color: var(--ink); letter-spacing: .02em; }
+#s01 .course { margin: 8px 0 0; font: 400 30px/1.3 var(--f-sans); color: var(--ink-2); }
+#s01 .brk { display: none; }
+#s01 .route { left: 96px; top: 868px; font: 600 28px/1 var(--f-sans); letter-spacing: .13em; text-transform: uppercase; color: var(--ink-2); white-space: nowrap; }
+#s01 .route b { color: var(--ink-3); font-weight: 400; padding: 0 .35em; }
+.axis-svg { left: 0; width: 1920px; overflow: visible; }
+#s01 .axis-svg { top: 914px; height: 120px; }
+.ax-lab { font: 700 30px/1 var(--f-sans); letter-spacing: .08em; text-transform: uppercase; }
+#s01 .ax-lab.l { left: 96px; top: 1004px; color: var(--teal); }
+#s01 .ax-lab.r { right: 96px; top: 1004px; color: var(--amber); }
+.sliver { width: 12px; height: 46px; border-radius: 2px; background: #ddd5c5; box-shadow: inset -2px 0 0 rgba(0,0,0,.25), 0 3px 6px rgba(0,0,0,.6); }
+#s01 .sliver.mu { left: 671px; top: 951px; }
+#s01 .sliver.ny { left: 1056px; top: 951px; }
+
+/* =================================== S04b ================================== */
+#s04b .rules { left: 64px; top: 84px; width: 556px; height: 538px; padding: 36px 36px 30px; }
+#s04b .rules > * { position: static; }
+.rules h3 { margin: 0; font: 700 40px/1 var(--f-stone); letter-spacing: .06em; color: var(--ink); }
+.rules .sub { margin: 10px 0 22px; font: italic 400 30px/1.1 var(--f-serif); color: var(--ink-2); }
+.rules ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.rules li { display: grid; grid-template-columns: 50px 1fr; gap: 14px; align-items: start; font: 500 30px/1.24 var(--f-sans); color: var(--ink); }
+.rules .n { display: grid; place-items: center; width: 46px; height: 46px; margin-top: -5px; border-radius: 50%; font: 700 28px/1 var(--f-sans); color: var(--ink); box-shadow: inset 0 2px 3px rgba(0,0,0,.8), inset 0 -1px 0 rgba(255,255,255,.12); background: rgba(0,0,0,.28); }
+.rules .i { width: 1.1em; }
+
+#s04b .clock { left: 64px; top: 648px; width: 556px; height: 352px; padding: 0; }
+.clock .row-l { left: 32px; font: 600 28px/1 var(--f-sans); color: var(--ink-3); letter-spacing: .06em; text-transform: uppercase; position: absolute; }
+.clock .row-l.td { top: 30px; } .clock .row-l.cons { top: 160px; }
+.clock .sliver-td { position: absolute; left: 32px; top: 76px; width: 16px; height: 52px; }
+.clock .val-td { position: absolute; left: 66px; top: 82px; font: 700 36px/1.1 var(--f-sans); color: var(--amber); white-space: nowrap; }
+.clock .val-td small { font: 400 28px/1 var(--f-sans); color: var(--ink-3); margin-left: 10px; }
+.clock .groove { position: absolute; left: 32px; top: 200px; width: 330px; height: 56px; border-radius: 5px; background: rgba(0,0,0,.42); box-shadow: inset 0 3px 6px rgba(0,0,0,.85), inset 0 -1px 0 rgba(255,255,255,.1); }
+.clock .groove i { position: absolute; top: 6px; bottom: 6px; width: 2px; background: rgba(255,255,255,.08); }
+.clock .groove i:nth-child(1) { left: 25%; } .clock .groove i:nth-child(2) { left: 50%; } .clock .groove i:nth-child(3) { left: 75%; }
+.clock .timer { position: absolute; left: 32px; top: 200px; width: 500px; height: 120px; }
+.clock .tbar { position: absolute; left: 4px; top: 4px; width: 322px; height: 48px; }
+.clock .deck-timer-fill { height: 100%; width: calc(var(--deck-progress, 0) * 100%); min-width: 4px; }
+.clock .readout { position: absolute; left: 348px; top: -8px; font: 700 64px/1 var(--f-sans); font-variant-numeric: tabular-nums; color: var(--ink); letter-spacing: .01em; }
+.clock .cap { position: absolute; left: 0; top: 70px; font: 400 28px/1 var(--f-sans); color: var(--ink-3); white-space: nowrap; }
+.clock [data-timer-state="done"] .readout { color: var(--amber); }
+.clock .decided {
+  position: absolute; left: 368px; top: 184px; width: 170px; height: 92px; border-radius: 8px; z-index: 3;
+  display: grid; place-items: center; font: 700 34px/1 var(--f-stone); letter-spacing: .04em; color: var(--ink);
+  background-color: #34373c; background-image: var(--n-light), var(--n-dark), linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.2));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), inset 0 -3px 0 rgba(0,0,0,.5), 0 10px 22px rgba(0,0,0,.7);
+}
+
+#s04b .mail { left: 680px; top: 84px; width: 1176px; height: 196px; padding: 26px 40px 0; transform: rotate(-.4deg); }
+.mail .head { display: flex; align-items: center; gap: 14px; font: 600 34px/1 var(--f-pencil); color: var(--paper-ink-2); }
+.mail .head .i { width: 42px; height: 32px; stroke-width: 2.4; color: var(--paper-ink-2); }
+.mail .body { margin: 14px 0 0; font: italic 400 42px/1.2 var(--f-serif); font-variation-settings: "opsz" 36; color: var(--paper-ink); }
+.mail .body b { font: normal 700 34px/1 var(--f-sans); letter-spacing: .06em; }
+#s04b .fict { left: 684px; top: 304px; font: 600 34px/1 var(--f-pencil); color: var(--ink-2); }
+#s04b .fict .i { color: var(--ink-3); width: 1.2em; }
+.scen { width: 500px; height: 236px; padding: 28px 34px; }
+.scen h4 { margin: 0; font: 700 30px/1 var(--f-sans); letter-spacing: .14em; text-transform: uppercase; color: var(--paper-ink-2); }
+.scen p { margin: 16px 0 0; font: 400 38px/1.2 var(--f-serif); font-variation-settings: "opsz" 30; color: var(--paper-ink); }
+#s04b .scen.t { left: 680px; top: 352px; transform: rotate(-.6deg); }
+#s04b .scen.m { left: 1356px; top: 352px; transform: rotate(.5deg); }
+.scen .stamp { position: absolute; }
+.scen .stamp.sd { left: 128px; top: 76px; width: 350px; height: 146px; transform: rotate(-6deg); }
+.scen .stamp.sv { left: 70px; top: 62px; width: 380px; height: 164px; transform: rotate(-4deg); }
+#s04b .chips { top: 612px; display: flex; gap: 14px; }
+#s04b .chips.t { left: 680px; } #s04b .chips.m { left: 1356px; }
+#s04b .live { left: 680px; top: 704px; font: 500 36px/52px var(--f-sans); color: var(--ink); white-space: nowrap; }
+#s04b .live .i { width: 34px; height: 52px; vertical-align: top; stroke-width: 3; color: var(--ink-2); margin-right: 12px; }
+#s04b .live .i.sit { width: 44px; }
+#s04b .live b { font-weight: 800; letter-spacing: .06em; }
+#s04b .live .dot { color: var(--ink-3); padding: 0 22px; }
+#s04b .flip { left: 1180px; top: 352px; width: 176px; height: 236px; }
+#s04b .flip svg { position: absolute; left: 0; top: 50px; width: 176px; height: 186px; overflow: visible; }
+#s04b .flip .lab { position: absolute; left: -12px; right: -12px; top: -10px; text-align: center; font: 700 44px/1 var(--f-pencil); color: var(--amber); white-space: nowrap; }
+#s04b .mueller { left: 680px; top: 822px; width: 1176px; }
+#s04b .mueller .who { margin-top: 18px; }
+#s04b .mueller .q { font-size: 56px; }
+
+/* =================================== S05 =================================== */
+#s05 .kicker { left: 80px; top: 96px; }
+#s05 .kicker .i { color: var(--ink-3); width: 1.7em; }
+#s05 .h-xl { left: 76px; top: 146px; }
+.rowlab { font: 800 32px/1 var(--f-sans); letter-spacing: .12em; text-transform: uppercase; margin-right: 22px; }
+.rowdef { font: 400 40px/1 var(--f-serif); font-variation-settings: "opsz" 36; color: var(--ink); }
+.was { font: 500 28px/1 var(--f-sans); color: var(--ink-3); white-space: nowrap; }
+.seglab { font: 400 28px/1.1 var(--f-sans); color: var(--ink-2); white-space: nowrap; }
+.seglab b { font-weight: 700; color: var(--ink); }
+.gq { font: italic 400 38px/1.1 var(--f-serif); font-variation-settings: "opsz" 36; color: var(--ink); white-space: nowrap; }
+.mn { font: 800 30px/1 var(--f-sans); letter-spacing: .08em; text-transform: uppercase; padding: 15px 24px; border-radius: 40px; border: 3px solid; white-space: nowrap; background: rgba(0,0,0,.18); }
+.mn small { font-weight: 500; letter-spacing: .02em; text-transform: none; font-size: 28px; }
+.mn.a { color: var(--amber); border-color: var(--amber); }
+.mn.t { color: var(--teal); border-color: var(--teal); }
+
+#s05 .head-td { left: 96px; top: 272px; }
+#s05 .was-td { left: 96px; top: 322px; }
+#s05 .disc-td { left: 96px; top: 400px; width: 120px; height: 40px; }
+#s05 .gd-td { left: 238px; top: 362px; height: 132px; width: 102px; }
+#s05 .gd-td .ln.p { stroke-width: 13; } #s05 .gd-td .ln.s { stroke-width: 6; opacity: .5; }
+#s05 .impl-td { left: 350px; top: 330px; width: 900px; height: 180px; overflow: visible; }
+#s05 .flipnote { left: 562px; top: 344px; font: 700 40px/1 var(--f-pencil); color: var(--amber); white-space: nowrap; }
+#s05 .lab-disc-td { left: 96px; top: 458px; }
+#s05 .lab-impl-td { left: 360px; top: 458px; }
+#s05 .gq-td { left: 238px; top: 510px; }
+#s05 .mn.a { right: 80px; top: 388px; }
+
+#s05 .head-cons { left: 96px; top: 618px; }
+#s05 .was-cons { left: 96px; top: 676px; }
+#s05 .disc-cons { left: 96px; top: 750px; width: 664px; height: 40px; }
+#s05 .gD-cons { left: 772px; top: 700px; height: 142px; width: 155px; }
+#s05 .impl-cons { left: 940px; top: 761px; width: 274px; height: 18px; background-image: var(--n-dark), linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0) 45%, rgba(0,0,0,.22)); }
+#s05 .impl-cons::after { content: ""; position: absolute; right: -26px; top: -11px; border-left: 28px solid var(--teal-fill); border-top: 20px solid transparent; border-bottom: 20px solid transparent; }
+#s05 .lab-disc-cons { left: 96px; top: 808px; }
+#s05 .lab-impl-cons { left: 940px; top: 808px; }
+#s05 .gq-cons { left: 772px; top: 862px; }
+#s05 .mn.t { right: 80px; top: 738px; }
+
+#s05 .foot { left: 96px; top: 1000px; font: 400 28px/1 var(--f-sans); color: var(--ink-3); white-space: nowrap; }
+#s05 .gest { right: 80px; top: 966px; display: flex; align-items: center; gap: 16px; font: 500 30px/1 var(--f-sans); color: var(--ink); white-space: nowrap; }
+#s05 .gest .i { width: 44px; height: 60px; stroke-width: 3; }
+#s05 .gest .key { font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); font-size: 28px; margin-right: 6px; }
+#s05 .gest .bigD { font: 800 34px/1 var(--f-stone); color: var(--teal); }
+#s05 .gest .littled { font: 700 44px/1 var(--f-pencil); color: var(--amber); }
+
+/* =================================== S08a ================================== */
+#s08a .h-xl { left: 76px; top: 116px; }
+#s08a .map { left: 0; top: 0; width: 1920px; height: 1080px; overflow: visible; pointer-events: none; }
+.cty { transform: translateX(-50%); font: 500 40px/1 var(--f-sans); color: var(--ink); white-space: nowrap; }
+.cty.up { top: 362px; } .cty.lo { top: 426px; }
+#s08a .ax-lab.l { left: 140px; top: 656px; color: var(--teal); }
+#s08a .ax-lab.r { right: 140px; top: 656px; color: var(--amber); }
+#s08a .bell-line { left: 140px; top: 752px; font: italic 400 46px/1.1 var(--f-serif); color: var(--ink); }
+#s08a .bell-line .ours { font: 600 30px/1 var(--f-pencil); font-size: 36px; color: var(--ink-2); margin-left: 14px; font-style: normal; }
+#s08a .gen { left: 140px; top: 842px; display: flex; align-items: center; gap: 18px; padding: 16px 28px; border-radius: 40px; border: 2px solid var(--ink-3); font: 500 30px/1 var(--f-sans); color: var(--ink); white-space: nowrap; }
+#s08a .gen b { font-weight: 800; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-2); font-size: 28px; }
+#s08a .src { right: 140px; top: 1000px; font: 400 28px/1 var(--f-sans); color: var(--ink-3); }
+
+/* =================================== S11 =================================== */
+.s11 .h-l { left: 76px; top: 84px; }
+.lvl { height: 130px; display: grid; place-items: center; font: 500 34px/1 var(--f-sans); color: var(--ink-2); letter-spacing: .02em; border-radius: 4px 4px 8px 8px;
+  background-color: #2a2c31; text-shadow: 0 -1px 0 rgba(0,0,0,.9), 0 1px 0 rgba(255,255,255,.08); }
+/* the step's top face, so the pyramid reads as stacked stone */
+.lvl::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; z-index: -1;
+  background-color: #3a3d43; background-image: var(--n-light), linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.12));
+  clip-path: polygon(14px 0, calc(100% - 14px) 0, 100% 100%, 0 100%); }
+.lvl.mid { font-weight: 800; color: var(--ink); }
+.lvl.here { background-color: #373a40; color: var(--ink); box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -3px 0 rgba(0,0,0,.45), 0 2px 0 rgba(0,0,0,.65), 0 26px 44px -20px rgba(0,0,0,.9), 0 0 0 2px rgba(241,236,226,.18); }
+.lvl.here::before { background-color: #4a4d54; }
+.lvl.l4 { left: 410px; top: 290px; width: 340px; }
+.lvl.l3 { left: 290px; top: 436px; width: 580px; }
+.lvl.l2 { left: 170px; top: 582px; width: 820px; }
+.lvl.l1 { left: 50px; top: 728px; width: 1060px; }
+.ground { left: 30px; top: 866px; width: 1360px; height: 6px; border-radius: 3px; background: rgba(0,0,0,.55); box-shadow: inset 0 2px 3px rgba(0,0,0,.9), 0 1px 0 rgba(255,255,255,.08); }
+.ringi { width: 340px; height: 234px; padding: 16px 17px; z-index: 4; }
+.ringi > * { position: static; }
+.ringi .boxes { display: grid; grid-template-columns: repeat(6, 46px); gap: 5px; }
+.ringi .box { position: relative; width: 46px; height: 46px; border: 1.5px solid rgba(76,71,64,.45); border-radius: 2px; }
+.ringi .box svg { position: absolute; inset: -4px; width: 54px; height: 54px; overflow: visible; color: var(--verm); mix-blend-mode: multiply; }
+.ringi .box svg.dfinal { inset: -16px; width: 78px; height: 78px; color: var(--teal-ink); }
+.ringi .t { margin: 14px 0 0; font: italic 600 44px/1 var(--f-serif); color: var(--paper-ink); }
+.ringi .s { margin: 6px 0 0; font: 500 28px/1 var(--f-sans); color: var(--paper-ink-2); }
+.ringi .lines { display: block; margin-top: 12px; width: 300px; height: 40px; }
+.ringi.at-mid { left: 1010px; top: 530px; transform: rotate(-1.2deg); }
+.ringi.at-sen { left: 890px; top: 384px; transform: rotate(.8deg); }
+.ringi.at-top { left: 770px; top: 238px; transform: rotate(-.6deg); }
+.s11 .mori { left: 1400px; top: 400px; width: 460px; }
+.s11 .q { font-size: 48px; }
+.nw { white-space: nowrap; }
+#s11d .meyer { left: 1140px; top: 252px; width: 720px; }
+#s11d .meyer .q { font-size: 46px; }
+#s11d .meyer .who { margin-top: 8px; }
+#s11d .shel { left: 1400px; width: 460px; }
+#s11d .shel .q { font-size: 38px; }
+#s11d .shel .who { margin-top: 10px; }
+#s11d .shel.a { top: 410px; } #s11d .shel.b { top: 616px; }
+#s11d .plant { left: 1152px; top: 664px; width: 220px; height: 348px; overflow: visible; }
+#s11d .nema { left: 1400px; top: 872px; width: 460px; }
+#s11d .nema p { margin: 0; font: italic 500 54px/1 var(--f-serif); color: var(--ink); }
+#s11d .nema span { display: block; margin-top: 10px; font: italic 400 42px/1 var(--f-serif); color: var(--ink); }
+
+/* =================================== S20 =================================== */
+#s20 .prop { left: 96px; top: 92px; width: 1260px; height: 236px; padding: 28px 40px; transform: rotate(-.4deg); }
+#s20 .prop > * { position: static; }
+#s20 .prop .head { display: flex; align-items: center; gap: 14px; font: 700 30px/1 var(--f-sans); letter-spacing: .12em; text-transform: uppercase; color: var(--paper-ink-2); }
+#s20 .prop .head .i { width: 42px; height: 32px; stroke-width: 2.4; }
+#s20 .prop .body { margin: 16px 0 0; max-width: 900px; font: italic 400 52px/1.15 var(--f-serif); font-variation-settings: "opsz" 48; color: var(--paper-ink); }
+#s20 .prop .body b { font: normal 700 40px/1 var(--f-sans); letter-spacing: .06em; }
+#s20 .prop .stamp { position: absolute; left: 1000px; top: 30px; width: 200px; height: 180px; transform: rotate(-7deg); }
+#s20 .chip-20 { left: 1390px; top: 184px; }
+#s20 .stand { left: 96px; top: 374px; display: flex; align-items: center; gap: 18px; font: italic 400 48px/1 var(--f-serif); color: var(--ink); white-space: nowrap; }
+#s20 .stand .i { width: 34px; height: 56px; stroke-width: 3; color: var(--ink-2); }
+#s20 .pair { left: 84px; top: 500px; width: 860px; height: 470px; }
+#s20 .pair .gD { position: absolute; left: 0; top: 34px; height: 430px; width: 468px; }
+#s20 .pair .qm { position: absolute; left: 468px; top: 150px; font: 500 230px/1 var(--f-serif); color: var(--ink-3); }
+#s20 .pair .gd { position: absolute; left: 610px; top: 190px; height: 260px; width: 200px; }
+#s20 .pair .gd .ln.p { stroke-width: 12; } #s20 .pair .gd .ln.s { stroke-width: 5; opacity: .55; }
+#s20 .close { left: 1000px; top: 520px; width: 860px; }
+#s20 .close > * { position: static; }
+#s20 .three { margin: 0; font: 500 36px/1.2 var(--f-sans); color: var(--ink-2); }
+#s20 .three b { font-weight: 700; color: var(--ink); }
+#s20 .ask { margin: 26px 0 0; font: 600 96px/1.04 var(--f-serif); font-variation-settings: "opsz" 72; letter-spacing: -.012em; color: var(--ink); }
+#s20 .ask .bD { font: 800 84px/1 var(--f-stone); color: var(--teal); letter-spacing: .01em; white-space: nowrap; }
+#s20 .ask .ld { font: 700 118px/.8 var(--f-pencil); color: var(--amber); white-space: nowrap; padding-right: .1em; }
+#s20 .qa { left: 1000px; top: 906px; font: 700 68px/1 var(--f-pencil); color: var(--amber); }
+
+/* ---------- view transitions ---------- */
+::view-transition-group(*) { animation-duration: var(--vt-dur); animation-timing-function: cubic-bezier(.65,0,.2,1); }
+::view-transition-old(*), ::view-transition-new(*) { animation-duration: var(--vt-dur); }
+:root[data-vt="morph"]::view-transition-old(root), :root[data-vt="morph"]::view-transition-new(root) { animation-duration: calc(var(--vt-dur) * .42); }
+::view-transition-old(crumb), ::view-transition-new(crumb) { animation-duration: calc(var(--vt-dur) * .42); }
+/* bars stretch (no aspect lock) so the clock bars can grow into the timeline segments */
+::view-transition-old(clock-td), ::view-transition-new(clock-td),
+::view-transition-old(clock-cons), ::view-transition-new(clock-cons),
+::view-transition-old(lb-top), ::view-transition-new(lb-top),
+::view-transition-old(lb-bot), ::view-transition-new(lb-bot) { height: 100%; width: 100%; object-fit: fill; }
+
+/* ---------- runtime chrome ---------- */
+#deck-black { position: fixed; inset: 0; background: #000; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity .25s; }
+.deck-is-black #deck-black { opacity: 1; pointer-events: auto; }
+#deck-jump { position: fixed; right: 18px; bottom: 16px; z-index: 1001; padding: 8px 14px; border-radius: 8px; background: rgba(20,20,22,.92); color: #fff; font: 600 18px/1 var(--f-sans); display: none; }
+#deck-jump.on { display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  .deck-anim .sk, .sk.deck-anim { animation: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ======================= shared SVG defs (filters, symbols) ======================= -->
+<svg class="defs" aria-hidden="true" focusable="false">
+  <defs>
+    <!-- carved: incised letter, lit from top-left (user units of a 1000-unit glyph) -->
+    <filter id="carve" x="-6%" y="-6%" width="112%" height="112%" color-interpolation-filters="sRGB">
+      <feColorMatrix in="SourceGraphic" type="matrix" values=".86 0 0 0 0  0 .86 0 0 0  0 0 .86 0 0  0 0 0 1 0" result="floor"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".55" numOctaves="2" seed="3" result="t"/>
+      <feColorMatrix in="t" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1.1 -.48" result="tg"/>
+      <feComposite in="tg" in2="SourceAlpha" operator="in" result="grain"/>
+      <feOffset in="SourceAlpha" dx="16" dy="20" result="sh"/>
+      <feComposite in="SourceAlpha" in2="sh" operator="out" result="band"/>
+      <feGaussianBlur in="band" stdDeviation="7" result="bandb"/>
+      <feComposite in="bandb" in2="SourceAlpha" operator="in" result="ish"/>
+      <feFlood flood-color="#020606" flood-opacity=".82"/>
+      <feComposite in2="ish" operator="in" result="ishc"/>
+      <feOffset in="SourceAlpha" dx="-6" dy="-7" result="hl"/>
+      <feComposite in="SourceAlpha" in2="hl" operator="out" result="hband"/>
+      <feGaussianBlur in="hband" stdDeviation="2" result="hbandb"/>
+      <feComposite in="hbandb" in2="SourceAlpha" operator="in" result="ihl"/>
+      <feFlood flood-color="#e8fffb" flood-opacity=".55"/>
+      <feComposite in2="ihl" operator="in" result="ihlc"/>
+      <feMorphology in="SourceAlpha" operator="dilate" radius="5" result="lip"/>
+      <feOffset in="lip" dx="5" dy="6" result="lipo"/>
+      <feComposite in="lipo" in2="SourceAlpha" operator="out" result="lipb"/>
+      <feComposite in="lipb" in2="lip" operator="in" result="lipc"/>
+      <feFlood flood-color="#ffffff" flood-opacity=".07"/>
+      <feComposite in2="lipc" operator="in" result="lipl"/>
+      <feMerge><feMergeNode in="lipl"/><feMergeNode in="floor"/><feMergeNode in="grain"/><feMergeNode in="ishc"/><feMergeNode in="ihlc"/></feMerge>
+    </filter>
+    <!-- pencil: wobble + graphite grain -->
+    <filter id="pencil" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence type="fractalNoise" baseFrequency=".045" numOctaves="2" seed="4" result="w"/>
+      <feDisplacementMap in="SourceGraphic" in2="w" scale="5" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="9" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.9 1.62" result="gm"/>
+      <feComposite in="d" in2="gm" operator="in"/>
+    </filter>
+    <filter id="pencil-fine" x="-5%" y="-20%" width="110%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="6" result="w"/>
+      <feDisplacementMap in="SourceGraphic" in2="w" scale="2.4" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="1.3" numOctaves="1" seed="12" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.3 1.5" result="gm"/>
+      <feComposite in="d" in2="gm" operator="in"/>
+    </filter>
+    <!-- ink: rough edge + voids (stamps) -->
+    <filter id="ink" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".06" numOctaves="2" seed="2" result="w"/>
+      <feDisplacementMap in="SourceGraphic" in2="w" scale="3.5" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency=".5" numOctaves="3" seed="11" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.6 2.15" result="gm"/>
+      <feComposite in="d" in2="gm" operator="in"/>
+    </filter>
+    <filter id="ink-soft" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="2" seed="21" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.4 1.6" result="gm"/>
+      <feComposite in="SourceGraphic" in2="gm" operator="in"/>
+    </filter>
+    <filter id="smudge" x="-20%" y="-60%" width="140%" height="220%"><feGaussianBlur stdDeviation="5"/></filter>
+
+    <!-- hanko (vermilion): ring + inner ring + approval tick -->
+    <symbol id="hanko" viewBox="0 0 100 100">
+      <g filter="url(#ink)" fill="none" stroke="currentColor">
+        <circle cx="50" cy="50" r="42" stroke-width="9"/>
+        <circle cx="50" cy="50" r="31" stroke-width="3"/>
+        <path d="M33 52 L46 65 L69 37" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </symbol>
+    <!-- final stamp: teal capital D seal -->
+    <symbol id="dseal" viewBox="0 0 100 100">
+      <g filter="url(#ink)">
+        <circle cx="50" cy="50" r="43" fill="none" stroke="currentColor" stroke-width="8"/>
+        <text x="50" y="72" text-anchor="middle" font-family="Cinzel" font-weight="900" font-size="62" fill="currentColor">D</text>
+      </g>
+    </symbol>
+
+    <!-- icons -->
+    <symbol id="i-arrow" viewBox="0 0 40 20"><path d="M3 10H35M27 3l8 7-8 7"/></symbol>
+    <symbol id="i-both" viewBox="0 0 64 20"><path d="M3 10H61M11 3 3 10l8 7M53 3l8 7-8 7"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 42 32"><rect x="2" y="2" width="38" height="28" rx="3"/><path d="M3 4l18 14L39 4"/></symbol>
+    <symbol id="i-stand" viewBox="0 0 34 56"><circle cx="17" cy="7" r="5.5"/><path d="M17 14v20M17 34l-7 20M17 34l7 20M17 19 7 30M17 19l10 11"/></symbol>
+    <symbol id="i-sit" viewBox="0 0 44 56"><circle cx="15" cy="7" r="5.5"/><path d="M15 14v22h17v18M15 21l10 9M5 30v24M5 38h12"/></symbol>
+    <symbol id="i-armsup" viewBox="0 0 44 60"><circle cx="22" cy="14" r="5.5"/><path d="M22 21v20M22 41l-7 17M22 41l7 17M22 25 9 4M22 25 35 4"/></symbol>
+    <symbol id="i-finger" viewBox="0 0 44 60"><path d="M19 32V8c0-4 6-4 6 0v24"/><path d="M13 30c-2 0-4 2-4 5v9c0 8 6 14 14 14s13-5 13-12V34c0-3-3-5-6-4"/><path d="M25 30c0-3 6-3 6 1"/><path d="M13 30c0-3 6-3 6 0"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 40 40"><path d="M6 34l4-12L28 4l8 8-18 18zM10 22l8 8M24 8l8 8"/></symbol>
+
+    <!-- axis gradients / blend masks (S01 and S08a share one coordinate system: x 96..1824 / 140..1780) -->
+    <linearGradient id="ax1-g" gradientUnits="userSpaceOnUse" x1="96" x2="1824" y1="0" y2="0"><stop offset="0" stop-color="#3fb8a6"/><stop offset=".42" stop-color="#3fb8a6"/><stop offset=".62" stop-color="#f5ae45"/><stop offset="1" stop-color="#f5ae45"/></linearGradient>
+    <linearGradient id="ax1-mg" gradientUnits="userSpaceOnUse" x1="96" x2="1824" y1="0" y2="0"><stop offset=".36" stop-color="#fff"/><stop offset=".64" stop-color="#000"/></linearGradient>
+    <linearGradient id="ax1-mgi" gradientUnits="userSpaceOnUse" x1="96" x2="1824" y1="0" y2="0"><stop offset=".36" stop-color="#000"/><stop offset=".64" stop-color="#fff"/></linearGradient>
+    <mask id="ax1-mc" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="120"><rect width="1920" height="120" fill="url(#ax1-mg)"/></mask>
+    <mask id="ax1-mp" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="120"><rect width="1920" height="120" fill="url(#ax1-mgi)"/></mask>
+    <linearGradient id="ax8-g" gradientUnits="userSpaceOnUse" x1="140" x2="1780" y1="0" y2="0"><stop offset="0" stop-color="#3fb8a6"/><stop offset=".42" stop-color="#3fb8a6"/><stop offset=".62" stop-color="#f5ae45"/><stop offset="1" stop-color="#f5ae45"/></linearGradient>
+    <linearGradient id="ax8-mg" gradientUnits="userSpaceOnUse" x1="140" x2="1780" y1="0" y2="0"><stop offset=".36" stop-color="#fff"/><stop offset=".64" stop-color="#000"/></linearGradient>
+    <linearGradient id="ax8-mgi" gradientUnits="userSpaceOnUse" x1="140" x2="1780" y1="0" y2="0"><stop offset=".36" stop-color="#000"/><stop offset=".64" stop-color="#fff"/></linearGradient>
+    <mask id="ax8-mc" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><rect width="1920" height="1080" fill="url(#ax8-mg)"/></mask>
+    <mask id="ax8-mp" maskUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080"><rect width="1920" height="1080" fill="url(#ax8-mgi)"/></mask>
+    <clipPath id="ax8-clip"><rect x="140" y="0" width="1640" height="1080"/></clipPath>
+  </defs>
+</svg>
+
+<div id="stage">
+
+<!-- ================================================================ S01 -->
+<section class="slide daylight" id="s01" data-transition="none" data-title="Big D or little d?">
+  <div class="lb top" data-morph="lb-top"></div><div class="lb bot" data-morph="lb-bot"></div>
+
+  <svg class="gD" viewBox="20 -715 800 735" data-morph="glyph-D" data-enter="wipe-down" data-duration="800" aria-label="Big D (carved)" role="img">
+    <text x="0" y="0" filter="url(#carve)">D</text>
+  </svg>
+  <svg class="gd" viewBox="0 0 200 260" data-morph="glyph-d" data-enter="draw" data-delay="650" data-duration="1150" aria-label="little d (pencil)" role="img">
+    <path class="guide" d="M-30 240H226"/><path class="guide" d="M-30 118H226" stroke-dasharray="6 9"/>
+    <g filter="url(#pencil)">
+      <path class="ln p sk" pathLength="1" style="--sk-dur:520ms" d="M150 150C140 126 116 116 94 118C60 121 38 152 40 186C42 220 66 242 94 240C122 238 144 214 150 186"/>
+      <path class="ln p sk" pathLength="1" style="--sk-at:430ms;--sk-dur:520ms" d="M156 20C153 82 150 150 151 206C152 228 158 241 178 236"/>
+      <path class="ln s sk" pathLength="1" style="--sk-at:250ms;--sk-dur:520ms" d="M146 140C130 122 104 119 86 124C58 132 44 160 47 190C51 220 74 237 99 235C124 232 140 212 147 192"/>
+      <path class="ln s sk" pathLength="1" style="--sk-at:640ms;--sk-dur:420ms" d="M160 32C157 90 155 152 156 214"/>
+    </g>
+  </svg>
+
+  <div class="title">
+    <h1><span class="t-big carved">BIG D</span><span class="t-or">or</span><span class="t-little">little d?</span></h1>
+    <p class="sub">Who decides — and how?</p>
+    <p class="meta">Erin Meyer · <em>The Culture Map</em> · Ch. 5<br>“Big D or Little d: Who Decides, and How?” (the Deciding scale)</p>
+    <p class="members">[MEMBER 1] · [MEMBER 2] · [MEMBER 3]</p>
+    <p class="course">Cross-Cultural Communication · Prof. Sabrina Hegner<span class="brk"> · </span><br>HSB · 06.01.2027</p>
+  </div>
+
+  <p class="route">Definition<b>·</b>Countries<b>·</b>Recommendations<b>·</b>Our cultures<b>·</b>Management implications</p>
+
+  <svg class="axis-svg" viewBox="0 0 1920 120" data-morph="axis" data-enter="wipe" data-delay="200" data-duration="900" aria-hidden="true">
+    <g mask="url(#ax1-mc)">
+      <line x1="112" y1="60" x2="1808" y2="60" stroke="#050607" stroke-width="16" stroke-linecap="round"/>
+      <line x1="112" y1="62" x2="1808" y2="62" stroke="url(#ax1-g)" stroke-width="9" stroke-linecap="round"/>
+      <line x1="112" y1="68" x2="1808" y2="68" stroke="#fff" stroke-opacity=".16" stroke-width="2"/>
+      <path d="M126 40 100 61l26 21" fill="none" stroke="#3fb8a6" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+    <g mask="url(#ax1-mp)" filter="url(#pencil-fine)">
+      <path d="M112 61C600 59 1000 63 1400 60S1700 62 1806 61" fill="none" stroke="url(#ax1-g)" stroke-width="6" stroke-linecap="round"/>
+      <path d="M1000 64C1300 66 1600 62 1790 63" fill="none" stroke="#f5ae45" stroke-opacity=".5" stroke-width="2.5"/>
+      <path d="M1792 41 1818 61l-27 20" fill="none" stroke="#f5ae45" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    </g>
+  </svg>
+  <div class="sliver mu" data-morph="tile-mu"></div>
+  <div class="sliver ny" data-morph="tile-ny"></div>
+  <span class="ax-lab l">Consensual</span>
+  <span class="ax-lab r">Top-down</span>
+</section>
+
+<!-- ================================================================ S04b -->
+<section class="slide story" id="s04b" data-transition="fade" data-title="Decision #2: the room decides">
+  <div class="lb top" data-morph="lb-top"></div><div class="lb bot" data-morph="lb-bot"></div>
+  <span class="crumb" data-morph="crumb">I · Decision #2</span>
+
+  <div class="rules slab" data-morph="rules">
+    <h3 class="carved">HOW WE DECIDE</h3>
+    <p class="sub">(agreed before we decide)</p>
+    <ol>
+      <li><span class="n">1</span><span>All agree <svg class="i"><use href="#i-arrow"/></svg> stand up (or both hands up)</span></li>
+      <li><span class="n">2</span><span>Seated = a concern, not a veto</span></li>
+      <li><span class="n">3</span><span>Deadline: 2:00</span></li>
+      <li><span class="n">4</span><span>No unanimity? Majority vote. Everyone commits.</span></li>
+      <li><span class="n">5</span><span>Then: no reopening.</span></li>
+    </ol>
+  </div>
+
+  <div class="clock slab">
+    <span class="row-l td">Decision #1</span>
+    <div class="sliver-td amber-hatch" data-morph="clock-td"></div>
+    <span class="val-td">#1 ≈ 3 s<small>one person</small></span>
+    <span class="row-l cons">Decision #2 · the room</span>
+    <div class="groove"><i></i><i></i><i></i></div>
+    <div class="timer" data-step="1" data-build="fade" data-duration="300" data-timer="120" data-timer-store="decision2" data-print="2:00">
+      <div class="tbar" data-timer-bar><div class="deck-timer-fill teal-stone" data-morph="clock-cons"></div></div>
+      <span class="readout" data-timer-text>2:00</span>
+      <span class="cap">4 × 30 s · consensus rules</span>
+    </div>
+    <div class="decided" data-triggered="dT dM vT vM" data-build="drop" data-duration="380">decided</div>
+  </div>
+
+  <div class="mail paper" data-morph="mail" data-enter="drop" data-duration="420">
+    <div class="head"><svg class="i"><use href="#i-mail"/></svg>our email · Per-style</div>
+    <p class="body">Hey class — I thought we could practise <b>SCENARIO T</b> at the end of Part I. What do you think?</p>
+  </div>
+
+  <p class="fict pencil">fictional exercises</p>
+
+  <div class="scen paper t" data-morph="card-t" data-enter="rise" data-delay="380">
+    <h4>Scenario T</h4>
+    <p>Your proposal needs approval at Tokyo HQ. In four weeks.</p>
+    <div class="stamp sd" data-triggered="dT" data-build="slam">
+      <svg viewBox="0 0 350 146" aria-label="D · no more discussion!" role="img"><g filter="url(#ink)" fill="none" stroke="#0a645a"><rect x="6" y="6" width="134" height="134" rx="22" stroke-width="9"/><path d="M160 26H340M160 120H340" stroke-width="5"/></g><text x="73" y="117" text-anchor="middle" font-size="118" fill="#0a645a" filter="url(#ink)">D</text><text class="small" x="158" y="70" font-size="38" fill="#0a5a51" filter="url(#ink-soft)">no more</text><text class="small" x="158" y="110" font-size="38" fill="#0a5a51" filter="url(#ink-soft)">discussion!</text></svg>
+    </div>
+    <div class="stamp sv" data-triggered="vT" data-build="slam">
+      <svg viewBox="0 0 380 164" aria-label="VOTE · a top-down technique (Meyer, p. 159)" role="img"><g filter="url(#ink)" fill="none" stroke="#a86400"><rect x="6" y="6" width="368" height="152" rx="12" stroke-width="8"/></g><text x="190" y="80" text-anchor="middle" font-size="72" fill="#a86400" filter="url(#ink)" letter-spacing="6">VOTE</text><text class="small" x="190" y="114" text-anchor="middle" font-size="28" fill="#7a4a00" filter="url(#ink-soft)">a top-down technique</text><text class="small" x="190" y="145" text-anchor="middle" font-size="28" fill="#7a4a00" filter="url(#ink-soft)">(Meyer, p. 159)</text></svg>
+    </div>
+  </div>
+
+  <div class="scen paper m" data-morph="card-m" data-enter="rise" data-delay="520">
+    <h4>Scenario M</h4>
+    <p>Your German–American team must pick a supplier. By Friday.</p>
+    <div class="stamp sd" data-triggered="dM" data-build="slam">
+      <svg viewBox="0 0 350 146" aria-label="D · no more discussion!" role="img"><g filter="url(#ink)" fill="none" stroke="#0a645a"><rect x="6" y="6" width="134" height="134" rx="22" stroke-width="9"/><path d="M160 26H340M160 120H340" stroke-width="5"/></g><text x="73" y="117" text-anchor="middle" font-size="118" fill="#0a645a" filter="url(#ink)">D</text><text class="small" x="158" y="70" font-size="38" fill="#0a5a51" filter="url(#ink-soft)">no more</text><text class="small" x="158" y="110" font-size="38" fill="#0a5a51" filter="url(#ink-soft)">discussion!</text></svg>
+    </div>
+    <div class="stamp sv" data-triggered="vM" data-build="slam">
+      <svg viewBox="0 0 380 164" aria-label="VOTE · a top-down technique (Meyer, p. 159)" role="img"><g filter="url(#ink)" fill="none" stroke="#a86400"><rect x="6" y="6" width="368" height="152" rx="12" stroke-width="8"/></g><text x="190" y="80" text-anchor="middle" font-size="72" fill="#a86400" filter="url(#ink)" letter-spacing="6">VOTE</text><text class="small" x="190" y="114" text-anchor="middle" font-size="28" fill="#7a4a00" filter="url(#ink-soft)">a top-down technique</text><text class="small" x="190" y="145" text-anchor="middle" font-size="28" fill="#7a4a00" filter="url(#ink-soft)">(Meyer, p. 159)</text></svg>
+    </div>
+  </div>
+
+  <div class="chips t" data-print="hide">
+    <button class="chip d" data-trigger="dT" data-trigger-group="d2" data-stop-timer="" aria-label="Stamp Scenario T with D">D</button>
+    <button class="chip v" data-trigger="vT" data-trigger-group="d2" data-stop-timer="" aria-label="Stamp Scenario T with VOTE">vote</button>
+  </div>
+  <div class="chips m" data-print="hide">
+    <button class="chip d" data-trigger="dM" data-trigger-group="d2" data-stop-timer="" aria-label="Stamp Scenario M with D">D</button>
+    <button class="chip v" data-trigger="vM" data-trigger-group="d2" data-stop-timer="" aria-label="Stamp Scenario M with VOTE">vote</button>
+  </div>
+
+  <p class="live"><svg class="i"><use href="#i-stand"/></svg><b>STAND</b> = agree <span class="dot">·</span> <svg class="i sit"><use href="#i-sit"/></svg><b>SEATED</b> = concern</p>
+
+  <div class="flip" data-step="2" data-build="draw" data-duration="900">
+    <span class="lab">new data?</span>
+    <svg viewBox="0 0 176 186" aria-hidden="true"><g filter="url(#pencil)" fill="none" stroke="#f5ae45" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+      <path class="sk" pathLength="1" d="M14 70C40 26 120 22 156 62"/><path class="sk" pathLength="1" style="--sk-at:300ms;--sk-dur:260ms" d="M136 60l22 4 4-24"/>
+      <path class="sk" pathLength="1" style="--sk-at:380ms" d="M162 118C134 162 54 164 20 124"/><path class="sk" pathLength="1" style="--sk-at:680ms;--sk-dur:240ms" d="M40 126l-22-4-4 24"/>
+    </g></svg>
+  </div>
+
+  <figure class="mueller" data-step="3" data-build="rise">
+    <blockquote class="q">“They casually change the decision every week…”</blockquote>
+    <figcaption class="who"><span class="mono">MM</span>M. Müller · German director</figcaption>
+  </figure>
+</section>
+
+<!-- ================================================================ S05 -->
+<section class="slide daylight" id="s05" data-transition="morph" data-title="What you just felt has a name">
+  <div class="lb top" data-morph="lb-top"></div><div class="lb bot" data-morph="lb-bot"></div>
+  <span class="crumb" data-morph="crumb">I · Definition</span>
+  <p class="kicker" data-enter="fade" data-delay="420" data-duration="420">The Deciding scale · <span class="c-teal">Consensual</span> <svg class="i wide"><use href="#i-both"/></svg> <span class="c-amber">Top-down</span> · <i>who decides, and how?</i></p>
+  <h2 class="h-xl" data-enter="rise" data-delay="620" data-duration="560">What you just felt has a name.</h2>
+
+  <!-- TOP-DOWN row (pencil) -->
+  <p class="head-td" data-step="2" data-build="rise"><span class="rowlab c-amber">Top-down</span><span class="rowdef">“Decisions are made by individuals (usually the boss).”</span></p>
+  <span class="was was-td" data-enter="fade" data-delay="480" data-duration="380">Decision #1 · one person · ≈ 3 s</span>
+  <div class="disc-td amber-hatch" data-morph="clock-td"></div>
+  <svg class="gd gd-td" viewBox="0 0 200 260" data-morph="glyph-d" data-enter="drop" data-delay="560" data-duration="420" aria-label="little d" role="img">
+    <g filter="url(#pencil)"><path class="ln p" d="M150 150C140 126 116 116 94 118C60 121 38 152 40 186C42 220 66 242 94 240C122 238 144 214 150 186"/><path class="ln p" d="M156 20C153 82 150 150 151 206C152 228 158 241 178 236"/><path class="ln s" d="M146 140C130 122 104 119 86 124C58 132 44 160 47 190C51 220 74 237 99 235C124 232 140 212 147 192"/></g>
+  </svg>
+  <svg class="impl-td" viewBox="0 0 900 180" data-step="1" data-build="draw" data-duration="1500" aria-hidden="true">
+    <g filter="url(#smudge)" fill="none" stroke="#d0c9bc" stroke-opacity=".14" stroke-width="14" stroke-linecap="round">
+      <path d="M210 68C290 58 380 62 470 74"/><path d="M590 106C650 116 710 112 750 98"/>
+    </g>
+    <g filter="url(#pencil)" fill="none" stroke="#f5ae45" stroke-linecap="round" stroke-linejoin="round">
+      <path class="sk" pathLength="1" style="--sk-dur:700ms" stroke-width="7" d="M6 90C110 88 180 93 270 90S450 87 560 91 760 89 866 90"/>
+      <path class="sk" pathLength="1" style="--sk-at:640ms;--sk-dur:200ms" stroke-width="7" d="M846 72l26 18-26 18"/>
+      <path class="sk" pathLength="1" style="--sk-at:760ms;--sk-dur:260ms" stroke-width="6" d="M192 76A26 26 0 1 0 148 76"/><path class="sk" pathLength="1" style="--sk-at:1000ms;--sk-dur:120ms" stroke-width="6" d="M147.5 64 148 76 137.4 70.5"/>
+      <path class="sk" pathLength="1" style="--sk-at:960ms;--sk-dur:260ms" stroke-width="6" d="M562 76A26 26 0 1 0 518 76"/><path class="sk" pathLength="1" style="--sk-at:1200ms;--sk-dur:120ms" stroke-width="6" d="M517.5 64 518 76 507.4 70.5"/>
+      <path class="sk" pathLength="1" style="--sk-at:1160ms;--sk-dur:260ms" stroke-width="6" d="M782 76A26 26 0 1 0 738 76"/><path class="sk" pathLength="1" style="--sk-at:1400ms;--sk-dur:100ms" stroke-width="6" d="M737.5 64 738 76 727.4 70.5"/>
+    </g>
+  </svg>
+  <span class="flipnote" data-step="1" data-delay="900">← our CEO’s flip</span>
+  <span class="seglab lab-disc-td" data-enter="fade" data-delay="560" data-duration="380">Discussion</span>
+  <span class="seglab lab-impl-td" data-step="1" data-build="fade"><b>Implementation</b> (more discussion, possible revisiting and altering of decision)</span>
+  <p class="gq gq-td" data-step="2" data-build="rise" data-delay="120">“each decision is also flexible—a decision with a lowercase d”</p>
+  <span class="mn a" data-step="4" data-build="zoom">Fast in · slow out <small>(flexible)</small></span>
+
+  <!-- CONSENSUAL row (stone) -->
+  <p class="head-cons" data-step="3" data-build="rise"><span class="rowlab c-teal">Consensual</span><span class="rowdef">“Decisions are made in groups through unanimous agreement.”</span></p>
+  <span class="was was-cons" data-enter="fade" data-delay="520" data-duration="380">Decision #2 · consensus rules · minutes</span>
+  <div class="disc-cons teal-stone" data-morph="clock-cons"></div>
+  <svg class="gD gD-cons" viewBox="20 -715 800 735" data-morph="glyph-D" data-enter="drop" data-delay="620" data-duration="420" aria-label="capital D" role="img">
+    <text x="0" y="0" filter="url(#carve)">D</text>
+  </svg>
+  <div class="impl-cons teal-stone" data-step="1" data-build="wipe" data-duration="420" data-delay="200"></div>
+  <span class="seglab lab-disc-cons" data-enter="fade" data-delay="600" data-duration="380">Discussion</span>
+  <span class="seglab lab-impl-cons" data-step="1" data-build="fade" data-delay="200"><b>Implementation</b> (no more discussion!)</span>
+  <p class="gq gq-cons" data-step="3" data-build="rise" data-delay="120">“fixed and inflexible—a decision with a capital D”</p>
+  <span class="mn t" data-step="4" data-build="zoom" data-delay="160">Slow in · fast out</span>
+
+  <p class="foot" data-enter="fade" data-delay="700" data-duration="400">Meyer (2014), Figs. 5.1–5.3 · mnemonic chips: <span class="pencil" style="font-size:34px;color:var(--ink-2)">ours</span></p>
+  <p class="gest" data-step="5" data-build="rise"><span class="key">Gesture key</span><span class="bigD">Big D</span> = both arms up <svg class="i"><use href="#i-armsup"/></svg> · <span class="littled">little d</span> = one finger <svg class="i"><use href="#i-finger"/></svg></p>
+</section>
+
+<!-- ================================================================ S08a -->
+<section class="slide daylight" id="s08a" data-transition="fade" data-title="Where does your culture decide?">
+  <div class="lb top" data-morph="lb-top"></div><div class="lb bot" data-morph="lb-bot"></div>
+  <span class="crumb" data-morph="crumb">I · Classification</span>
+  <h2 class="h-xl">Where does your culture decide?</h2>
+
+  <svg class="map" viewBox="0 0 1920 1080" aria-hidden="true">
+    <!-- axis: carved on the consensual side, pencil on the top-down side -->
+    <g>
+      <g mask="url(#ax8-mc)">
+        <line x1="150" y1="620" x2="1770" y2="620" stroke="#050607" stroke-width="16" stroke-linecap="round"/>
+        <line x1="150" y1="622" x2="1770" y2="622" stroke="url(#ax8-g)" stroke-width="9" stroke-linecap="round"/>
+        <line x1="150" y1="628" x2="1770" y2="628" stroke="#fff" stroke-opacity=".16" stroke-width="2"/>
+        <path d="M162 600 136 621l26 21" fill="none" stroke="#3fb8a6" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <g mask="url(#ax8-mp)" filter="url(#pencil-fine)">
+        <path d="M150 621C600 619 1000 623 1400 620S1700 622 1768 621" fill="none" stroke="url(#ax8-g)" stroke-width="6" stroke-linecap="round"/>
+        <path d="M1752 601 1778 621l-27 20" fill="none" stroke="#f5ae45" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+    </g>
+    <!-- bell curves (click 2), clipped to the axis -->
+    <g clip-path="url(#ax8-clip)">
+    <g class="bells" data-step="2" data-build="draw" data-duration="1100" filter="url(#pencil-fine)" stroke-width="3" fill-opacity=".08" stroke-opacity=".85">
+      <path class="sk" pathLength="1" style="--sk-at:0ms" stroke="#3fb8a6" fill="#3fb8a6" d="M-4.9 620C80.1 620 123.1 468 235.1 468S390.1 620 475.1 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:30ms" stroke="#3fb8a6" fill="#3fb8a6" d="M90.2 620C175.2 620 218.2 468 330.2 468S485.2 620 570.2 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:60ms" stroke="#3fb8a6" fill="#3fb8a6" d="M219.8 620C304.8 620 347.8 468 459.8 468S614.8 620 699.8 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:90ms" stroke="#3fb8a6" fill="#3fb8a6" d="M454.3 620C539.3 620 582.3 468 694.3 468S849.3 620 934.3 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:120ms" stroke="#60b695" fill="#60b695" d="M647.8 620C732.8 620 775.8 468 887.8 468S1042.8 620 1127.8 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:150ms" stroke="#bfb162" fill="#bfb162" d="M820.0 620C905.0 620 948.0 468 1060 468S1215.0 620 1300.0 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:180ms" stroke="#ecaf4a" fill="#ecaf4a" d="M900.4 620C985.4 620 1028.4 468 1140.4 468S1295.4 620 1380.4 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:210ms" stroke="#f5ae45" fill="#f5ae45" d="M959.4 620C1044.4 620 1087.4 468 1199.4 468S1354.4 620 1439.4 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:240ms" stroke="#f5ae45" fill="#f5ae45" d="M1030.0 620C1115.0 620 1158.0 468 1270 468S1425.0 620 1510.0 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:270ms" stroke="#f5ae45" fill="#f5ae45" d="M1200.5 620C1285.5 620 1328.5 468 1440.5 468S1595.5 620 1680.5 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:300ms" stroke="#f5ae45" fill="#f5ae45" d="M1271.0 620C1356.0 620 1399.0 468 1511 468S1666.0 620 1751.0 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:330ms" stroke="#f5ae45" fill="#f5ae45" d="M1336.6 620C1421.6 620 1464.6 468 1576.6 468S1731.6 620 1816.6 620"/>
+      <path class="sk" pathLength="1" style="--sk-at:360ms" stroke="#f5ae45" fill="#f5ae45" d="M1440.0 620C1525.0 620 1568.0 468 1680 468S1835.0 620 1920.0 620"/>
+    </g>
+    </g>
+    <!-- pencil ticks + dots: six always (they keep their Fig. 5.3 places), seven more at click 1 -->
+    <g fill="none" stroke="#aaa397" stroke-width="2" stroke-opacity=".7" filter="url(#pencil-fine)"><path d="M235.1 478V606M330.2 478V606M459.8 478V606M694.3 478V606M1060 478V606M1576.6 478V606"/></g>
+    <g fill="#f1ece2"><circle cx="235.1" cy="621" r="7"/><circle cx="330.2" cy="621" r="7"/><circle cx="459.8" cy="621" r="7"/><circle cx="694.3" cy="621" r="7"/><circle cx="1060" cy="621" r="7"/><circle cx="1576.6" cy="621" r="7"/></g>
+    <g data-step="1" data-build="fade" data-duration="600">
+      <g fill="none" stroke="#aaa397" stroke-width="2" stroke-opacity=".7" filter="url(#pencil-fine)"><path d="M887.8 478V606M1140.4 478V606M1199.4 478V606M1270 478V606M1440.5 478V606M1511 478V606M1680 478V606"/></g>
+      <g fill="#f1ece2"><circle cx="887.8" cy="621" r="7"/><circle cx="1140.4" cy="621" r="7"/><circle cx="1199.4" cy="621" r="7"/><circle cx="1270" cy="621" r="7"/><circle cx="1440.5" cy="621" r="7"/><circle cx="1511" cy="621" r="7"/><circle cx="1680" cy="621" r="7"/></g>
+    </g>
+  </svg>
+
+  <!-- Fig. 5.3 labels, two staggered rows as in the book (x = 140 + f * 1640) -->
+  <span class="cty up" style="left:330.2px">Sweden</span>
+  <span class="cty up" style="left:694.3px">Germany</span>
+  <span class="cty up" style="left:1060px">US</span>
+  <span class="cty up" style="left:1199.4px" data-step="1" data-build="rise" data-delay="240">France</span>
+  <span class="cty up" style="left:1511px" data-step="1" data-build="rise" data-delay="120">India</span>
+  <span class="cty up" style="left:1680px" data-step="1" data-build="rise" data-delay="0">Nigeria</span>
+  <span class="cty lo" style="left:235.1px">Japan</span>
+  <span class="cty lo" style="left:459.8px">Netherlands</span>
+  <span class="cty lo" style="left:887.8px" data-step="1" data-build="rise" data-delay="0">UK</span>
+  <span class="cty lo" style="left:1140.4px" data-step="1" data-build="rise" data-delay="120">Brazil</span>
+  <span class="cty lo" style="left:1270px" data-step="1" data-build="rise" data-delay="360">Italy</span>
+  <span class="cty lo" style="left:1440.5px" data-step="1" data-build="rise" data-delay="240">Russia</span>
+  <span class="cty lo" style="left:1576.6px">China</span>
+
+  <span class="ax-lab l">Consensual</span>
+  <span class="ax-lab r">Top-down</span>
+
+  <p class="bell-line" data-step="2" data-build="rise" data-delay="300">A country is a bell curve, not a dot.<span class="ours">(ours)</span></p>
+  <p class="gen" data-step="2" data-build="rise" data-delay="450"><b>relative</b> · a generalization, not a stereotype (Lecture III, slides 33–34)</p>
+  <p class="src">Source: Meyer (2014), Fig. 5.3</p>
+</section>
+
+<!-- ================================================================ S11b -->
+<section class="slide story s11" id="s11b" data-transition="fade" data-title="Ringi: the decision climbs">
+  <div class="lb top" data-morph="lb-top"></div><div class="lb bot" data-morph="lb-bot"></div>
+  <span class="crumb" data-morph="crumb">I · Case · Ringi</span>
+  <h2 class="h-l" data-morph="s11-h">The decision climbs — stamp by stamp.</h2>
+  <div class="lvl slab l4" data-morph="lvl4">top management</div>
+  <div class="lvl slab l3" data-morph="lvl3">senior</div>
+  <div class="lvl slab l2 mid here" data-morph="lvl2">mid-management</div>
+  <div class="lvl slab l1" data-morph="lvl1">staff</div>
+  <div class="ground" data-morph="ground"></div>
+  <div class="ringi paper at-mid" data-morph="ringisho">
+    <div class="boxes">
+      <span class="box"><svg data-enter="slam" data-delay="420" style="transform:rotate(-8deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg data-enter="slam" data-delay="540" style="transform:rotate(6deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg data-enter="slam" data-delay="660" style="transform:rotate(-3deg)"><use href="#hanko"/></svg></span>
+      <span class="box"></span><span class="box"></span><span class="box"></span>
+    </div>
+    <p class="t">ringisho</p>
+    <p class="s">(proposal document)</p>
+    <svg class="lines" viewBox="0 0 300 40" aria-hidden="true"><g fill="none" stroke="#4c4740" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round" filter="url(#pencil-fine)"><path d="M2 10C60 8 120 12 180 9S260 10 296 9"/><path d="M2 30C50 28 110 32 150 29"/></g></svg>
+  </div>
+  <figure class="mori" data-morph="q-mori" data-step="1" data-build="rise">
+    <blockquote class="q">“…hierarchical, <span class="nw">bottom-up,</span> and consensual all at the same time.”</blockquote>
+    <figcaption class="who"><span class="mono">SM</span>S. Mori</figcaption>
+  </figure>
+</section>
+
+<!-- ================================================================ S11c -->
+<section class="slide story s11" id="s11c" data-transition="morph" data-title="Ringi: the decision climbs (senior)">
+  <div class="lb top" data-morph="lb-top"></div><div class="lb bot" data-morph="lb-bot"></div>
+  <span class="crumb" data-morph="crumb">I · Case · Ringi</span>
+  <h2 class="h-l" data-morph="s11-h">The decision climbs — stamp by stamp.</h2>
+  <div class="lvl slab l4" data-morph="lvl4">top management</div>
+  <div class="lvl slab l3 here" data-morph="lvl3">senior</div>
+  <div class="lvl slab l2 mid" data-morph="lvl2">mid-management</div>
+  <div class="lvl slab l1" data-morph="lvl1">staff</div>
+  <div class="ground" data-morph="ground"></div>
+  <div class="ringi paper at-sen" data-morph="ringisho">
+    <div class="boxes">
+      <span class="box"><svg style="transform:rotate(-8deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg style="transform:rotate(6deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg style="transform:rotate(-3deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg data-enter="slam" data-delay="820" style="transform:rotate(9deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg data-enter="slam" data-delay="960" style="transform:rotate(-5deg)"><use href="#hanko"/></svg></span>
+      <span class="box"></span>
+    </div>
+    <p class="t">ringisho</p>
+    <p class="s">(proposal document)</p>
+    <svg class="lines" viewBox="0 0 300 40" aria-hidden="true"><g fill="none" stroke="#4c4740" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round" filter="url(#pencil-fine)"><path d="M2 10C60 8 120 12 180 9S260 10 296 9"/><path d="M2 30C50 28 110 32 150 29"/></g></svg>
+  </div>
+  <figure class="mori" data-morph="q-mori">
+    <blockquote class="q">“…hierarchical, <span class="nw">bottom-up,</span> and consensual all at the same time.”</blockquote>
+    <figcaption class="who"><span class="mono">SM</span>S. Mori</figcaption>
+  </figure>
+</section>
+
+<!-- ================================================================ S11d -->
+<section class="slide story s11" id="s11d" data-transition="morph" data-title="Ringi and nemawashi">
+  <div class="lb top" data-morph="lb-top"></div><div class="lb bot" data-morph="lb-bot"></div>
+  <span class="crumb" data-morph="crumb">I · Case · Ringi</span>
+  <h2 class="h-l" data-morph="s11-h">The decision climbs — stamp by stamp.</h2>
+  <div class="lvl slab l4 here" data-morph="lvl4">top management</div>
+  <div class="lvl slab l3" data-morph="lvl3">senior</div>
+  <div class="lvl slab l2 mid" data-morph="lvl2">mid-management</div>
+  <div class="lvl slab l1" data-morph="lvl1">staff</div>
+  <div class="ground" data-morph="ground"></div>
+  <div class="ringi paper at-top" data-morph="ringisho">
+    <div class="boxes">
+      <span class="box"><svg style="transform:rotate(-8deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg style="transform:rotate(6deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg style="transform:rotate(-3deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg style="transform:rotate(9deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg style="transform:rotate(-5deg)"><use href="#hanko"/></svg></span>
+      <span class="box"><svg class="dfinal" data-enter="slam" data-delay="860" data-duration="380" style="transform:rotate(-7deg)" aria-label="capital D stamp" role="img"><use href="#dseal"/></svg></span>
+    </div>
+    <p class="t">ringisho</p>
+    <p class="s">(proposal document)</p>
+    <svg class="lines" viewBox="0 0 300 40" aria-hidden="true"><g fill="none" stroke="#4c4740" stroke-opacity=".45" stroke-width="2.4" stroke-linecap="round" filter="url(#pencil-fine)"><path d="M2 10C60 8 120 12 180 9S260 10 296 9"/><path d="M2 30C50 28 110 32 150 29"/></g></svg>
+  </div>
+
+  <figure class="meyer" data-step="1" data-build="rise" data-delay="160">
+    <blockquote class="q"><span class="c-teal" style="font:800 46px/1 var(--f-stone);margin-right:12px">D</span>“a decision with a capital D”</blockquote>
+    <figcaption class="who">— Meyer</figcaption>
+  </figure>
+
+  <svg class="plant" viewBox="0 0 240 380" data-step="2" data-build="draw" data-duration="1300" aria-label="line-art plant with bound roots" role="img">
+    <g filter="url(#pencil-fine)" fill="none" stroke="#d0c9bc" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+      <path class="sk" pathLength="1" style="--sk-dur:500ms" d="M120 222C117 180 126 140 118 92C114 70 120 50 128 30"/>
+      <path class="sk" pathLength="1" style="--sk-at:300ms;--sk-dur:300ms" d="M119 150C96 140 70 146 54 120C78 112 104 120 119 150"/>
+      <path class="sk" pathLength="1" style="--sk-at:380ms;--sk-dur:300ms" d="M121 120C142 104 170 110 186 86C160 80 134 92 121 120"/>
+      <path class="sk" pathLength="1" style="--sk-at:460ms;--sk-dur:300ms" d="M119 88C100 76 84 60 86 38C104 46 116 64 119 88"/>
+      <path class="sk" pathLength="1" style="--sk-at:540ms;--sk-dur:300ms" d="M126 52C138 38 156 32 170 34C162 50 146 56 126 52"/>
+      <path class="sk" pathLength="1" style="--sk-at:500ms;--sk-dur:420ms" d="M120 224C76 226 52 256 56 290C60 326 96 348 124 346C160 344 188 318 186 284C184 250 160 226 120 224"/>
+      <path class="sk" pathLength="1" style="--sk-at:880ms;--sk-dur:220ms" d="M98 346C92 358 80 364 70 376M140 345C146 358 158 366 170 374M120 348V378"/>
+    </g>
+    <g filter="url(#pencil-fine)" fill="none" stroke="#55cbb9" stroke-width="4" stroke-linecap="round">
+      <path class="sk" pathLength="1" style="--sk-at:880ms;--sk-dur:260ms" d="M60 262C100 286 150 286 182 260"/>
+      <path class="sk" pathLength="1" style="--sk-at:980ms;--sk-dur:260ms" d="M56 300C96 320 152 322 186 296"/>
+      <path class="sk" pathLength="1" style="--sk-at:1060ms;--sk-dur:220ms" d="M84 236C70 280 82 330 104 344M156 234C172 276 166 322 146 342"/>
+    </g>
+  </svg>
+  <div class="nema" data-step="2" data-build="rise" data-delay="500">
+    <p>nemawashi</p><span>= “root-binding”</span>
+  </div>
+
+  <figure class="shel a" data-step="3" data-build="rise">
+    <blockquote class="q">“…do my ‘root binding’ well before the actual meeting.”</blockquote>
+    <figcaption class="who">— J. Sheldon</figcaption>
+  </figure>
+  <figure class="shel b" data-step="3" data-build="rise" data-delay="260">
+    <blockquote class="q">“…it becomes very hard to go back on the group decision…”</blockquote>
+    <figcaption class="who">— J. Sheldon</figcaption>
+  </figure>
+</section>
+
+<!-- ================================================================ S20 -->
+<section class="slide daylight" id="s20" data-transition="fade" data-title="So — was that a big D or a little d?">
+  <div class="lb top" data-morph="lb-top"></div><div class="lb bot" data-morph="lb-bot"></div>
+  <div class="prop paper" data-morph="mail">
+    <p class="head"><svg class="i"><use href="#i-mail"/></svg>One last proposal:</p>
+    <p class="body">In your next group project, agree <b>HOW</b> you decide — before you decide.</p>
+    <div class="stamp" data-triggered="d20" data-build="slam">
+      <svg viewBox="0 0 180 180" aria-label="D stamp" role="img"><g filter="url(#ink)" fill="none" stroke="#0a645a"><rect x="8" y="8" width="164" height="164" rx="26" stroke-width="10"/></g><text x="90" y="142" text-anchor="middle" font-size="146" fill="#0a645a" filter="url(#ink)">D</text></svg>
+    </div>
+  </div>
+  <button class="chip d chip-20" data-trigger="d20" data-print="hide" aria-label="Stamp the proposal with D">D</button>
+
+  <p class="stand" data-step="1" data-build="rise"><svg class="i"><use href="#i-stand"/></svg>Stand up if you’ll take this with you.</p>
+
+  <div class="pair" data-step="2" data-build="fade" data-duration="900">
+    <svg class="gD" viewBox="20 -715 800 735" data-morph="glyph-D" aria-label="Big D" role="img"><text x="0" y="0" filter="url(#carve)">D</text></svg>
+    <span class="qm">?</span>
+    <svg class="gd" viewBox="0 0 200 260" data-morph="glyph-d" aria-label="little d" role="img">
+      <g filter="url(#pencil)">
+        <path class="ln p sk" pathLength="1" style="--sk-at:250ms;--sk-dur:420ms" d="M150 150C140 126 116 116 94 118C60 121 38 152 40 186C42 220 66 242 94 240C122 238 144 214 150 186"/>
+        <path class="ln p sk" pathLength="1" style="--sk-at:600ms;--sk-dur:300ms" d="M156 20C153 82 150 150 151 206C152 228 158 241 178 236"/>
+        <path class="ln s sk" pathLength="1" style="--sk-at:420ms;--sk-dur:380ms" d="M146 140C130 122 104 119 86 124C58 132 44 160 47 190C51 220 74 237 99 235C124 232 140 212 147 192"/>
+      </g>
+    </svg>
+  </div>
+  <div class="close" data-step="2" data-build="rise" data-delay="300">
+    <p class="three">Three decisions today: <b>seconds</b> · <b>minutes</b> · <b>yours</b>.</p>
+    <h2 class="ask">So — was that a <span class="bD">big D</span> or a <span class="ld">little d</span>?</h2>
+  </div>
+  <p class="qa" data-step="3" data-build="draw" data-duration="600">Q&amp;A runs on little d.</p>
+</section>
+
+</div><!-- /#stage -->
+
+<div id="deck-black" aria-hidden="true"></div>
+<div id="deck-jump" aria-live="polite"></div>
+
+<script>
+/* ==========================================================================
+   Minimal runtime for the shared markup contract (prototype; the final
+   engine in deck/engine replaces this script, markup + CSS stay).
+   ========================================================================== */
+(function () {
+  'use strict';
+  var W = 1920, H = 1080;
+  var root = document.documentElement;
+  var stage = document.getElementById('stage');
+  var slides = Array.prototype.slice.call(stage.querySelectorAll(':scope > section.slide'));
+  var params = new URLSearchParams(location.search);
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var reduced = function () { return RM.matches || params.has('nomotion'); };
+  var vtSlow = parseFloat(params.get('vtslow') || '1') || 1;
+  var hasVT = typeof document.startViewTransition === 'function' && !params.has('novt');
+  var cssMs = function (name, fb) { var v = getComputedStyle(root).getPropertyValue(name).trim(); var n = parseFloat(v); return isNaN(n) ? fb : (/s$/.test(v) && !/ms$/.test(v) ? n * 1000 : n); };
+  var MORPH_MS = cssMs('--deck-morph-duration', 780), FADE_MS = cssMs('--deck-fade-duration', 420), BUILD_MS = cssMs('--deck-build-duration', 520);
+
+  var st = { i: 0, step: 0, fired: {}, timers: new Map(), from: null, vt: null, token: 0, anims: new Set(), black: false, digits: '' };
+
+  /* ---------- fit the 1920x1080 stage, letterboxed ---------- */
+  function fit() {
+    var s = Math.min(window.innerWidth / W, window.innerHeight / H);
+    stage.style.transform = 'translate(' + ((window.innerWidth - W * s) / 2) + 'px,' + ((window.innerHeight - H * s) / 2) + 'px) scale(' + s + ')';
+  }
+  window.addEventListener('resize', fit); fit();
+
+  var steps = slides.map(function (s) {
+    var m = 0; s.querySelectorAll('[data-step]').forEach(function (e) { m = Math.max(m, parseInt(e.getAttribute('data-step'), 10) || 0); }); return m;
+  });
+  function idxOf(id) { for (var k = 0; k < slides.length; k++) if (slides[k].id === id) return k; return -1; }
+  function firedSet(s) { return st.fired[s.id] || (st.fired[s.id] = new Set()); }
+  function visibleIdx(from, dir) { for (var k = from + dir; k >= 0 && k < slides.length; k += dir) if (!slides[k].hasAttribute('data-hidden')) return k; return -1; }
+
+  function shownNow(el, slide) {
+    for (var n = el; n && n !== slide; n = n.parentElement) {
+      if (n.hasAttribute('data-step') && !n.classList.contains('is-revealed')) return false;
+      if (n.hasAttribute('data-triggered') && !n.classList.contains('is-triggered')) return false;
+    }
+    return true;
+  }
+
+  /* ---------- state -> DOM ---------- */
+  function applyState() {
+    var i = st.i, step = st.step;
+    slides.forEach(function (s, k) { var on = k === i; s.classList.toggle('is-active', on); s.setAttribute('aria-hidden', on ? 'false' : 'true'); });
+    var s = slides[i], f = firedSet(s);
+    s.querySelectorAll('[data-step]').forEach(function (el) { el.classList.toggle('is-revealed', (parseInt(el.getAttribute('data-step'), 10) || 0) <= step); });
+    s.querySelectorAll('[data-triggered]').forEach(function (el) {
+      var on = el.getAttribute('data-triggered').split(/\s+/).some(function (t) { return f.has(t); });
+      el.classList.toggle('is-triggered', on);
+    });
+    s.querySelectorAll('[data-trigger]').forEach(function (el) { var on = f.has(el.getAttribute('data-trigger')); el.classList.toggle('is-fired', on); el.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    syncTimers(s);
+    try { history.replaceState(null, '', '#' + s.id + (step ? '/' + step : '')); } catch (e) {}
+  }
+
+  /* ---------- entrance builds ---------- */
+  var FX = {
+    fade: [{ opacity: 0 }, { opacity: 1 }],
+    draw: [{ opacity: 0, offset: 0 }, { opacity: 1, offset: 0.06 }, { opacity: 1, offset: 1 }],
+    rise: [{ opacity: 0, translate: '0 28px' }, { opacity: 1, translate: '0 0' }],
+    drop: [{ opacity: 0, translate: '0 -46px' }, { opacity: 1, translate: '0 0' }],
+    left: [{ opacity: 0, translate: '-46px 0' }, { opacity: 1, translate: '0 0' }],
+    right: [{ opacity: 0, translate: '46px 0' }, { opacity: 1, translate: '0 0' }],
+    wipe: [{ clipPath: 'inset(-80px 100% -80px -80px)' }, { clipPath: 'inset(-80px -80px -80px -80px)' }],
+    'wipe-left': [{ clipPath: 'inset(-80px -80px -80px 100%)' }, { clipPath: 'inset(-80px -80px -80px -80px)' }],
+    'wipe-down': [{ clipPath: 'inset(-80px -80px 100% -80px)' }, { clipPath: 'inset(-80px -80px -80px -80px)' }],
+    'wipe-up': [{ clipPath: 'inset(100% -80px -80px -80px)' }, { clipPath: 'inset(-80px -80px -80px -80px)' }],
+    zoom: [{ opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1 }],
+    slam: [{ opacity: 0, scale: 1.9, offset: 0 }, { opacity: 1, scale: 0.95, offset: 0.6 }, { opacity: 1, scale: 1.02, offset: 0.8 }, { opacity: 1, scale: 1, offset: 1 }]
+  };
+  var DUR = { slam: 340, drop: 420, zoom: 420, wipe: 650, 'wipe-left': 650, 'wipe-down': 650, 'wipe-up': 650, draw: 900 };
+  function enter(el, name) {
+    if (reduced() || name === 'none') return;
+    var kf = FX[name] || FX.fade;
+    var dur = parseFloat(el.getAttribute('data-duration')) || DUR[name] || BUILD_MS;
+    var delay = parseFloat(el.getAttribute('data-delay')) || 0;
+    el.style.setProperty('--enter-delay', delay + 'ms');
+    el.classList.add('deck-anim');
+    var a = el.animate(kf, { duration: dur, delay: delay, easing: name === 'slam' ? 'cubic-bezier(.25,0,.2,1)' : 'cubic-bezier(.2,.7,.2,1)', fill: 'backwards' });
+    st.anims.add(a);
+    var done = function () { el.classList.remove('deck-anim'); st.anims.delete(a); };
+    a.finished.then(done, done);
+  }
+  function playBuilds(s, n) {
+    s.querySelectorAll('[data-step="' + n + '"]').forEach(function (el) { enter(el, el.getAttribute('data-build') || 'fade'); });
+  }
+  function playEnters(s) {
+    s.querySelectorAll('[data-enter]').forEach(function (el) { if (shownNow(el, s)) enter(el, el.getAttribute('data-enter') || 'fade'); });
+  }
+
+  /* ---------- timers (data-timer="120"): start when revealed ---------- */
+  function tState(el) { var t = st.timers.get(el); if (!t) { t = { start: null, acc: 0, running: false, stopped: false, done: false }; st.timers.set(el, t); } return t; }
+  function elapsed(t) { return t.running ? t.acc + (performance.now() - t.start) / 1000 : t.acc; }
+  function fmt(sec) { sec = Math.max(0, Math.ceil(sec - 1e-6)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+  function syncTimers(s) {
+    s.querySelectorAll('[data-timer]').forEach(function (el) {
+      var t = tState(el);
+      if (el.hasAttribute('data-step') && !el.classList.contains('is-revealed')) { t.start = null; t.acc = 0; t.running = false; t.stopped = false; t.done = false; }
+      else if (shownNow(el, s) && !t.running && !t.stopped && !t.done && t.start === null) { t.start = performance.now(); t.running = true; }
+      paintTimer(el);
+    });
+  }
+  function paintTimer(el) {
+    var t = tState(el), dur = parseFloat(el.getAttribute('data-timer')) || 60, e = elapsed(t);
+    if (t.running && e >= dur) { t.acc = dur; t.running = false; t.done = true; e = dur; }
+    var txt = el.querySelector('[data-timer-text]'), str = fmt(dur - e);
+    if (txt && txt.textContent !== str) txt.textContent = str;
+    el.style.setProperty('--deck-progress', (e / dur).toFixed(4));
+    el.setAttribute('data-timer-state', t.running ? 'running' : t.done ? 'done' : t.stopped ? 'stopped' : 'idle');
+  }
+  function stopTimers(s, ids) {
+    s.querySelectorAll('[data-timer]').forEach(function (el) {
+      if (ids.length && ids.indexOf(el.id) < 0) return;
+      var t = tState(el); if (t.running) { t.acc = elapsed(t); t.running = false; }
+      if (t.start !== null) t.stopped = true; paintTimer(el);
+    });
+  }
+  (function tick() { st.timers.forEach(function (t, el) { if (t.running) paintTimer(el); }); requestAnimationFrame(tick); })();
+
+  /* ---------- triggers + hotspots ---------- */
+  function fire(btn) {
+    var s = slides[st.i], f = firedSet(s), id = btn.getAttribute('data-trigger');
+    settle();
+    if (f.has(id)) { f.delete(id); applyState(); return; }
+    var grp = btn.getAttribute('data-trigger-group');
+    if (grp) s.querySelectorAll('[data-trigger-group="' + grp + '"]').forEach(function (b) { f.delete(b.getAttribute('data-trigger')); });
+    var before = new Set(Array.prototype.slice.call(s.querySelectorAll('[data-triggered].is-triggered')));
+    f.add(id);
+    if (btn.hasAttribute('data-stop-timer')) stopTimers(s, (btn.getAttribute('data-stop-timer') || '').split(/\s+/).filter(Boolean));
+    applyState();
+    s.querySelectorAll('[data-triggered].is-triggered').forEach(function (el) { if (!before.has(el)) enter(el, el.getAttribute('data-build') || 'fade'); });
+  }
+  function jump(target) {
+    var m = String(target).match(/^([^/]+)(?:\/(\d+))?$/); if (!m) return;
+    var j = /^\d+$/.test(m[1]) ? parseInt(m[1], 10) - 1 : idxOf(m[1]);
+    if (j < 0 || j >= slides.length) return;
+    st.from = { i: st.i, step: st.step };
+    go(j, Math.min(parseInt(m[2] || '0', 10), steps[j]), 'forward', 'fade');
+  }
+
+  /* ---------- transitions ---------- */
+  function clearNames() { stage.querySelectorAll('[data-morph]').forEach(function (el) { el.style.viewTransitionName = ''; }); }
+  /* is el visible on slide s at build step n (state, not classes) */
+  function shownAt(el, s, n) {
+    var f = firedSet(s);
+    for (var e = el; e && e !== s; e = e.parentElement) {
+      if (e.hasAttribute('data-step') && (parseInt(e.getAttribute('data-step'), 10) || 0) > n) return false;
+      if (e.hasAttribute('data-triggered') && !e.getAttribute('data-triggered').split(/\s+/).some(function (t) { return f.has(t); })) return false;
+    }
+    return true;
+  }
+  function morphKeys(s, n) { var k = new Set(); s.querySelectorAll('[data-morph]').forEach(function (el) { if (shownAt(el, s, n)) k.add(el.getAttribute('data-morph')); }); return k; }
+  /* name only keys present on both slides: unmatched objects simply fade with the slide */
+  function nameMorphs(s, n, shared) { s.querySelectorAll('[data-morph]').forEach(function (el) { var k = el.getAttribute('data-morph'); if (shared.has(k) && shownAt(el, s, n)) el.style.viewTransitionName = k; }); }
+  function settle() {
+    if (st.vt) { try { st.vt.skipTransition(); } catch (e) {} }
+    st.anims.forEach(function (a) { try { a.finish(); } catch (e) {} });
+    if (st.fallback) { try { st.fallback.finish(); } catch (e) {} st.fallback = null; }
+  }
+  function go(j, step, dir, forceType) {
+    settle();
+    var from = slides[st.i], to = slides[j], fromStep = st.step;
+    var type = forceType || (dir === 'back' ? (from.getAttribute('data-transition') || 'fade') : (to.getAttribute('data-transition') || 'fade'));
+    var same = j === st.i;
+    st.i = j; st.step = step;
+    var token = ++st.token, playEnter = dir === 'forward' && step === 0;
+    var shared = new Set();
+    if (type === 'morph') { var a0 = morphKeys(from, fromStep), b0 = morphKeys(to, step); a0.forEach(function (k) { if (b0.has(k)) shared.add(k); }); }
+    var update = function () {
+      clearNames(); applyState();
+      if (token !== st.token) return;
+      if (type === 'morph') nameMorphs(to, step, shared);
+      if (playEnter) playEnters(to);
+    };
+    if (same || reduced() || type === 'none') { clearNames(); applyState(); if (playEnter && !same) playEnters(to); return; }
+    if (hasVT) {
+      clearNames();
+      if (type === 'morph') nameMorphs(from, fromStep, shared);
+      root.style.setProperty('--vt-dur', ((type === 'morph' ? MORPH_MS : FADE_MS) * vtSlow) + 'ms');
+      root.setAttribute('data-vt', type);
+      var vt;
+      try { vt = document.startViewTransition(update); } catch (e) { update(); return; }
+      st.vt = vt;
+      vt.ready.catch(function () {}); vt.updateCallbackDone.catch(function () {});
+      vt.finished.catch(function () {}).then(function () { if (st.vt === vt) { st.vt = null; clearNames(); root.removeAttribute('data-vt'); } });
+    } else {
+      from.classList.add('is-leaving');
+      update();
+      var a = to.animate([{ opacity: 0 }, { opacity: 1 }], { duration: FADE_MS, easing: 'ease' });
+      st.fallback = a;
+      var end = function () { from.classList.remove('is-leaving'); };
+      a.finished.then(end, end);
+    }
+  }
+  function next() {
+    if (st.black) { setBlack(false); return; }
+    if (st.step < steps[st.i]) { settle(); st.step++; applyState(); playBuilds(slides[st.i], st.step); return; }
+    var nx = slides[st.i].getAttribute('data-next'), j = nx ? idxOf(nx) : visibleIdx(st.i, 1);
+    if (j < 0) return;
+    st.from = null; go(j, 0, 'forward');
+  }
+  function prev() {
+    if (st.black) { setBlack(false); return; }
+    if (st.step > 0) { settle(); st.step--; applyState(); return; }
+    if (st.from) { var f = st.from; st.from = null; go(f.i, steps[f.i], 'back', 'fade'); return; }
+    var j = visibleIdx(st.i, -1); if (j < 0) return;
+    go(j, steps[j], 'back');
+  }
+  function setBlack(on) { st.black = on; root.classList.toggle('deck-is-black', on); }
+
+  /* ---------- input ---------- */
+  var jumpEl = document.getElementById('deck-jump');
+  function showJump() { jumpEl.textContent = st.digits ? 'Go to slide ' + st.digits + ' ⏎' : ''; jumpEl.classList.toggle('on', !!st.digits); }
+  document.addEventListener('keydown', function (e) {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    var k = e.key;
+    if (/^[0-9]$/.test(k)) { st.digits += k; showJump(); e.preventDefault(); return; }
+    if (k === 'Enter' && st.digits) { var n = parseInt(st.digits, 10); st.digits = ''; showJump(); e.preventDefault(); if (n >= 1 && n <= slides.length) jump(String(n)); return; }
+    if (k === 'Escape') { if (st.digits) { st.digits = ''; showJump(); } return; }
+    if (k === ' ' && e.shiftKey) { e.preventDefault(); prev(); return; }
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Enter') { e.preventDefault(); next(); return; }
+    if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); prev(); return; }
+    if (k === 'Home') { e.preventDefault(); st.from = null; go(visibleIdx(-1, 1), 0, 'forward', 'fade'); return; }
+    if (k === 'End') { e.preventDefault(); st.from = null; go(visibleIdx(slides.length, -1), 0, 'forward', 'fade'); return; }
+    if (k === 'b' || k === 'B' || k === '.') { e.preventDefault(); setBlack(!st.black); return; }
+    if (k === 'f' || k === 'F') { if (document.fullscreenElement) document.exitFullscreen(); else root.requestFullscreen && root.requestFullscreen().catch(function () {}); }
+  });
+  document.addEventListener('click', function (e) {
+    if (e.button !== 0) return;
+    var t = e.target.closest('[data-trigger]');
+    if (t && stage.contains(t)) { e.preventDefault(); fire(t); t.blur(); return; }
+    var g = e.target.closest('[data-goto]');
+    if (g && stage.contains(g)) { e.preventDefault(); jump(g.getAttribute('data-goto')); g.blur(); return; }
+    if (e.target.closest('button, a, input, select, textarea, [data-noadvance]')) return;
+    next();
+  });
+
+  /* ---------- boot ---------- */
+  var m = location.hash.match(/^#([\w-]+)(?:\/(\d+))?/), i0 = 0, s0 = 0;
+  if (m) { var k0 = /^\d+$/.test(m[1]) ? parseInt(m[1], 10) - 1 : idxOf(m[1]); if (k0 >= 0 && k0 < slides.length) { i0 = k0; s0 = Math.min(parseInt(m[2] || '0', 10), steps[k0]); } }
+  st.i = i0; st.step = s0; applyState();
+  if (s0 === 0 && !params.has('noenter')) (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () { playEnters(slides[st.i]); });
+
+  /* test / rehearsal hooks */
+  window.deck = {
+    next: next, prev: prev,
+    go: function (id, step, type) { var j = /^\d+$/.test(String(id)) ? +id - 1 : idxOf(id); if (j >= 0) go(j, step == null ? 0 : Math.min(step, steps[j]), 'forward', type); },
+    final: function (id) { var j = idxOf(id); if (j >= 0) { st.i = j; st.step = steps[j]; clearNames(); applyState(); } },
+    fire: function (id) { var b = slides[st.i].querySelector('[data-trigger="' + id + '"]'); if (b) fire(b); },
+    timerSet: function (sec) { slides[st.i].querySelectorAll('[data-timer]').forEach(function (el) { var t = tState(el); t.acc = sec; if (t.running) t.start = performance.now(); paintTimer(el); }); },
+    state: function () { return { slide: slides[st.i].id, index: st.i, step: st.step, steps: steps[st.i], vt: !!st.vt }; }
+  };
+})();
+</script>
+</body>
+</html>

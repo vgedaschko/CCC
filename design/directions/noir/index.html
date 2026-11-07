@@ -1,0 +1,1032 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big D or little d?</title>
+<meta name="description" content="Noir Cinema direction: a presentation that decides itself. Erin Meyer, The Culture Map, Ch. 5.">
+<style>
+/* ==========================================================================
+   NOIR CINEMA · design tokens
+   Teal family = consensual / Big D · Amber family = top-down / little d
+   Vermilion = hanko only · Grey = the usual pattern · Off-white = neutral
+   ========================================================================== */
+@font-face{font-family:"Archivo";src:url("fonts/archivo-latin-wdth-normal.woff2") format("woff2");font-weight:100 900;font-stretch:62% 125%;font-style:normal;font-display:block}
+@font-face{font-family:"Newsreader";src:url("fonts/newsreader-latin-opsz-normal.woff2") format("woff2");font-weight:200 800;font-style:normal;font-display:block}
+@font-face{font-family:"Newsreader";src:url("fonts/newsreader-latin-opsz-italic.woff2") format("woff2");font-weight:200 800;font-style:italic;font-display:block}
+
+:root{
+  --bg:#0B0C0E;          /* graphite stage */
+  --bar:#000;            /* letterbox */
+  --ink:#F3EEE4;         /* off-white */
+  --ink-2:#C9C3B8;       /* secondary */
+  --ink-3:#ADA79E;       /* tertiary, >= 4.5:1 even on a washed-out beamer */
+  --line:rgba(243,238,228,.16);
+  --glass:rgba(243,238,228,.045);
+  --teal:#3FD8C6; --teal-2:#22B3A3; --teal-deep:#06685D; --teal-a:rgba(63,216,198,.14);
+  --amber:#FFB54A; --amber-2:#E99A2C; --amber-deep:#9A5A06; --amber-a:rgba(255,181,74,.13);
+  --grey:#96989E;
+  --verm:#D63B22;
+  --paper:#EDE6D7; --paper-ink:#1B1B1D;
+  --sans:"Archivo","Segoe UI",Arial,sans-serif;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sym:"Segoe UI Symbol","Segoe UI","DejaVu Sans",Arial,sans-serif;
+  --ease:cubic-bezier(.65,.05,.25,1);      /* camera: slow in, slow out */
+  --ease-out:cubic-bezier(.16,1,.3,1);
+}
+
+/* ---------- page & stage ---------- */
+html,body{margin:0;height:100%;background:#000;overflow:hidden}
+body{-webkit-font-smoothing:antialiased;text-rendering:geometricPrecision;user-select:none;-webkit-user-select:none;cursor:default}
+body.nocursor,body.nocursor *{cursor:none!important}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;margin:-540px 0 0 -960px;transform-origin:50% 50%;
+  overflow:hidden;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:32px;line-height:1.3;
+  font-optical-sizing:auto;font-kerning:normal}
+#stage *{box-sizing:border-box}
+:where(#stage) :where(p,h1,h2,h3,h4,ol,ul,figure,blockquote){margin:0;padding:0}
+.sr{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* light as the material: two pools of coloured light that drift between shots */
+.lights{position:absolute;inset:0;pointer-events:none;z-index:0}
+.light{position:absolute;left:0;top:0;width:1300px;height:1000px;margin:-500px 0 0 -650px;border-radius:50%;
+  background:radial-gradient(closest-side,var(--c) 0%,rgba(0,0,0,0) 100%);
+  transform:translate(var(--x,960px),var(--y,540px)) scale(var(--s,1));opacity:var(--o,1);
+  transition:transform .8s var(--ease),opacity .8s var(--ease)}
+.light.lt{--c:rgba(40,205,186,.20)}
+.light.la{--c:rgba(255,166,52,.17)}
+.light.ls{--c:rgba(255,244,222,.13)}
+#stage[data-slide="s01"]  .lt{--x:420px;--y:520px;--s:1.05}  #stage[data-slide="s01"]  .la{--x:980px;--y:640px;--s:.75}  #stage[data-slide="s01"] .ls{--o:0}
+#stage[data-slide="s04b"] .lt{--x:300px;--y:860px;--s:.85}  #stage[data-slide="s04b"] .la{--x:1500px;--y:360px;--s:.8}   #stage[data-slide="s04b"] .ls{--x:1280px;--y:540px;--s:1.1}
+#stage[data-slide="s05"]  .lt{--x:1000px;--y:860px;--s:1}   #stage[data-slide="s05"]  .la{--x:1200px;--y:430px;--s:1}    #stage[data-slide="s05"] .ls{--o:0}
+#stage[data-slide="s08a"] .lt{--x:260px;--y:700px;--s:.95}  #stage[data-slide="s08a"] .la{--x:1680px;--y:700px;--s:.95}  #stage[data-slide="s08a"] .ls{--x:960px;--y:640px;--s:.9;--o:.7}
+#stage[data-slide="s11b"] .lt{--x:600px;--y:712px;--s:.6}   #stage[data-slide="s11b"] .la{--o:0;--x:1500px;--y:600px}   #stage[data-slide="s11b"] .ls{--x:600px;--y:712px;--s:.75}
+#stage[data-slide="s11c"] .lt{--x:600px;--y:527px;--s:.7}   #stage[data-slide="s11c"] .la{--o:0;--x:1500px;--y:600px}   #stage[data-slide="s11c"] .ls{--x:600px;--y:527px;--s:.75}
+#stage[data-slide="s11d"] .lt{--x:600px;--y:342px;--s:.95}  #stage[data-slide="s11d"] .la{--o:0;--x:1500px;--y:600px}   #stage[data-slide="s11d"] .ls{--x:600px;--y:342px;--s:.8}
+#stage[data-slide="s20"]  .lt{--x:420px;--y:520px;--s:1.05}  #stage[data-slide="s20"]  .la{--x:980px;--y:640px;--s:.75}  #stage[data-slide="s20"] .ls{--x:1500px;--y:300px;--s:.8;--o:.6}
+
+/* film grain + vignette (very subtle) */
+.grain{position:absolute;inset:-80px;pointer-events:none;z-index:60;opacity:.055;mix-blend-mode:screen;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grain 1s steps(5) infinite}
+@keyframes grain{0%{transform:translate(0,0)}20%{transform:translate(-31px,17px)}40%{transform:translate(23px,-29px)}60%{transform:translate(-13px,-41px)}80%{transform:translate(37px,11px)}100%{transform:translate(0,0)}}
+.vignette{position:absolute;inset:0;pointer-events:none;z-index:0;background:radial-gradient(ellipse 75% 70% at 50% 48%,rgba(0,0,0,0) 60%,rgba(0,0,0,.5) 100%)}
+
+/* story mode: thin letterbox bars (64 px = 5.9 % of 1080 each) */
+.lb{position:absolute;left:0;right:0;height:0;background:var(--bar);z-index:40;transition:height .7s var(--ease)}
+.lb.top{top:0;box-shadow:0 1px 0 rgba(243,238,228,.07)}
+.lb.bot{bottom:0;box-shadow:0 -1px 0 rgba(243,238,228,.07)}
+#stage[data-mode="story"] .lb{height:64px}
+
+/* ---------- slides ---------- */
+.slide{position:absolute;inset:0;display:none}
+.slide.active{display:block}
+.slide > *{position:absolute}
+.crumb{left:72px;top:0;height:64px;display:flex;align-items:center;z-index:45;
+  font:640 28px/1 var(--sans);font-stretch:118%;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-2)}
+.crumb b{color:var(--ink);font-weight:700}
+.kick{font:650 28px/1.2 var(--sans);font-stretch:125%;letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
+.h1{font-family:var(--serif);font-weight:500;font-size:100px;line-height:1.02;letter-spacing:-.012em;color:var(--ink);text-shadow:0 0 50px rgba(243,238,228,.08)}
+.q{font-family:var(--serif);font-style:italic;font-weight:470;line-height:1.18;color:var(--ink);text-wrap:pretty}
+.who{display:block;margin-top:14px;font:600 28px/1.2 var(--sans);font-stretch:112%;letter-spacing:.08em;color:var(--ink-2);font-style:normal}
+.who .mono{display:inline-grid;place-items:center;width:64px;height:64px;margin-right:16px;border:2px solid var(--ink-3);border-radius:50%;
+  font:700 28px/1 var(--sans);font-stretch:100%;letter-spacing:0;color:var(--ink);vertical-align:middle}
+.teal{color:var(--teal)} .amber{color:var(--amber)}
+.ic{width:1em;height:1em;vertical-align:-.12em;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.sym{font-family:var(--sym);font-style:normal}
+.ours{font:600 28px/1 var(--sans);font-stretch:112%;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);border:1.5px solid var(--ink-3);border-radius:8px;padding:5px 9px 4px;margin-left:12px;vertical-align:.18em;font-style:normal}
+
+/* the D / d glyph pair (recurring object) */
+.glyph{font-kerning:none;white-space:nowrap;line-height:1}
+.gD{font-family:var(--sans);font-weight:860;font-stretch:125%;color:var(--teal);
+  text-shadow:0 0 28px rgba(63,216,198,.35),0 0 110px rgba(63,216,198,.32)}
+.gd{font-family:var(--serif);font-style:italic;font-weight:430;color:var(--amber);
+  text-shadow:0 0 24px rgba(255,181,74,.28),0 0 90px rgba(255,181,74,.25)}
+
+/* ---------- builds (entrance only: final state = markup) ---------- */
+[data-step],[data-auto]{opacity:0;transition:opacity .6s var(--ease-out),transform .7s var(--ease-out),clip-path .75s var(--ease-out),scale .3s ease}
+[data-step].in,[data-auto].in{opacity:1;transform:none;transition-delay:var(--d,0ms)}
+.e-wipe.in{clip-path:inset(-20% -3% -20% -3%)}
+.e-wipev{clip-path:inset(-4% -4% 100% -4%)}
+.e-wipev.in{clip-path:inset(-4% -4% -4% -4%)}
+.e-up{transform:translateY(22px)}
+.e-drop{transform:translateY(-46px)}
+.e-wipe{clip-path:inset(-20% 100% -20% -2%)}
+.e-zoom{transform:scale(.82)}
+.e-grow{transform:scaleY(0);transform-box:fill-box;transform-origin:50% 100%}
+.e-mail{transform:translate(70px,-46px)}
+.e-slam{transform:scale(1.75)}
+[data-step].e-slam.in,[data-auto].e-slam.in,.e-slam.on{transition:opacity .16s linear,transform .3s cubic-bezier(.3,1.45,.55,1)}
+[data-triggered]{opacity:0;pointer-events:none;transition:opacity .3s ease,transform .3s cubic-bezier(.3,1.45,.55,1)}
+[data-triggered].on{opacity:1;transform:none}
+.no-anim,.no-anim *{transition:none!important;animation-play-state:paused}
+
+/* ---------- shared components ---------- */
+.card{background:linear-gradient(180deg,rgba(243,238,228,.065),rgba(243,238,228,.03));border:1.5px solid rgba(243,238,228,.17);border-radius:20px;
+  box-shadow:0 30px 80px rgba(0,0,0,.45),inset 0 1px 0 rgba(243,238,228,.08)}
+.chip{display:inline-flex;align-items:center;gap:12px;border-radius:999px;padding:9px 24px 9px;border:2px solid currentColor;
+  font:650 28px/1.15 var(--sans);font-stretch:108%;letter-spacing:.06em;white-space:nowrap}
+.trig{position:absolute;height:64px;min-width:96px;padding:0 20px;border-radius:14px;cursor:pointer;display:grid;place-items:center;
+  background:rgba(0,0,0,.35);border:2px solid currentColor;transition:opacity .6s var(--ease-out),background .2s,box-shadow .2s,transform .15s}
+.trig.in{transition-delay:var(--d,0ms),0s,0s,0s}
+.trig:hover{background:rgba(243,238,228,.08)}
+.trig:active{transform:scale(.96)}
+.trig[aria-pressed="true"]{box-shadow:0 0 0 4px rgba(243,238,228,.12),0 0 26px currentColor}
+.trig.tD{color:var(--teal);font:860 36px/1 var(--sans);font-stretch:125%}
+.trig.tV{color:var(--amber);font:italic 500 36px/1 var(--serif)}
+.hotspot{position:absolute;cursor:pointer;background:none;border:0;color:var(--ink-3);font:600 28px/1 var(--sans);padding:8px 10px}
+
+/* ==========================================================================
+   S01 · title
+   ========================================================================== */
+.lockup{left:84px;top:172px;width:1010px;height:640px}
+.lockup > *{position:absolute}
+.lk-big{left:22px;top:28px;font:720 62px/1 var(--sans);font-stretch:125%;letter-spacing:.36em;color:var(--ink)}
+.lockup .gD{left:-14px;top:60px;font-size:560px}
+.lk-or{left:540px;top:92px;font:italic 440 96px/1 var(--serif);color:var(--ink-3)}
+.lk-little{left:668px;top:92px;font:italic 440 96px/1 var(--serif);color:var(--ink)}
+.lockup .gd{left:600px;top:206px;font-size:430px}
+.lk-q{left:850px;top:206px;font:400 430px/1 var(--serif);color:var(--ink-2)}
+.s01-sub{left:1160px;top:268px;width:690px;font:italic 450 80px/1.04 var(--serif);color:var(--ink)}
+.s01-credits{left:1160px;top:490px;width:690px;border-top:1.5px solid var(--line);padding-top:30px}
+.s01-credits .t1{font:650 34px/1.2 var(--sans);font-stretch:108%;color:var(--ink)}
+.s01-credits .t2{margin-top:8px;font:italic 450 34px/1.22 var(--serif);color:var(--ink-2)}
+.s01-credits .t3{margin-top:26px;font:650 28px/1.3 var(--sans);letter-spacing:.03em;color:var(--ink-2);white-space:nowrap}
+.s01-credits .t4{margin-top:8px;font:500 28px/1.35 var(--sans);color:var(--ink-2)}
+.route{left:84px;top:872px;font:560 30px/1 var(--sans);color:var(--ink-2);letter-spacing:.01em;display:flex;gap:18px;align-items:center}
+.route i{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--ink-3)}
+.axis{left:84px;top:944px;width:1752px;height:90px}
+.axis .ln{position:absolute;left:0;right:0;top:0;height:4px;border-radius:2px;background:linear-gradient(90deg,var(--teal),var(--grey) 50%,var(--amber))}
+.axis .end{position:absolute;top:26px;font:650 30px/1 var(--sans);font-stretch:112%;letter-spacing:.04em}
+.axis .end.l{left:0;color:var(--teal)} .axis .end.r{right:0;color:var(--amber)}
+.axis .tile{position:absolute;top:-22px;width:6px;height:48px;border-radius:3px;background:var(--ink-2);box-shadow:0 0 18px rgba(243,238,228,.35)}
+
+/* ==========================================================================
+   S04b · Decision #2
+   ========================================================================== */
+.rules{left:64px;top:100px;width:576px;padding:30px 34px 30px}
+.rules h3{font:760 34px/1 var(--sans);font-stretch:125%;letter-spacing:.14em;color:var(--ink)}
+.rules .sub{margin-top:10px;font:italic 450 30px/1.1 var(--serif);color:var(--ink-2)}
+.rules ol{list-style:none;margin-top:20px}
+.rules li{display:grid;grid-template-columns:58px 1fr;align-items:start;font:500 29px/1.26 var(--sans);color:var(--ink);padding:7px 0}
+.num{display:inline-grid;place-items:center;width:42px;height:42px;border-radius:50%;border:2px solid var(--ink-2);font:700 28px/1 var(--sans);color:var(--ink);margin-top:-4px}
+.live{left:64px;top:588px;width:600px;font:500 30px/1.2 var(--sans);color:var(--ink-2);white-space:nowrap}
+.live b{font-weight:780;letter-spacing:.03em;color:var(--ink)}
+.live .rec{display:inline-block;width:14px;height:14px;border-radius:50%;background:var(--teal);margin-right:14px;vertical-align:.08em;box-shadow:0 0 14px var(--teal);animation:rec 1.6s ease-in-out infinite}
+@keyframes rec{50%{opacity:.35}}
+.timer{left:64px;top:700px;width:560px;height:240px}
+.timer > *{position:absolute}
+.t-read{left:-6px;top:0;font:720 132px/1 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--teal);text-shadow:0 0 40px rgba(63,216,198,.35)}
+.t-bar{left:0;top:160px;width:540px;height:30px;border-radius:4px;background:var(--teal-a);overflow:hidden;box-shadow:inset 0 0 0 1.5px rgba(63,216,198,.5)}
+.t-fill{position:absolute;inset:0;background:linear-gradient(90deg,var(--teal-2),var(--teal));transform-origin:0 50%;transform:scaleX(0)}
+.t-bar i{position:absolute;top:0;bottom:0;width:2px;background:rgba(11,12,14,.85)}
+.t-done{left:336px;top:8px;font:italic 500 34px/1.1 var(--serif);color:var(--amber);opacity:0;transition:opacity .4s}
+.timer.done .t-done{opacity:1}
+.timer.done .t-read{color:var(--amber);text-shadow:0 0 40px rgba(255,181,74,.3)}
+.timer.ghost{opacity:1;transition:opacity .25s}
+.timer.in ~ .timer.ghost{opacity:0}
+.t-lbl2{left:400px;top:756px;font:600 28px/1.2 var(--sans);color:var(--ink-2);white-space:nowrap}
+.t-ticks{left:64px;top:902px;width:540px;height:34px}
+.t-ticks span{position:absolute;top:0;transform:translateX(-50%);font:500 28px/1 var(--sans);font-variant-numeric:tabular-nums;color:var(--ink-3)}
+.t-ticks span:last-child{transform:translateX(-100%)}
+.clk-td{left:64px;top:650px;width:13.5px;height:30px;border-radius:2px;background:var(--amber);box-shadow:0 0 16px rgba(255,181,74,.55)}
+.t-lbl1{left:96px;top:648px;font:650 28px/1.2 var(--sans);color:var(--amber);white-space:nowrap}
+.cover{left:44px;top:694px;width:604px;height:256px;border-radius:20px;background:#0B0C0E;border:2px solid currentColor;display:grid;place-content:center;text-align:center;z-index:5}
+.cover.cD{color:var(--teal);box-shadow:0 0 60px rgba(63,216,198,.18)} .cover.cV{color:var(--amber);box-shadow:0 0 60px rgba(255,181,74,.16)}
+.cover b{display:block;font:italic 460 96px/1 var(--serif);color:var(--ink)}
+.cover small{display:block;margin-top:14px;font:600 28px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:currentColor;visibility:hidden}
+.cover small.has{visibility:visible}
+
+.mail{left:704px;top:96px;width:1152px;padding:24px 34px 26px}
+.mail .tag{display:flex;align-items:center;gap:14px;font:600 28px/1 var(--sans);font-stretch:108%;letter-spacing:.04em;color:var(--ink-2)}
+.mail .tag .ic{width:34px;height:34px;stroke-width:1.8;color:var(--ink-2)}
+.mail .body{margin-top:14px;font:italic 450 40px/1.22 var(--serif);color:var(--ink)}
+.mail .body b{font:760 33px/1 var(--sans);font-stretch:116%;letter-spacing:.06em;font-style:normal;color:var(--ink)}
+.scn{top:416px;width:540px;height:248px;padding:28px 32px}
+.scn.T{left:704px} .scn.M{left:1316px}
+.scn h4{margin:0;font:720 30px/1 var(--sans);font-stretch:125%;letter-spacing:.16em;color:var(--ink)}
+.scn .mono{position:absolute;right:26px;top:16px;font:860 104px/1 var(--sans);font-stretch:125%;color:transparent;-webkit-text-stroke:2px rgba(243,238,228,.22)}
+.scn p{position:absolute;left:32px;right:150px;bottom:26px;font:480 32px/1.28 var(--sans);color:var(--ink);text-wrap:balance}
+.scn p,.scn .mono{transition:opacity .3s ease}
+.slide:has(.stamp.on[data-triggered="dT"],.stamp.on[data-triggered="vT"]) .scn.T :is(p,.mono),
+.slide:has(.stamp.on[data-triggered="dM"],.stamp.on[data-triggered="vM"]) .scn.M :is(p,.mono){opacity:.2}
+.fict{right:64px;top:698px;font:italic 450 32px/1 var(--serif);color:var(--ink-3)}
+.stamp{z-index:6;display:grid;place-items:center;align-content:center;text-align:center;border-radius:18px;background:#0A0B0D;border:4px solid currentColor;
+  box-shadow:0 0 0 5px rgba(8,9,11,.92),0 0 0 7px currentColor,0 20px 60px rgba(0,0,0,.6)}
+.stamp.sD{width:420px;height:140px;color:var(--teal);rotate:-5deg;top:498px;display:flex;justify-content:center;gap:22px;align-items:center}
+.stamp.sD b{font:860 104px/.86 var(--sans);font-stretch:125%;text-shadow:0 0 30px rgba(63,216,198,.45)}
+.stamp.sD span{font:italic 500 38px/1.02 var(--serif);color:var(--teal);text-align:left}
+.stamp.sV{width:420px;height:152px;color:var(--amber);rotate:4deg;top:492px}
+.stamp.sV b{font:860 60px/.9 var(--sans);font-stretch:125%;letter-spacing:.14em;margin-right:-.14em}
+.stamp.sV span{margin-top:10px;font:560 28px/1.16 var(--sans);color:var(--amber)}
+.flip{left:900px;top:298px;width:760px;height:130px;z-index:7}
+.flip svg{position:absolute;inset:0;overflow:visible}
+.flip .pill{position:absolute;left:50%;top:6px;transform:translateX(-50%);padding:6px 22px 9px;border-radius:999px;background:#0B0C0E;border:2px solid var(--amber);
+  font:italic 500 38px/1 var(--serif);color:var(--amber);white-space:nowrap;box-shadow:0 0 30px rgba(255,181,74,.25)}
+.mq{left:704px;top:780px;width:1152px}
+.mq .q{font-size:54px}
+
+/* bridge (S04z): everything but the two clocks fades out before the morph */
+.slide.bridging > *:not([data-keep]):not(.crumb){opacity:0!important;transition:opacity .38s ease!important}
+.slide.bridging .t-read,.slide.bridging .t-done{opacity:0!important;transition:opacity .38s ease!important}
+.slide.bridging .timer{opacity:1!important}
+.slide.bridging .t-fill{transform:scaleX(1)!important;transition:transform .42s var(--ease)!important}
+
+/* ==========================================================================
+   S05 · definition
+   ========================================================================== */
+.s05-kick{left:72px;top:92px;white-space:nowrap}
+.s05-kick span{font-weight:500;font-stretch:100%;letter-spacing:.01em;text-transform:none;color:var(--ink-2)}
+.s05-h{left:72px;top:136px}
+.rowlab{font:780 42px/1 var(--sans);font-stretch:125%;letter-spacing:.12em}
+.rl-a{left:72px;top:316px;color:var(--amber)} .rl-b{left:72px;top:676px;color:var(--teal)}
+.lbl{font:560 28px/1.2 var(--sans);color:var(--ink-2);white-space:nowrap}
+.lb-a{left:72px;top:372px} .lb-b{left:72px;top:732px}
+.def{width:480px;font-size:37px}
+.df-a{left:72px;top:422px} .df-b{left:72px;top:782px}
+.mn{left:72px}
+.mn-a{top:564px;color:var(--amber)} .mn-b{top:928px;color:var(--teal)}
+.mn em{font-family:var(--serif);font-style:italic;font-weight:500;letter-spacing:0;text-transform:none;font-size:32px}
+.seg{height:30px;border-radius:3px}
+.sg-a{left:600px;top:500px;width:180px;background:var(--amber);box-shadow:0 0 22px rgba(255,181,74,.4)}
+.sg-b{left:600px;top:860px;width:760px;background:linear-gradient(90deg,var(--teal-2),var(--teal));box-shadow:0 0 22px rgba(63,216,198,.35)}
+.seglab{font:560 28px/1.25 var(--sans);color:var(--ink-2);text-wrap:balance}
+.sl-a1{left:600px;top:548px} .sl-b1{left:600px;top:908px}
+.sl-a2{left:868px;top:548px;width:980px} .sl-b2{left:1560px;top:908px;width:300px}
+.s05 .gd{left:792px;top:330px;font-size:250px}
+.s05 .gD{left:1366px;top:722px;font-size:196px}
+.impl{overflow:visible}
+.im-a{left:860px;top:420px;width:1000px;height:120px}
+.im-b{left:1556px;top:840px;width:300px;height:70px}
+.loop{left:0;top:0;width:96px;height:96px;overflow:visible}
+.lp1{left:1010px;top:418px} .lp2{left:1320px;top:418px} .lp3{left:1630px;top:418px}
+.flipnote{left:984px;top:374px;font:italic 500 32px/1 var(--serif);color:var(--amber);white-space:nowrap}
+.ann{font-family:var(--serif);font-style:italic;font-weight:470;font-size:37px;line-height:1.15;color:var(--ink);white-space:nowrap}
+.an-a{left:954px;top:296px}
+.an-b{right:520px;top:682px;text-align:right}
+.s05-foot{left:72px;top:1012px;font:500 28px/1.2 var(--sans);color:var(--ink-3);white-space:nowrap}
+.gest{right:72px;top:1000px;display:flex;align-items:center;gap:16px;font:560 28px/1.2 var(--sans);color:var(--ink-2);white-space:nowrap}
+.gest svg{width:46px;height:52px;fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+
+/* ==========================================================================
+   S08a · Fig. 5.3
+   ========================================================================== */
+.s08-h{left:72px;top:124px}
+.map-svg{left:0;top:0;width:1920px;height:1080px;overflow:visible}
+.map-axis{stroke-width:5;stroke-linecap:round}
+.map-dot{fill:var(--ink);stroke:#0B0C0E;stroke-width:3}
+.bell{fill:var(--c);fill-opacity:.09;stroke:var(--c);stroke-opacity:.8;stroke-width:2.5;stroke-linejoin:round}
+.cty{transform:translateX(-50%);font:560 38px/1 var(--sans);color:var(--ink);white-space:nowrap;text-shadow:0 0 12px #0B0C0E,0 0 24px #0B0C0E}
+.cty.e-up{transform:translate(-50%,22px)}
+.cty.e-up.in{transform:translateX(-50%)}
+.cty.up{top:536px} .cty.lo{top:604px}
+.m-end{top:726px;font:700 36px/1 var(--sans);font-stretch:112%;letter-spacing:.04em}
+.m-end.l{left:76px;color:var(--teal)} .m-end.r{right:76px;color:var(--amber)}
+.s08-line{left:110px;top:812px;font-size:50px}
+.s08-chip{left:110px;top:906px;color:var(--ink-2)}
+.s08-chip b{color:var(--ink);font-weight:700}
+.s08-src{right:76px;top:920px;font:500 28px/1 var(--sans);color:var(--ink-3)}
+
+/* ==========================================================================
+   S11b-d · ringi & nemawashi
+   ========================================================================== */
+.s11-h{left:72px;top:96px;font-size:78px}
+.pyr{left:0;top:0;width:1920px;height:1080px;overflow:visible}
+.tier{fill:rgba(243,238,228,.035);stroke:rgba(243,238,228,.32);stroke-width:2}
+.tier.lit{fill:rgba(63,216,198,.10);stroke:var(--teal);stroke-width:2.5}
+.tl{font:520 30px/1 var(--sans);color:var(--ink-2);text-align:right;white-space:nowrap}
+.tl.mid{font-weight:780;color:var(--ink)}
+.tl.lit{color:var(--teal)}
+.tl1{right:1520px;top:327px} .tl2{right:1508px;top:512px} .tl3{right:1621px;top:697px} .tl4{right:1733px;top:882px}
+.trail{left:599px;width:3px;border-radius:2px;background:linear-gradient(0deg,rgba(63,216,198,.0),rgba(63,216,198,.85))}
+.ringi{left:420px;width:360px;height:256px;border-radius:8px;background:var(--paper);color:var(--paper-ink);padding:18px 22px;z-index:3;
+  box-shadow:0 0 0 1px rgba(0,0,0,.3),0 30px 70px rgba(0,0,0,.65),0 0 120px rgba(255,244,222,.12)}
+.ringi .rt{font:italic 560 38px/1 var(--serif);color:var(--paper-ink)}
+.ringi .rs{margin-top:4px;font:560 28px/1.1 var(--sans);color:#3B3A37}
+.ringi .ln{height:8px;border-radius:4px;background:#C9C0AE;margin-top:12px}
+.ringi .ln.s{width:62%}
+.seals{position:absolute;left:22px;right:22px;bottom:18px;display:flex;gap:8px}
+.seals > span{position:relative;width:46px;height:46px;border:1.5px solid #B9AF9B;border-radius:4px}
+.hk{position:absolute;inset:3px;border-radius:50%;border:3px solid var(--verm);display:grid;place-items:center;rotate:var(--r,0deg)}
+.hk::before{content:"";position:absolute;inset:6px;border-radius:50%;
+  background:radial-gradient(circle at 38% 34%,rgba(214,59,34,.78),rgba(214,59,34,.95) 55%,rgba(196,48,28,.86))}
+.hk.e-zoom{transform:scale(1.9)}
+.hk.e-zoom.in{transform:none}
+.hk.hD{inset:-7px;border-color:var(--teal-deep);border-width:3.5px;background:rgba(10,127,114,.08);z-index:2}
+.hk.hD::before{display:none}
+.hk.hD b{font:860 30px/1 var(--sans);font-stretch:125%;color:var(--teal-deep)}
+.ringi.p1{top:584px} .ringi.p2{top:399px} .ringi.p3{top:214px}
+.mori{left:1100px;top:440px;width:760px}
+.mori .q{font-size:58px;text-wrap:balance}
+.meyerD{left:1100px;top:250px;width:760px;display:flex;gap:26px;align-items:center}
+.meyerD .seal{flex:none;width:92px;height:92px;border-radius:50%;border:3px solid var(--teal);display:grid;place-items:center;font:860 50px/1 var(--sans);font-stretch:125%;color:var(--teal);box-shadow:0 0 30px rgba(63,216,198,.3)}
+.meyerD .q{font-size:50px}
+.meyerD .who{margin-top:6px}
+.nema{left:1100px;top:404px;width:760px;height:250px}
+.nema svg{position:absolute;left:0;top:0;width:190px;height:250px;overflow:visible}
+.nema .tx{position:absolute;left:226px;top:44px}
+.nema .w{font:italic 480 66px/1 var(--serif);color:var(--ink)}
+.nema .eq{margin-top:16px;font:italic 470 50px/1.05 var(--serif);color:var(--ink)}
+.nema .eq .sans{font:500 44px/1 var(--sans);color:var(--ink-2);font-style:normal;margin-right:10px}
+.sheldon{left:1100px;top:684px;width:760px}
+.sheldon .q{font-size:37px;text-wrap:balance}
+.sheldon .q + .q{margin-top:18px}
+
+/* ==========================================================================
+   S20 · close (bookend to S01)
+   ========================================================================== */
+.l20 .gD{left:-14px;top:60px;font-size:560px}
+.l20 .lk-qm{left:500px;top:206px;font:400 430px/1 var(--serif);color:var(--ink-2)}
+.l20 .gd{left:748px;top:206px;font-size:430px}
+.prop{left:1150px;top:128px;width:706px;padding:24px 32px 28px}
+.prop .tag{font:650 28px/1 var(--sans);font-stretch:108%;letter-spacing:.04em;color:var(--ink-2)}
+.prop .body{margin-top:14px;font:italic 450 42px/1.18 var(--serif);color:var(--ink)}
+.prop .body b{font:760 34px/1 var(--sans);font-stretch:116%;letter-spacing:.08em;font-style:normal}
+.t20{left:1150px;top:338px}
+.st20{left:1560px;top:170px}
+.stand{left:1150px;top:436px;width:706px;font:650 38px/1.2 var(--sans);color:var(--ink)}
+.three{left:1150px;top:508px;width:706px;font:500 30px/1.3 var(--sans);color:var(--ink-2)}
+.three b{font-weight:720;font-size:38px;font-stretch:108%}
+.final{left:1150px;top:628px;width:720px;font-size:86px;line-height:1}
+.final .gD2{font-family:var(--sans);font-weight:860;font-stretch:125%;font-style:normal;color:var(--teal);font-size:.86em}
+.final .gd2{font-style:italic;color:var(--amber)}
+.qa{left:1150px;top:922px;font:italic 470 44px/1 var(--serif);color:var(--ink-2)}
+.qa .gd2{color:var(--amber)}
+.hub{right:30px;bottom:24px}
+
+/* ---------- overlays ---------- */
+#black{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .45s ease;z-index:100}
+#black.on{opacity:1;pointer-events:auto}
+#jump{position:fixed;right:28px;bottom:22px;z-index:101;padding:10px 18px;border-radius:12px;background:rgba(20,22,25,.92);color:#F3EEE4;
+  font:600 28px/1 "Archivo",sans-serif;letter-spacing:.06em;opacity:0;transition:opacity .2s}
+#jump.on{opacity:1}
+
+/* ---------- transitions (View Transitions API) ---------- */
+::view-transition-group(*){animation-duration:.8s;animation-timing-function:var(--ease)}
+::view-transition-old(root){animation:vt-out .42s cubic-bezier(.4,0,1,1) both}
+::view-transition-new(root){animation:vt-in .55s .25s cubic-bezier(0,0,.2,1) both}
+html.vt-fade::view-transition-old(root){animation:vt-out-push .5s cubic-bezier(.4,0,1,1) both}
+html.vt-fade::view-transition-new(root){animation:vt-in-pull .7s .1s cubic-bezier(.16,1,.3,1) both}
+@keyframes vt-out{to{opacity:0}}
+@keyframes vt-in{from{opacity:0}}
+@keyframes vt-out-push{to{opacity:0;transform:scale(1.03)}}
+@keyframes vt-in-pull{from{opacity:0;transform:scale(.985)}}
+/* clock bars stretch into the timelines (non-uniform scale) */
+::view-transition-old(m-clock-td),::view-transition-new(m-clock-td),
+::view-transition-old(m-clock-cons),::view-transition-new(m-clock-cons),
+::view-transition-old(m-trail),::view-transition-new(m-trail){height:100%}
+/* labels: keep natural size, quick hand-over */
+::view-transition-old(m-lbl1),::view-transition-new(m-lbl1),::view-transition-old(m-lbl2),::view-transition-new(m-lbl2),
+::view-transition-old(m-crumb),::view-transition-new(m-crumb),::view-transition-old(m-mori),::view-transition-new(m-mori){width:auto;height:auto}
+::view-transition-old(m-lbl1),::view-transition-old(m-lbl2){animation-name:xf-out}
+::view-transition-new(m-lbl1),::view-transition-new(m-lbl2){animation-name:xf-in}
+/* a morph pair whose words change hands over in sequence instead of overprinting */
+::view-transition-old(*.swap){animation-name:xf-out}
+::view-transition-new(*.swap){animation-name:xf-in}
+@keyframes xf-out{0%{opacity:1}45%,100%{opacity:0}}
+@keyframes xf-in{0%,50%{opacity:0}100%{opacity:1}}
+
+/* crossfade fallback when View Transitions are unavailable */
+.slide.leaving{display:block;animation:fb-out .45s ease forwards;pointer-events:none}
+.slide.entering{animation:fb-in .6s .15s ease both}
+@keyframes fb-out{to{opacity:0}}
+@keyframes fb-in{from{opacity:0}}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition:none!important;animation:none!important}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+}
+
+/* static export: every slide in its final state, one per page */
+@media print{
+  @page{size:1920px 1080px;margin:0}
+  html,body{height:auto;overflow:visible;background:#0B0C0E}
+  #stage{position:relative;left:0;top:0;margin:0;transform:none!important;height:auto;overflow:visible;background:none}
+  .lights,.grain,.vignette,.lb,#black,#jump{display:none}
+  .slide{display:block!important;position:relative;width:1920px;height:1080px;overflow:hidden;page-break-after:always;break-after:page;background:var(--bg);
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .slide:last-of-type{page-break-after:auto;break-after:auto}
+  .slide.story::before,.slide.story::after{content:"";position:absolute;left:0;right:0;height:64px;background:#000;z-index:40}
+  .slide.story::before{top:0} .slide.story::after{bottom:0}
+  [data-step],[data-auto]{opacity:1!important;transform:none!important;clip-path:none!important}
+  .cty.e-up{transform:translateX(-50%)!important}
+  [data-print]{opacity:1!important}
+  .trig,.hotspot,.timer:not(.ghost){display:none}
+}
+</style>
+</head>
+<body>
+<div id="stage" data-slide="s01" data-mode="day">
+  <div class="lights" aria-hidden="true"><div class="light lt"></div><div class="light la"></div><div class="light ls"></div></div>
+  <div class="vignette" aria-hidden="true"></div>
+  <div class="lb top" aria-hidden="true"></div>
+  <div class="lb bot" aria-hidden="true"></div>
+
+<!-- ======================================================= S01 -->
+<section class="slide" id="s01" data-transition="fade" data-mode="day" aria-label="Big D or little d?">
+  <h1 class="sr">BIG D or little d?</h1>
+  <div class="lockup" aria-hidden="true">
+    <span class="lk-big">BIG</span>
+    <span class="glyph gD" data-morph="D">D</span>
+    <span class="lk-or">or</span><span class="lk-little">little</span>
+    <span class="glyph gd" data-morph="d">d</span>
+    <span class="lk-q">?</span>
+  </div>
+  <p class="s01-sub">Who decides —<br>and how?</p>
+  <div class="s01-credits">
+    <p class="t1">Erin Meyer · The Culture Map</p>
+    <p class="t2">Ch. 5 “Big D or Little d: Who Decides, and How?” (the Deciding scale)</p>
+    <p class="t3">[MEMBER 1] · [MEMBER 2] · [MEMBER 3]</p>
+    <p class="t4">Cross-Cultural Communication ·<br>Prof. Sabrina Hegner · HSB · 06.01.2027</p>
+  </div>
+  <p class="route">Definition <i></i> Countries <i></i> Recommendations <i></i> Our cultures <i></i> Management implications</p>
+  <div class="axis" data-morph="axis">
+    <div class="ln"></div>
+    <span class="tile" data-morph="tile-mu" style="left:592px" title="Munich"></span>
+    <span class="tile" data-morph="tile-ny" style="left:980px" title="New York"></span>
+    <span class="end l">Consensual</span><span class="end r">Top-down</span>
+  </div>
+</section>
+
+<!-- ======================================================= S04b -->
+<section class="slide story" id="s04b" data-transition="fade" data-mode="story" data-bridge aria-label="Decision #2: the room decides">
+  <p class="crumb" data-morph="crumb">I · <b>&nbsp;Decision #2</b></p>
+
+  <div class="card rules" data-morph="rulecard">
+    <h3>HOW WE DECIDE</h3>
+    <p class="sub">(agreed before we decide)</p>
+    <ol>
+      <li><span class="num">1</span><span>All agree <svg class="ic" viewBox="0 0 24 24"><path d="M3 12h17M14 6l6 6-6 6"/></svg> stand up (or both hands up)</span></li>
+      <li><span class="num">2</span><span>Seated = a concern, not a veto</span></li>
+      <li><span class="num">3</span><span>Deadline: 2:00</span></li>
+      <li><span class="num">4</span><span>No unanimity? Majority vote. Everyone commits.</span></li>
+      <li><span class="num">5</span><span>Then: no reopening.</span></li>
+    </ol>
+  </div>
+
+  <p class="live"><span class="rec" aria-hidden="true"></span><b>STAND</b> = agree · <b>SEATED</b> = concern</p>
+
+  <!-- the parked top-down clock from Decision #1 -->
+  <div class="clk-td" data-morph="clock-td" data-keep></div>
+  <p class="t-lbl1" data-morph="lbl1" data-keep>#1 <span class="sym">≈</span> 3 s</p>
+
+  <!-- consensus clock: static face, then the live countdown on click 1 -->
+  <div class="timer" data-step="1" data-timer="120" data-keep>
+    <div class="t-read" data-timer-text>2:00</div>
+    <div class="t-done">time · rule <span class="num" style="border-color:var(--amber);color:var(--amber);vertical-align:-.1em">4</span></div>
+    <div class="t-bar" data-morph="clock-cons"><div class="t-fill" data-timer-fill></div><i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i></div>
+  </div>
+  <div class="timer ghost" data-ghost aria-hidden="true">
+    <div class="t-read">2:00</div>
+    <div class="t-bar"><i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i></div>
+  </div>
+  <p class="t-lbl2" data-morph="lbl2" data-keep>#2 · the room</p>
+  <div class="t-ticks" aria-hidden="true"><span style="left:25%">0:30</span><span style="left:50%">1:00</span><span style="left:75%">1:30</span><span style="left:100%">2:00</span></div>
+
+  <div class="cover cD" data-triggered="dT dM"><b>decided</b><small data-elapsed>after <span>0:00</span></small></div>
+  <div class="cover cV" data-triggered="vT vM"><b>decided</b><small data-elapsed>after <span>0:00</span></small></div>
+
+  <div class="card mail e-mail" data-morph="mail" data-auto="100">
+    <p class="tag"><svg class="ic" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6.5L20.5 7"/></svg>our email · Per-style</p>
+    <p class="body">Hey class — I thought we could practise <b>SCENARIO T</b> at the end of Part I. What do you think?</p>
+  </div>
+
+  <div class="card scn T e-up" data-morph="cardT" data-auto="420">
+    <h4>SCENARIO T</h4><span class="mono" aria-hidden="true">T</span>
+    <p>Your proposal needs approval at Tokyo HQ. In four weeks.</p>
+  </div>
+  <div class="card scn M e-up" data-morph="cardM" data-auto="540">
+    <h4>SCENARIO M</h4><span class="mono" aria-hidden="true">M</span>
+    <p>Your German–American team must pick a supplier. By Friday.</p>
+  </div>
+
+  <button class="trig tD" style="left:704px;top:684px" data-trigger="dT" data-auto="760" aria-label="Stamp D on scenario T">D</button>
+  <button class="trig tV" style="left:820px;top:684px" data-trigger="vT" data-auto="760" aria-label="Stamp vote on scenario T">vote</button>
+  <button class="trig tD" style="left:1316px;top:684px" data-trigger="dM" data-auto="760" aria-label="Stamp D on scenario M">D</button>
+  <button class="trig tV" style="left:1432px;top:684px" data-trigger="vM" data-auto="760" aria-label="Stamp vote on scenario M">vote</button>
+  <p class="fict" data-auto="760">fictional exercises</p>
+
+  <div class="stamp sD e-slam" style="left:764px" data-triggered="dT"><b>D</b><span>no more<br>discussion!</span></div>
+  <div class="stamp sD e-slam" style="left:1376px" data-triggered="dM"><b>D</b><span>no more<br>discussion!</span></div>
+  <div class="stamp sV e-slam" style="left:764px" data-triggered="vT"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+  <div class="stamp sV e-slam" style="left:1376px" data-triggered="vM"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+
+  <div class="flip" data-step="2">
+    <svg viewBox="0 0 760 130" aria-hidden="true">
+      <defs><marker id="ah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#FFB54A"/></marker></defs>
+      <path d="M74 122 C 150 34, 610 34, 686 122" fill="none" stroke="#FFB54A" stroke-width="4" stroke-linecap="round" marker-start="url(#ah)" marker-end="url(#ah)"/>
+    </svg>
+    <span class="pill">new data?</span>
+  </div>
+
+  <blockquote class="mq e-up" data-step="3">
+    <p class="q">“They casually change the decision every week…”</p>
+    <span class="who"><span class="mono">MM</span>M. Müller · German director</span>
+  </blockquote>
+</section>
+
+<!-- ======================================================= S05 -->
+<section class="slide s05" id="s05" data-transition="morph" data-mode="day" aria-label="What you just felt has a name">
+  <p class="crumb" data-morph="crumb">I · <b>&nbsp;Definition</b></p>
+  <p class="kick s05-kick">The Deciding scale <span>· Consensual <svg class="ic" viewBox="0 0 24 24" style="width:1.1em"><path d="M2 12h20M7 7l-5 5 5 5M17 7l5 5-5 5"/></svg> Top-down · who decides, and how?</span></p>
+  <h2 class="h1 s05-h">What you just felt has a name.</h2>
+
+  <!-- TOP-DOWN row (Decision #1 came first) -->
+  <p class="rowlab rl-a">TOP-DOWN</p>
+  <p class="lbl lb-a" data-morph="lbl1">Decision #1 · one person · <span class="sym">≈</span> 3 s</p>
+  <p class="q def df-a e-up" data-step="2">“Decisions are made by individuals (usually the boss).”</p>
+  <div class="seg sg-a" data-morph="clock-td"></div>
+  <p class="seglab sl-a1">Discussion</p>
+  <span class="glyph gd e-drop" data-morph="d" data-auto="80">d</span>
+  <svg class="impl im-a e-wipe" data-step="1" viewBox="0 0 1000 120" aria-hidden="true">
+    <defs><marker id="ahA" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 10 5 0 10z" fill="#FFB54A"/></marker></defs>
+    <line x1="4" y1="95" x2="968" y2="95" stroke="#FFB54A" stroke-width="7" stroke-linecap="round" marker-end="url(#ahA)"/>
+  </svg>
+  <svg class="loop lp1" data-step="1" style="--d:250ms" viewBox="0 0 96 96" aria-hidden="true"><use href="#loopIcon"/></svg>
+  <svg class="loop lp2" data-step="1" style="--d:450ms" viewBox="0 0 96 96" aria-hidden="true"><use href="#loopIcon"/></svg>
+  <svg class="loop lp3" data-step="1" style="--d:650ms" viewBox="0 0 96 96" aria-hidden="true"><use href="#loopIcon"/></svg>
+  <p class="flipnote" data-step="1" style="--d:350ms">our CEO’s flip</p>
+  <p class="seglab sl-a2 e-up" data-step="1">Implementation (more discussion, possible revisiting and altering of decision)</p>
+  <p class="ann an-a e-up" data-step="2">“each decision is also flexible—a decision with a lowercase <span class="amber">d</span>”</p>
+  <p class="chip mn mn-a e-up" data-step="4">FAST IN · SLOW OUT <em>(flexible)</em></p>
+
+  <!-- CONSENSUAL row -->
+  <p class="rowlab rl-b">CONSENSUAL</p>
+  <p class="lbl lb-b" data-morph="lbl2">Decision #2 · consensus rules · minutes</p>
+  <p class="q def df-b e-up" data-step="3">“Decisions are made in groups through unanimous agreement.”</p>
+  <div class="seg sg-b" data-morph="clock-cons"></div>
+  <p class="seglab sl-b1">Discussion</p>
+  <span class="glyph gD e-drop" data-morph="D" data-auto="220">D</span>
+  <svg class="impl im-b e-wipe" data-step="1" viewBox="0 0 300 70" aria-hidden="true">
+    <defs><marker id="ahB" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0 0 10 5 0 10z" fill="#3FD8C6"/></marker></defs>
+    <line x1="6" y1="35" x2="262" y2="35" stroke="#3FD8C6" stroke-width="7" stroke-linecap="round" marker-end="url(#ahB)"/>
+  </svg>
+  <p class="seglab sl-b2 e-up" data-step="1">Implementation<br>(no more discussion!)</p>
+  <p class="ann an-b e-up" data-step="3">“fixed and inflexible—a decision with a capital <span class="teal" style="font-family:var(--sans);font-style:normal;font-weight:800;font-stretch:125%">D</span>”</p>
+  <p class="chip mn mn-b e-up" data-step="4">SLOW IN · FAST OUT</p>
+
+  <p class="s05-foot">Meyer (2014), Figs. 5.1–5.3 · mnemonic chips: <i>ours</i></p>
+  <p class="gest e-up" data-step="5">Gesture key:
+    <svg viewBox="0 0 46 52" aria-hidden="true" style="stroke:var(--teal)"><circle cx="23" cy="10" r="5.5"/><path d="M23 16v18M23 34l-7 14M23 34l7 14M23 21 9 5M23 21 37 5"/></svg>
+    Big D = both arms up ·
+    <svg viewBox="0 0 46 52" aria-hidden="true" style="stroke:var(--amber)"><rect x="12" y="24" width="20" height="20" rx="6"/><path d="M19 24V7.5a3 3 0 0 1 6 0V24"/></svg>
+    little d = one finger</p>
+</section>
+
+<!-- ======================================================= S08a -->
+<section class="slide" id="s08a" data-transition="fade" data-mode="day" aria-label="Where does your culture decide?">
+  <p class="crumb" data-morph="crumb">I · <b>&nbsp;Classification</b></p>
+  <h2 class="h1 s08-h">Where does your culture decide?</h2>
+<svg class="map-svg" viewBox="0 0 1920 1080" aria-hidden="true">
+<defs><linearGradient id="axisGrad" x1="0" x2="1"><stop offset="0" stop-color="#3FD8C6"/><stop offset=".5" stop-color="#96989E"/><stop offset="1" stop-color="#FFB54A"/></linearGradient></defs>
+<g class="bells">
+<path class="bell e-grow" data-step="2" style="--d:330ms;--c:#49D1C1" d="M-99 688 L-82 687 L-65 685 L-48 682 L-31 678 L-14 671 L3 662 L20 650 L37 634 L54 615 L71 592 L88 566 L106 537 L123 508 L140 480 L157 456 L174 437 L191 424 L208 420 L225 424 L242 437 L259 456 L276 480 L293 508 L310 537 L327 566 L344 592 L362 615 L379 634 L396 650 L413 662 L430 671 L447 678 L464 682 L481 685 L498 687 L515 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:275ms;--c:#53C9BD" d="M-1 688 L17 687 L34 685 L51 682 L68 678 L85 671 L102 662 L119 650 L136 634 L153 615 L170 592 L187 566 L204 537 L221 508 L238 480 L255 456 L273 437 L290 424 L307 420 L324 424 L341 437 L358 456 L375 480 L392 508 L409 537 L426 566 L443 592 L460 615 L477 634 L494 650 L511 662 L529 671 L546 678 L563 682 L580 685 L597 687 L614 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:220ms;--c:#61BFB6" d="M135 688 L152 687 L169 685 L186 682 L203 678 L220 671 L237 662 L254 650 L271 634 L288 615 L305 592 L322 566 L339 537 L357 508 L374 480 L391 456 L408 437 L425 424 L442 420 L459 424 L476 437 L493 456 L510 480 L527 508 L544 537 L561 566 L578 592 L595 615 L613 634 L630 650 L647 662 L664 671 L681 678 L698 682 L715 685 L732 687 L749 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:165ms;--c:#7AADAB" d="M378 688 L395 687 L412 685 L429 682 L446 678 L463 671 L480 662 L497 650 L514 634 L532 615 L549 592 L566 566 L583 537 L600 508 L617 480 L634 456 L651 437 L668 424 L685 420 L702 424 L719 437 L736 456 L753 480 L770 508 L788 537 L805 566 L822 592 L839 615 L856 634 L873 650 L890 662 L907 671 L924 678 L941 682 L958 685 L975 687 L992 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:110ms;--c:#8E9EA2" d="M577 688 L594 687 L611 685 L628 682 L645 678 L662 671 L680 662 L697 650 L714 634 L731 615 L748 592 L765 566 L782 537 L799 508 L816 480 L833 456 L850 437 L867 424 L884 420 L901 424 L918 437 L936 456 L953 480 L970 508 L987 537 L1004 566 L1021 592 L1038 615 L1055 634 L1072 650 L1089 662 L1106 671 L1123 678 L1140 682 L1157 685 L1174 687 L1192 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:55ms;--c:#A39C94" d="M756 688 L773 687 L790 685 L807 682 L824 678 L841 671 L858 662 L875 650 L892 634 L909 615 L926 592 L944 566 L961 537 L978 508 L995 480 L1012 456 L1029 437 L1046 424 L1063 420 L1080 424 L1097 437 L1114 456 L1131 480 L1148 508 L1165 537 L1182 566 L1200 592 L1217 615 L1234 634 L1251 650 L1268 662 L1285 671 L1302 678 L1319 682 L1336 685 L1353 687 L1370 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:0ms;--c:#AD9E8C" d="M839 688 L856 687 L873 685 L890 682 L907 678 L924 671 L942 662 L959 650 L976 634 L993 615 L1010 592 L1027 566 L1044 537 L1061 508 L1078 480 L1095 456 L1112 437 L1129 424 L1146 420 L1163 424 L1180 437 L1198 456 L1215 480 L1232 508 L1249 537 L1266 566 L1283 592 L1300 615 L1317 634 L1334 650 L1351 662 L1368 671 L1385 678 L1402 682 L1419 685 L1436 687 L1454 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:55ms;--c:#B5A085" d="M902 688 L919 687 L936 685 L953 682 L970 678 L987 671 L1004 662 L1021 650 L1038 634 L1055 615 L1073 592 L1090 566 L1107 537 L1124 508 L1141 480 L1158 456 L1175 437 L1192 424 L1209 420 L1226 424 L1243 437 L1260 456 L1277 480 L1294 508 L1311 537 L1329 566 L1346 592 L1363 615 L1380 634 L1397 650 L1414 662 L1431 671 L1448 678 L1465 682 L1482 685 L1499 687 L1516 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:110ms;--c:#BEA37E" d="M974 688 L991 687 L1008 685 L1025 682 L1042 678 L1059 671 L1076 662 L1093 650 L1110 634 L1127 615 L1144 592 L1161 566 L1179 537 L1196 508 L1213 480 L1230 456 L1247 437 L1264 424 L1281 420 L1298 424 L1315 437 L1332 456 L1349 480 L1366 508 L1383 537 L1400 566 L1417 592 L1435 615 L1452 634 L1469 650 L1486 662 L1503 671 L1520 678 L1537 682 L1554 685 L1571 687 L1588 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:165ms;--c:#D4A96D" d="M1151 688 L1168 687 L1185 685 L1202 682 L1219 678 L1236 671 L1253 662 L1270 650 L1287 634 L1304 615 L1322 592 L1339 566 L1356 537 L1373 508 L1390 480 L1407 456 L1424 437 L1441 424 L1458 420 L1475 424 L1492 437 L1509 456 L1526 480 L1543 508 L1561 537 L1578 566 L1595 592 L1612 615 L1629 634 L1646 650 L1663 662 L1680 671 L1697 678 L1714 682 L1731 685 L1748 687 L1765 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:220ms;--c:#DCAB66" d="M1222 688 L1239 687 L1256 685 L1273 682 L1290 678 L1307 671 L1324 662 L1341 650 L1358 634 L1375 615 L1392 592 L1410 566 L1427 537 L1444 508 L1461 480 L1478 456 L1495 437 L1512 424 L1529 420 L1546 424 L1563 437 L1580 456 L1597 480 L1614 508 L1631 537 L1648 566 L1666 592 L1683 615 L1700 634 L1717 650 L1734 662 L1751 671 L1768 678 L1785 682 L1802 685 L1819 687 L1836 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:275ms;--c:#E5AE5F" d="M1290 688 L1307 687 L1324 685 L1341 682 L1358 678 L1375 671 L1392 662 L1409 650 L1426 634 L1444 615 L1461 592 L1478 566 L1495 537 L1512 508 L1529 480 L1546 456 L1563 437 L1580 424 L1597 420 L1614 424 L1631 437 L1648 456 L1665 480 L1682 508 L1700 537 L1717 566 L1734 592 L1751 615 L1768 634 L1785 650 L1802 662 L1819 671 L1836 678 L1853 682 L1870 685 L1887 687 L1904 688 Z"/>
+<path class="bell e-grow" data-step="2" style="--d:330ms;--c:#F2B154" d="M1398 688 L1415 687 L1432 685 L1449 682 L1466 678 L1483 671 L1500 662 L1517 650 L1534 634 L1551 615 L1568 592 L1585 566 L1603 537 L1620 508 L1637 480 L1654 456 L1671 437 L1688 424 L1705 420 L1722 424 L1739 437 L1756 456 L1773 480 L1790 508 L1807 537 L1824 566 L1841 592 L1859 615 L1876 634 L1893 650 L1910 662 L1927 671 L1944 678 L1961 682 L1978 685 L1995 687 L2012 688 Z"/>
+</g>
+<line class="map-axis" x1="76" y1="690" x2="1844" y2="690" stroke="url(#axisGrad)"/>
+<path class="map-head" fill="#3FD8C6" d="M48,690 l32,-14 v28 z"/>
+<path class="map-head" fill="#FFB54A" d="M1872,690 l-32,-14 v28 z"/>
+<circle class="map-dot" cx="208" cy="690" r="7"/>
+<circle class="map-dot" cx="307" cy="690" r="7"/>
+<circle class="map-dot" cx="442" cy="690" r="7"/>
+<circle class="map-dot" cx="685" cy="690" r="7"/>
+<circle class="map-dot" data-step="1" style="--d:0ms" cx="884" cy="690" r="7"/>
+<circle class="map-dot" cx="1063" cy="690" r="7"/>
+<circle class="map-dot" data-step="1" style="--d:150ms" cx="1146" cy="690" r="7"/>
+<circle class="map-dot" data-step="1" style="--d:300ms" cx="1209" cy="690" r="7"/>
+<circle class="map-dot" data-step="1" style="--d:450ms" cx="1281" cy="690" r="7"/>
+<circle class="map-dot" data-step="1" style="--d:300ms" cx="1458" cy="690" r="7"/>
+<circle class="map-dot" data-step="1" style="--d:150ms" cx="1529" cy="690" r="7"/>
+<circle class="map-dot" cx="1597" cy="690" r="7"/>
+<circle class="map-dot" data-step="1" style="--d:0ms" cx="1705" cy="690" r="7"/>
+</svg>
+<span class="cty up" data-morph="dot-se" style="left:307px">Sweden</span>
+<span class="cty up" data-morph="dot-de" style="left:685px">Germany</span>
+<span class="cty up" data-morph="dot-us" style="left:1063px">US</span>
+<span class="cty up e-up" data-morph="dot-fr" data-step="1" style="left:1209px;--d:300ms">France</span>
+<span class="cty up e-up" data-morph="dot-in" data-step="1" style="left:1529px;--d:150ms">India</span>
+<span class="cty up e-up" data-morph="dot-ng" data-step="1" style="left:1705px;--d:0ms">Nigeria</span>
+<span class="cty lo" data-morph="dot-jp" style="left:208px">Japan</span>
+<span class="cty lo" data-morph="dot-nl" style="left:442px">Netherlands</span>
+<span class="cty lo e-up" data-morph="dot-uk" data-step="1" style="left:884px;--d:0ms">UK</span>
+<span class="cty lo e-up" data-morph="dot-br" data-step="1" style="left:1146px;--d:150ms">Brazil</span>
+<span class="cty lo e-up" data-morph="dot-it" data-step="1" style="left:1281px;--d:450ms">Italy</span>
+<span class="cty lo e-up" data-morph="dot-ru" data-step="1" style="left:1458px;--d:300ms">Russia</span>
+<span class="cty lo" data-morph="dot-cn" style="left:1597px">China</span>
+  <p class="m-end l">Consensual</p>
+  <p class="m-end r">Top-down</p>
+  <p class="q s08-line e-up" data-step="2" style="--d:500ms">A country is a bell curve, not a dot.<span class="ours">ours</span></p>
+  <p class="chip s08-chip e-up" data-step="2" style="--d:700ms"><b>relative</b> · a generalization, not a stereotype (Lecture III, slides 33–34)</p>
+  <p class="s08-src">Source: Meyer (2014), Fig. 5.3</p>
+</section>
+
+<!-- ======================================================= S11b -->
+<section class="slide story" id="s11b" data-transition="fade" data-mode="story" aria-label="Ringi: the decision climbs, stamp by stamp">
+  <p class="crumb" data-morph="crumb">I · Case · <b>&nbsp;Ringi</b></p>
+  <h2 class="h1 s11-h" data-morph="h-ringi">The decision climbs — stamp by stamp.</h2>
+  <svg class="pyr" data-morph="pyramid" viewBox="0 0 1920 1080" aria-hidden="true">
+  <polygon class="tier" points="600,250 711,432 489,432"/>
+  <polygon class="tier" points="486,438 714,438 823,617 377,617"/>
+  <polygon class="tier lit" points="373,623 827,623 936,802 264,802"/>
+  <polygon class="tier" points="261,808 939,808 1048,987 152,987"/>
+  <line x1="414" y1="342" x2="536" y2="342" stroke="rgba(243,238,228,.45)" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
+  </svg>
+  <p class="tl tl1" data-morph="tl-top">top management</p>
+  <p class="tl tl2" data-morph="tl-senior">senior</p>
+  <p class="tl tl3 mid lit" data-morph="tl-mid">mid-management</p>
+  <p class="tl tl4" data-morph="tl-staff">staff</p>
+  <div class="trail" data-morph="trail" style="top:712px;height:0"></div>
+  <div class="ringi p1" data-morph="ringisho">
+    <p class="rt">ringisho</p><p class="rs">(proposal document)</p>
+    <div class="ln"></div><div class="ln s"></div>
+    <div class="seals">
+      <span><i class="hk e-zoom" data-auto="500" style="--r:-8deg"></i></span>
+      <span><i class="hk e-zoom" data-auto="600" style="--r:6deg"></i></span>
+      <span><i class="hk e-zoom" data-auto="700" style="--r:-3deg"></i></span>
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+  <blockquote class="mori e-up" data-step="1" data-morph="mori">
+    <p class="q">“…hierarchical, <span style="white-space:nowrap">bottom-up,</span> and consensual all at the same time.”</p>
+    <span class="who"><span class="mono">SM</span>S. Mori</span>
+  </blockquote>
+</section>
+
+<!-- ======================================================= S11c -->
+<section class="slide story" id="s11c" data-transition="morph" data-mode="story" aria-label="Ringi: the ringisho climbs to senior level">
+  <p class="crumb" data-morph="crumb">I · Case · <b>&nbsp;Ringi</b></p>
+  <h2 class="h1 s11-h" data-morph="h-ringi">The decision climbs — stamp by stamp.</h2>
+  <svg class="pyr" data-morph="pyramid" viewBox="0 0 1920 1080" aria-hidden="true">
+  <polygon class="tier" points="600,250 711,432 489,432"/>
+  <polygon class="tier lit" points="486,438 714,438 823,617 377,617"/>
+  <polygon class="tier" points="373,623 827,623 936,802 264,802"/>
+  <polygon class="tier" points="261,808 939,808 1048,987 152,987"/>
+  <line x1="414" y1="342" x2="536" y2="342" stroke="rgba(243,238,228,.45)" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
+  </svg>
+  <p class="tl tl1" data-morph="tl-top">top management</p>
+  <p class="tl tl2 lit" data-morph="tl-senior">senior</p>
+  <p class="tl tl3 mid" data-morph="tl-mid">mid-management</p>
+  <p class="tl tl4" data-morph="tl-staff">staff</p>
+  <div class="trail" data-morph="trail" style="top:527px;height:185px"></div>
+  <div class="ringi p2" data-morph="ringisho">
+    <p class="rt">ringisho</p><p class="rs">(proposal document)</p>
+    <div class="ln"></div><div class="ln s"></div>
+    <div class="seals">
+      <span><i class="hk" style="--r:-8deg"></i></span>
+      <span><i class="hk" style="--r:6deg"></i></span>
+      <span><i class="hk" style="--r:-3deg"></i></span>
+      <span><i class="hk e-zoom" data-auto="80" style="--r:9deg"></i></span>
+      <span><i class="hk e-zoom" data-auto="180" style="--r:-5deg"></i></span>
+      <span></span>
+    </div>
+  </div>
+  <blockquote class="mori" data-morph="mori">
+    <p class="q">“…hierarchical, <span style="white-space:nowrap">bottom-up,</span> and consensual all at the same time.”</p>
+    <span class="who"><span class="mono">SM</span>S. Mori</span>
+  </blockquote>
+</section>
+
+<!-- ======================================================= S11d -->
+<section class="slide story" id="s11d" data-transition="morph" data-mode="story" aria-label="Ringi reaches the top; nemawashi">
+  <p class="crumb" data-morph="crumb">I · Case · <b>&nbsp;Ringi</b></p>
+  <h2 class="h1 s11-h" data-morph="h-ringi">The decision climbs — stamp by stamp.</h2>
+  <svg class="pyr" data-morph="pyramid" viewBox="0 0 1920 1080" aria-hidden="true">
+  <polygon class="tier lit" points="600,250 711,432 489,432"/>
+  <polygon class="tier" points="486,438 714,438 823,617 377,617"/>
+  <polygon class="tier" points="373,623 827,623 936,802 264,802"/>
+  <polygon class="tier" points="261,808 939,808 1048,987 152,987"/>
+  <line x1="414" y1="342" x2="536" y2="342" stroke="#3FD8C6" stroke-width="2.5" stroke-dasharray="2 9" stroke-linecap="round"/>
+  </svg>
+  <p class="tl tl1 lit" data-morph="tl-top">top management</p>
+  <p class="tl tl2" data-morph="tl-senior">senior</p>
+  <p class="tl tl3 mid" data-morph="tl-mid">mid-management</p>
+  <p class="tl tl4" data-morph="tl-staff">staff</p>
+  <div class="trail" data-morph="trail" style="top:342px;height:370px"></div>
+  <div class="ringi p3" data-morph="ringisho">
+    <p class="rt">ringisho</p><p class="rs">(proposal document)</p>
+    <div class="ln"></div><div class="ln s"></div>
+    <div class="seals">
+      <span><i class="hk" style="--r:-8deg"></i></span>
+      <span><i class="hk" style="--r:6deg"></i></span>
+      <span><i class="hk" style="--r:-3deg"></i></span>
+      <span><i class="hk" style="--r:9deg"></i></span>
+      <span><i class="hk" style="--r:-5deg"></i></span>
+      <span><i class="hk hD e-zoom" data-auto="120" style="--r:-9deg"><b>D</b></i></span>
+    </div>
+  </div>
+
+  <div class="meyerD e-up" data-step="1">
+    <span class="seal" aria-hidden="true">D</span>
+    <blockquote><p class="q">“a decision with a capital D”</p><span class="who">Meyer</span></blockquote>
+  </div>
+
+  <div class="nema" data-step="2">
+    <svg class="e-wipev" data-step="2" style="--d:150ms" viewBox="0 0 190 250" aria-hidden="true">
+      <g fill="none" stroke="#F3EEE4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M95 128V40"/>
+        <path d="M95 92c-26-2-44-16-48-40 24 0 44 14 48 40z"/>
+        <path d="M95 70c22-4 38-20 40-42-22 2-38 18-40 42z"/>
+        <path d="M95 44c-8-8-10-22-2-32 8 8 8 22 2 32z"/>
+        <path d="M30 128h130" stroke="#9D978E"/>
+      </g>
+      <g fill="none" stroke="#C9C3B8" stroke-width="2.4" stroke-linecap="round">
+        <path d="M95 130c0 30-6 52-20 78M95 132c4 26 14 46 30 70M92 150c-16 8-30 22-36 40M98 156c18 6 30 18 38 34M84 186c-6 14-6 26 0 38M110 180c8 12 10 24 6 38"/>
+      </g>
+      <g fill="none" stroke="#3FD8C6" stroke-width="3.2" stroke-linecap="round">
+        <ellipse cx="95" cy="176" rx="54" ry="50"/>
+        <path d="M48 152 140 204M50 202 142 150M41 177h108M95 126v100"/>
+      </g>
+    </svg>
+    <div class="tx">
+      <p class="w">nemawashi</p>
+      <p class="eq"><span class="sans">=</span>“root-binding”</p>
+    </div>
+  </div>
+
+  <div class="sheldon e-up" data-step="3">
+    <p class="q">“…do my ‘root binding’ well before the actual meeting.”</p>
+    <p class="q">“…it becomes very hard to go back on the group decision…”</p>
+    <span class="who"><span class="mono">JS</span>J. Sheldon</span>
+  </div>
+</section>
+
+<!-- ======================================================= S20 -->
+<section class="slide" id="s20" data-transition="fade" data-mode="day" aria-label="So — was that a big D or a little d?">
+  <div class="card mail prop" data-morph="mail">
+    <p class="tag">One last proposal:</p>
+    <p class="body">In your next group project, agree <b>HOW</b> you decide — before you decide.</p>
+  </div>
+  <button class="trig tD t20" data-trigger="d20" aria-label="Stamp D on the proposal">D</button>
+  <div class="stamp sD e-slam st20" data-triggered="d20"><b>D</b><span>no more discussion!</span></div>
+
+  <p class="stand e-up" data-step="1">Stand up if you’ll take this with you.</p>
+
+  <div class="lockup l20" data-step="2" aria-hidden="true">
+    <span class="glyph gD" data-morph="D">D</span>
+    <span class="lk-qm">?</span>
+    <span class="glyph gd" data-morph="d">d</span>
+  </div>
+  <p class="three e-up" data-step="2" style="--d:250ms">Three decisions today:<br><b class="amber">seconds</b> · <b class="teal">minutes</b> · <b style="color:var(--ink)">yours</b>.</p>
+  <h2 class="h1 final e-up" data-step="2" style="--d:450ms">So — was that<br>a big <span class="gD2">D</span> or<br>a little <span class="gd2">d</span>?</h2>
+  <p class="qa e-up" data-step="3">Q&amp;A runs on little <span class="gd2">d</span>.</p>
+  <button class="hotspot hub" data-goto="hub" aria-label="Backup hub (slide 36)"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12h17M14 6l6 6-6 6"/></svg> 36</button>
+</section>
+
+  <div class="grain" aria-hidden="true"></div>
+</div>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="ahL" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4.2" markerHeight="4.2" orient="auto"><path d="M0 0 10 5 0 10z" fill="#FFB54A"/></marker>
+    <!-- a counter-clockwise loop that sits on the implementation line: the decision is revisited -->
+    <symbol id="loopIcon" viewBox="0 0 96 96">
+      <path d="M48 97 A 30 30 0 1 0 22 52" fill="none" stroke="#FFB54A" stroke-width="5.5" stroke-linecap="round" marker-end="url(#ahL)"/>
+    </symbol>
+  </defs>
+</svg>
+<div id="black" aria-hidden="true"></div>
+<div id="jump" aria-hidden="true"></div>
+
+<script>
+/* ==========================================================================
+   Minimal runtime for the shared markup contract
+   - .slide[data-transition=morph|fade|none] inside #stage (1920x1080, scaled)
+   - [data-step=n] entrance builds · [data-auto=ms] entrance on arrival
+   - [data-morph=key] -> view-transition-name (morph) · [data-goto] · [data-trigger]/[data-triggered]
+   - [data-timer=sec] live countdown, starts when revealed
+   ========================================================================== */
+(function(){
+  'use strict';
+  var stage = document.getElementById('stage');
+  var slides = Array.prototype.slice.call(stage.querySelectorAll('.slide'));
+  var reduceMQ = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var cur = -1, step = 0, vt = null, bridgingNow = false;
+  var root = document.documentElement;
+
+  function $$(sel, el){ return Array.prototype.slice.call((el||document).querySelectorAll(sel)); }
+  function maxStep(s){ var m = 0; $$('[data-step]', s).forEach(function(e){ m = Math.max(m, +e.getAttribute('data-step') || 0); }); return m; }
+  function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
+  function fmt(sec){ sec = Math.max(0, sec); return Math.floor(sec/60) + ':' + String(sec%60).padStart(2,'0'); }
+
+  /* ---------- fit the 1920x1080 stage into any window ---------- */
+  function fit(){ var k = Math.min(window.innerWidth/1920, window.innerHeight/1080); stage.style.transform = 'scale(' + k + ')'; }
+  window.addEventListener('resize', fit); fit();
+
+  /* ---------- timers ---------- */
+  var looping = false;
+  function timerEls(s){ return $$('[data-timer]', s); }
+  function timerRender(el, elapsed){
+    var total = (+el.getAttribute('data-timer')) * 1000;
+    var txt = fmt(Math.ceil(Math.max(0, total - elapsed) / 1000));
+    var t = el.querySelector('[data-timer-text]') || el;
+    if (t.textContent !== txt) t.textContent = txt;
+    var f = el.querySelector('[data-timer-fill]');
+    if (f) f.style.transform = 'scaleX(' + Math.min(1, elapsed/total).toFixed(4) + ')';
+  }
+  function timerStart(el){
+    if (el._t) return;
+    el._t = { t0: performance.now(), total: (+el.getAttribute('data-timer'))*1000, frozen: null, done: false };
+    el.classList.add('running');
+    if (!looping){ looping = true; requestAnimationFrame(loop); }
+  }
+  function timerReset(el){ el._t = null; el.classList.remove('running','done','frozen'); timerRender(el, 0); }
+  function timerFreeze(el){
+    var T = el._t; if (!T || T.frozen !== null || T.done) return;
+    T.frozen = Math.min(performance.now() - T.t0, T.total); el.classList.remove('running'); el.classList.add('frozen');
+    timerRender(el, T.frozen);
+  }
+  function timerElapsed(el){ var T = el._t; if (!T) return null; return T.frozen !== null ? T.frozen : Math.min(performance.now() - T.t0, T.total); }
+  function loop(){
+    var any = false;
+    $$('[data-timer]').forEach(function(el){
+      var T = el._t; if (!T || T.frozen !== null || T.done) return;
+      var e = performance.now() - T.t0;
+      timerRender(el, Math.min(e, T.total));
+      if (e >= T.total){ T.done = true; el.classList.remove('running'); el.classList.add('done'); }
+      else any = true;
+    });
+    if (any) requestAnimationFrame(loop); else looping = false;
+  }
+
+  /* ---------- builds ---------- */
+  function noAnim(s, fn){ s.classList.add('no-anim'); fn(); void s.offsetWidth; requestAnimationFrame(function(){ requestAnimationFrame(function(){ s.classList.remove('no-anim'); }); }); }
+  function applySteps(s, n){
+    $$('[data-step]', s).forEach(function(e){
+      var on = (+e.getAttribute('data-step')) <= n;
+      e.classList.toggle('in', on);
+      if (e.hasAttribute('data-timer')){ if (on) timerStart(e); else timerReset(e); }
+    });
+    timerEls(s).forEach(function(e){ if (!e.hasAttribute('data-step') && !e.closest('[data-step]')) timerStart(e); });
+  }
+  function autos(s, mode){
+    $$('[data-auto]', s).forEach(function(e){
+      if (mode === 'hide'){ e.classList.remove('in'); e.style.removeProperty('--d'); }
+      else if (mode === 'instant'){ e.classList.add('in'); }
+      else { e.style.setProperty('--d', (+e.getAttribute('data-auto') || 0) + 'ms'); e.classList.add('in'); }
+    });
+  }
+
+  /* ---------- triggers ---------- */
+  function setTrigger(s, name, on){
+    var act = s._act || (s._act = {});
+    if (on) act[name] = true; else delete act[name];
+    $$('[data-trigger]', s).forEach(function(c){ c.setAttribute('aria-pressed', act[c.getAttribute('data-trigger')] ? 'true' : 'false'); });
+    $$('[data-triggered]', s).forEach(function(e){
+      var hit = e.getAttribute('data-triggered').split(/\s+/).some(function(n){ return act[n]; });
+      e.classList.toggle('on', hit);
+    });
+    if (on){
+      var el = null;
+      timerEls(s).forEach(function(t){ timerFreeze(t); if (t._t) el = t; });
+      $$('[data-elapsed]', s).forEach(function(x){
+        var ms = el ? timerElapsed(el) : null; var sp = x.querySelector('span') || x;
+        if (ms !== null){ sp.textContent = fmt(Math.round(ms/1000)); x.classList.add('has'); } else x.classList.remove('has');
+      });
+    }
+  }
+
+  /* ---------- morph naming ---------- */
+  function vtName(k){ return 'm-' + String(k).replace(/[^a-zA-Z0-9_-]/g, '_'); }
+  function nameAll(s){ $$('[data-morph]', s).forEach(function(e){ e.style.viewTransitionName = vtName(e.getAttribute('data-morph')); }); }
+  function clearNames(s){ if (s) $$('[data-morph]', s).forEach(function(e){ e.style.viewTransitionName = ''; e.style.removeProperty('view-transition-class'); }); }
+  /* text that changes between the two shots is handed over (fade out, then in) rather than overprinted */
+  function norm(t){ return t.replace(/\s+/g, ' ').trim(); }
+  function markSwaps(a, b){
+    $$('[data-morph]', a).forEach(function(e){
+      var k = e.getAttribute('data-morph'), m = b.querySelector('[data-morph="' + k + '"]');
+      if (!m || e.children.length > 3) return;
+      var ta = norm(e.textContent), tb = norm(m.textContent);
+      if (ta && tb && ta !== tb){ e.style.setProperty('view-transition-class', 'swap'); m.setAttribute('data-swap', ''); }
+    });
+  }
+
+  /* ---------- activation ---------- */
+  function activate(i, st, autoMode){
+    slides.forEach(function(s, k){ s.classList.toggle('active', k === i); s.classList.remove('bridging','leaving','entering'); });
+    var s = slides[i]; cur = i; step = st;
+    stage.setAttribute('data-slide', s.id);
+    stage.setAttribute('data-mode', s.getAttribute('data-mode') || 'day');
+    noAnim(s, function(){ applySteps(s, st); autos(s, autoMode); });
+    try { history.replaceState(null, '', '#' + (i+1)); } catch(e){}
+  }
+
+  function go(i, st, dir, opts){
+    opts = opts || {};
+    if (i < 0 || i >= slides.length) return;
+    if (vt){ try { vt.skipTransition(); } catch(e){} vt = null; }
+    var from = cur >= 0 ? slides[cur] : null, to = slides[i];
+    var target = st === 'end' ? maxStep(to) : (st || 0);
+    var adjacent = from && Math.abs(i - cur) === 1;
+    var kind = ((dir > 0 ? to : from) || to).getAttribute('data-transition') || 'fade';
+    if (kind === 'morph' && !adjacent) kind = 'fade';
+    var autoMode = target > 0 || dir < 0 ? 'instant' : 'hide';
+    if (!from || opts.instant || reduceMQ.matches || kind === 'none'){ activate(i, target, autoMode === 'hide' ? 'instant' : autoMode); return Promise.resolve(); }
+
+    var pre = Promise.resolve();
+    if (dir > 0 && adjacent && kind === 'morph' && from.hasAttribute('data-bridge')){
+      bridgingNow = true; from.classList.add('bridging');
+      pre = sleep(560).then(function(){ bridgingNow = false; });
+    }
+    return pre.then(function(){
+      if (!document.startViewTransition){
+        var old = from; old.classList.add('leaving');
+        activate(i, target, autoMode); old.classList.add('leaving'); to.classList.add('entering');
+        setTimeout(function(){ old.classList.remove('leaving'); to.classList.remove('entering'); if (autoMode === 'hide') autos(to, 'play'); }, 760);
+        return;
+      }
+      root.classList.add('vt-' + kind);
+      if (kind === 'morph'){ nameAll(from); markSwaps(from, to); } else clearNames(from);
+      var t = document.startViewTransition(function(){
+        activate(i, target, autoMode);
+        clearNames(from);
+        if (kind === 'morph'){
+          nameAll(to);
+          $$('[data-swap]', to).forEach(function(e){ e.style.setProperty('view-transition-class', 'swap'); e.removeAttribute('data-swap'); });
+        }
+      });
+      vt = t;
+      return t.finished.catch(function(){}).then(function(){
+        root.classList.remove('vt-morph','vt-fade');
+        clearNames(to);
+        if (vt === t) vt = null;
+        if (autoMode === 'hide' && cur === i) autos(to, 'play');
+      });
+    });
+  }
+
+  function next(){
+    if (bridgingNow) return;
+    var s = slides[cur];
+    if (step < maxStep(s)){ step++; applySteps(s, step); }
+    else if (cur < slides.length - 1) go(cur + 1, 0, 1);
+  }
+  function prev(){
+    if (bridgingNow) return;
+    var s = slides[cur];
+    if (step > 0){ step--; applySteps(s, step); }
+    else if (cur > 0) go(cur - 1, 'end', -1);
+  }
+  function jump(i){ if (i === cur || i < 0 || i >= slides.length) return; go(i, 0, i > cur ? 1 : -1); }
+
+  /* ---------- input ---------- */
+  var buf = '', bufT = null, jumpEl = document.getElementById('jump'), blackEl = document.getElementById('black');
+  function showBuf(){ jumpEl.textContent = buf ? '→ ' + buf : ''; jumpEl.classList.toggle('on', !!buf); }
+  document.addEventListener('keydown', function(e){
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (/^[0-9]$/.test(k)){ buf += k; clearTimeout(bufT); bufT = setTimeout(function(){ buf=''; showBuf(); }, 3000); showBuf(); e.preventDefault(); return; }
+    if (k === 'Enter'){ e.preventDefault(); if (buf){ var n = parseInt(buf, 10); buf=''; showBuf(); jump(n - 1); } else next(); return; }
+    if (k === 'Escape'){ buf=''; showBuf(); return; }
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Spacebar'){ e.preventDefault(); next(); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace'){ e.preventDefault(); prev(); }
+    else if (k === 'Home'){ e.preventDefault(); jump(0); }
+    else if (k === 'End'){ e.preventDefault(); jump(slides.length - 1); }
+    else if (k === 'b' || k === 'B' || k === '.'){ blackEl.classList.toggle('on'); }
+    else if (k === 'f' || k === 'F'){ if (!document.fullscreenElement) document.documentElement.requestFullscreen && document.documentElement.requestFullscreen().catch(function(){}); else document.exitFullscreen(); }
+  });
+  document.addEventListener('mousedown', function(e){ if (e.target.closest('button')) e.preventDefault(); });
+  document.addEventListener('click', function(e){
+    if (e.button !== 0) return;
+    if (blackEl.classList.contains('on')){ blackEl.classList.remove('on'); return; }
+    var t = e.target.closest('[data-trigger],[data-goto],a,button');
+    if (t){
+      var s = slides[cur];
+      if (t.hasAttribute('data-trigger')){ var n = t.getAttribute('data-trigger'); setTrigger(s, n, !(s._act && s._act[n])); }
+      else if (t.hasAttribute('data-goto')){ var j = slides.findIndex(function(x){ return x.id === t.getAttribute('data-goto'); }); if (j >= 0) jump(j); }
+      return;
+    }
+    next();
+  });
+  var curT = null;
+  document.addEventListener('mousemove', function(){ document.body.classList.remove('nocursor'); clearTimeout(curT); curT = setTimeout(function(){ document.body.classList.add('nocursor'); }, 2500); });
+
+  /* ---------- start ---------- */
+  var h = (location.hash || '').slice(1), start = 0;
+  if (/^\d+$/.test(h)) start = Math.min(slides.length, Math.max(1, +h)) - 1;
+  else if (h){ var f = slides.findIndex(function(s){ return s.id === h; }); if (f >= 0) start = f; }
+  activate(start, 0, 'hide');
+  requestAnimationFrame(function(){ autos(slides[start], 'play'); });
+
+  /* small API for rehearsal tools, screenshots and the PDF build */
+  window.deck = {
+    next: next, prev: prev,
+    goto: function(i, st, instant){ return go(i, st, i >= cur ? 1 : -1, { instant: !!instant }); },
+    fire: function(name){ setTrigger(slides[cur], name, true); },
+    state: function(){ return { index: cur, id: slides[cur].id, step: step, steps: maxStep(slides[cur]), count: slides.length }; },
+    timerOffset: function(sec){ $$('[data-timer]').forEach(function(el){ if (el._t && el._t.frozen === null) el._t.t0 -= sec*1000; }); },
+    slides: slides.map(function(s){ return s.id; })
+  };
+})();
+</script>
+</body>
+</html>

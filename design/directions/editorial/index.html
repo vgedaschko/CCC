@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big D or little d?</title>
+<meta name="description" content="Design direction prototype: Editorial Paper. Erin Meyer, The Culture Map, ch. 5 (the Deciding scale).">
+<style>
+/* ==========================================================================
+   EDITORIAL PAPER — design tokens
+   ========================================================================== */
+@font-face{font-family:"Fraunces E";src:url("fonts/fraunces-latin-standard-normal.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:block}
+@font-face{font-family:"Fraunces E";src:url("fonts/fraunces-latin-standard-italic.woff2") format("woff2");font-weight:100 900;font-style:italic;font-display:block}
+@font-face{font-family:"Schibsted E";src:url("fonts/schibsted-grotesk-latin-wght-normal.woff2") format("woff2");font-weight:400 900;font-style:normal;font-display:block}
+
+:root{
+  --paper:#F3EEE4;      /* page */
+  --paper-2:#FBF8F2;    /* cards */
+  --paper-3:#E7E0D2;    /* neutral fills */
+  --ink:#17150F;        /* type, rules */
+  --ink-2:#4B463C;      /* secondary type (8.1:1 on paper) */
+  --ink-3:#8C8579;      /* decoration only, never text */
+  /* consensual / Big D — teal family */
+  --teal:#0F6E68;  --teal-deep:#0B5D5A;  --teal-tint:#CFE4DE;  --teal-wash:#E2EDE8;
+  /* top-down / little d — amber family */
+  --amber:#E9A23B; --amber-ink:#8A4E00;  --amber-glyph:#AD6800; --amber-stamp:#8F5200; --amber-tint:#F5DCAA; --amber-wash:#F7EAD2;
+  /* hanko only */
+  --verm:#C8381A;
+
+  --serif:"Fraunces E", Georgia, "Times New Roman", serif;
+  --sans:"Schibsted E", "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+  --ease:cubic-bezier(.2,.85,.25,1);
+  --ease-io:cubic-bezier(.72,0,.24,1);
+  --vt-dur:.85s;      /* morph glide */
+  --vt-fade:.5s;      /* page crossfade */
+  --card-shadow:10px 10px 0 rgba(23,21,15,.09);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;overflow:hidden;background:#0c0b09}
+body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;font-kerning:normal}
+#viewport{position:fixed;inset:0;overflow:hidden}
+#stage{position:absolute;left:0;top:0;width:1920px;height:1080px;transform-origin:0 0;background:var(--paper);overflow:hidden;font-size:30px;line-height:1.3;contain:layout paint}
+/* paper grain */
+#stage::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:60;opacity:.55;mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .3  0 0 0 0 .22  0 0 0 .09 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+
+.slide{position:absolute;inset:0;display:none}
+.slide.is-active{display:block}
+.abs{position:absolute}
+svg.i{width:1em;height:1em;vertical-align:-.14em;fill:none;stroke:currentColor;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+
+/* ==========================================================================
+   Build system (entrance only: final state == markup state)
+   ========================================================================== */
+@keyframes ed-fade{from{opacity:0;translate:0 22px}to{opacity:1;translate:0 0}}
+@keyframes ed-fadeonly{from{opacity:0}to{opacity:1}}
+@keyframes ed-wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes ed-wipe-down{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes ed-wipe-up{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes ed-stamp{0%{opacity:0;scale:1.9}55%{opacity:1;scale:.94}78%{scale:1.025}100%{opacity:1;scale:1}}
+@keyframes ed-pop{0%{opacity:0;scale:1.8}65%{opacity:1;scale:.93}100%{opacity:1;scale:1}}
+@keyframes ed-drop{0%{opacity:0;translate:0 -90px}70%{opacity:1;translate:0 6px}100%{opacity:1;translate:0 0}}
+@keyframes ed-notif{from{opacity:0;translate:70px -50px}to{opacity:1;translate:0 0}}
+@keyframes ed-zoom{from{opacity:0;scale:.55}to{opacity:1;scale:1}}
+@keyframes ed-rise{from{opacity:0;scale:1 0}to{opacity:1;scale:1 1}}
+@keyframes ed-tick{from{translate:0 105%}to{translate:0 0}}
+
+[data-enter="fade"]{--anim:ed-fade}
+[data-enter="fadeonly"]{--anim:ed-fadeonly}
+[data-enter="wipe"]{--anim:ed-wipe;--dur:.6s}
+[data-enter="wipe-down"]{--anim:ed-wipe-down;--dur:.7s}
+[data-enter="wipe-up"]{--anim:ed-wipe-up;--dur:.7s}
+[data-enter="stamp"]{--anim:ed-stamp;--dur:.38s;--ease-in:cubic-bezier(.3,0,.2,1)}
+[data-enter="pop"]{--anim:ed-pop;--dur:.34s}
+[data-enter="drop"]{--anim:ed-drop;--dur:.55s}
+[data-enter="notif"]{--anim:ed-notif;--dur:.45s}
+[data-enter="zoom"]{--anim:ed-zoom;--dur:.5s}
+[data-enter="rise"]{--anim:ed-rise;--dur:.7s}
+
+.is-pending{opacity:0 !important;visibility:hidden !important}
+.is-in{animation:var(--anim,ed-fade) var(--dur,.55s) var(--ease-in,var(--ease)) var(--delay,0ms) both}
+.slide:not(.no-auto) [data-auto]{animation:var(--anim,ed-fade) var(--dur,.55s) var(--ease-in,var(--ease)) var(--auto,0ms) both}
+
+/* View Transitions: morph + page crossfade */
+::view-transition-group(*){animation-duration:var(--vt-dur);animation-timing-function:var(--ease-io)}
+::view-transition-old(*),::view-transition-new(*){height:100%;width:100%;object-fit:fill;animation-duration:calc(var(--vt-dur) * .7);animation-timing-function:ease-in-out}
+::view-transition-old(root),::view-transition-new(root){animation-duration:var(--vt-fade);animation-timing-function:ease-in-out}
+/* morph choreography: a quick page crossfade; the incoming page's text arrives late (data-auto), so the morphing objects glide over bare paper */
+html[data-vt="morph"]::view-transition-old(root),html[data-vt="morph"]::view-transition-new(root){animation-duration:.34s}
+::view-transition-old(*):only-child{animation-duration:.28s}
+::view-transition-new(*):only-child{animation-duration:.4s}
+/* crossfade fallback (no View Transitions API) */
+.slide.is-leaving{display:block;z-index:30;animation:ed-out var(--vt-fade) ease-in-out both;pointer-events:none}
+@keyframes ed-out{from{opacity:1}to{opacity:0}}
+.slide.is-arriving{animation:ed-fadeonly var(--vt-fade) ease-in-out both}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none !important}
+}
+
+/* ==========================================================================
+   Editorial chrome: running head, kicker, folio, footer
+   ========================================================================== */
+.runhead{position:absolute;left:96px;right:96px;top:36px;height:68px;display:flex;align-items:center;gap:28px;border-bottom:3px solid var(--ink);font:700 28px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+.crumb{display:flex;align-items:center;gap:16px}
+.crumb::before{content:"";width:18px;height:18px;background:linear-gradient(90deg,var(--teal) 0 50%,var(--amber) 50% 100%)}
+.rh-title{margin-left:auto;font:italic 400 30px/1 var(--serif);letter-spacing:0;text-transform:none;color:var(--ink-2)}
+.folio{padding-left:26px;border-left:2px solid var(--ink);height:36px;display:flex;align-items:center;overflow:hidden;font:800 30px/1 var(--sans);letter-spacing:.04em;font-variant-numeric:tabular-nums}
+.folio b{display:inline-block;font-weight:800}
+.slide.is-active .folio b{animation:ed-tick .55s var(--ease) both}
+.foot{position:absolute;left:96px;right:96px;bottom:30px;min-height:40px;display:flex;align-items:flex-end;gap:24px;font:400 28px/1.2 var(--sans);color:var(--ink-2)}
+.foot::before{content:"";position:absolute;left:0;right:0;top:-18px;border-top:1.5px solid var(--ink)}
+.foot .src b{font-weight:700;color:var(--ink)}
+
+.kicker{font:700 28px/1.2 var(--sans);letter-spacing:.14em;text-transform:uppercase}
+.h1{margin:0;font:600 88px/1.02 var(--serif);letter-spacing:-.018em}
+.q{margin:0;font:italic 400 44px/1.18 var(--serif)}
+.q cite,.cite{display:block;font:600 28px/1.2 var(--sans);font-style:normal;letter-spacing:.06em;color:var(--ink-2);margin-top:14px}
+.ours{font:600 28px/1 var(--sans);letter-spacing:.06em;color:var(--ink-2);white-space:nowrap}
+.cn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;border:2.5px solid currentColor;border-radius:50%;font:800 28px/1 var(--sans);font-variant-numeric:tabular-nums}
+.g-teal{color:var(--teal)} .g-amber{color:var(--amber-glyph)}
+.t-teal{color:var(--teal-deep)} .t-amber{color:var(--amber-ink)}
+
+/* buttons on stage (trigger chips, goto hotspots) */
+.chip{appearance:none;-webkit-appearance:none;margin:0;cursor:pointer;font:700 28px/1 var(--sans);letter-spacing:.04em;padding:11px 24px 12px;border-radius:999px;border:2.5px solid currentColor;background:var(--paper-2);color:var(--ink);transition:background .25s,color .25s,transform .15s}
+.chip:hover{transform:translateY(-2px)}
+.chip:focus-visible{outline:3px solid var(--ink);outline-offset:4px}
+.chip-d{color:var(--teal-deep);font:900 32px/1 var(--serif);padding:8px 26px 10px}
+.chip-v{color:var(--amber-ink)}
+.chip-d.is-fired{background:var(--teal);border-color:var(--teal);color:var(--paper)}
+.chip-v.is-fired{background:var(--amber);border-color:var(--amber);color:var(--ink)}
+
+/* ==========================================================================
+   Shared objects: stamps, email card
+   ========================================================================== */
+.stamp{position:absolute;z-index:8;pointer-events:none;background:var(--paper-2);padding:6px;border-radius:24px;box-shadow:0 2px 0 rgba(23,21,15,.06)}
+.stamp .ink{display:block;-webkit-mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='7'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 2.35'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");          mask-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='g'><feTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='7'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 2.35'/></filter><rect width='100%' height='100%' filter='url(%23g)'/></svg>");  -webkit-mask-size:260px;mask-size:260px}
+.stamp-d{rotate:-5deg;color:var(--teal)}
+.stamp-d .ink{border:7px solid currentColor;border-radius:18px;padding:0 26px 4px 18px;display:flex;align-items:center;gap:16px;background:#E5EFEB}
+.stamp-d .sg{font:900 120px/1 var(--serif);letter-spacing:-.02em}
+.stamp-d .st{font:italic 700 34px/1.04 var(--serif)}
+.stamp-v{rotate:-5deg;color:var(--amber-stamp);border-radius:6px}
+.stamp-v .ink{border:9px double currentColor;padding:6px 22px 10px;background:#FAEFD9}
+.stamp-v .sg{display:block;font:900 68px/1 var(--sans);letter-spacing:.2em}
+.stamp-v .st{display:block;font:700 28px/1.2 var(--sans);margin-top:6px;letter-spacing:.01em}
+
+.mail{position:absolute;background:var(--paper-2);border:3px solid var(--ink);box-shadow:var(--card-shadow)}
+.mail-head{display:flex;align-items:center;gap:16px;font:700 28px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);border-bottom:2px solid var(--ink);padding:20px 34px 18px}
+.mail-head svg{width:44px;height:44px;color:var(--ink);stroke-width:3}
+.mail-head .dots{margin-left:auto;display:flex;gap:10px}
+.mail-head .dots i{width:14px;height:14px;border-radius:50%;border:2px solid var(--ink)}
+.mail-body{padding:22px 34px 30px;font:italic 400 42px/1.24 var(--serif)}
+.mail-body b{font-style:normal;font-weight:800;font-size:.9em;letter-spacing:.05em}
+
+/* ==========================================================================
+   S01 — cover
+   ========================================================================== */
+#s01 .mast{left:96px;right:96px;top:40px;height:64px;display:flex;align-items:center;font:500 28px/1 var(--sans);letter-spacing:.02em;border-bottom:7px solid var(--ink)}
+#s01 .mast::after{content:"";position:absolute;left:0;right:0;bottom:-17px;border-bottom:2px solid var(--ink)}
+#s01 .mast .r{margin-left:auto;font:italic 400 30px/1 var(--serif);color:var(--ink-2)}
+#s01 .bigD{left:62px;top:192px;font:900 900px/1 var(--serif);letter-spacing:-.03em;color:var(--teal)}
+#s01 .smalld{left:780px;top:704px;font:800 296px/1 var(--serif);color:var(--amber-glyph)}
+#s01 .title{left:1040px;top:146px;width:800px;margin:0;font:900 212px/.86 var(--serif);letter-spacing:-.035em}
+#s01 .title .lit{display:block;font:italic 400 150px/1.02 var(--serif);letter-spacing:-.02em;margin-top:14px}
+#s01 .sub{left:1044px;top:540px;width:780px;margin:0;font:italic 400 60px/1.1 var(--serif);color:var(--ink-2)}
+#s01 .meta{left:1044px;top:648px;width:780px;border-top:2px solid var(--ink);padding-top:20px}
+#s01 .meta p{margin:0 0 14px;font:400 28px/1.35 var(--sans)}
+#s01 .meta .members{font-weight:700;letter-spacing:.04em;margin-bottom:22px}
+#s01 .route{margin:0;font:600 28px/1.5 var(--sans);letter-spacing:.02em}
+#s01 .route span{white-space:nowrap}
+#s01 .route i{font-style:normal;color:var(--ink-2);padding:0 6px}
+.axisbar{position:absolute;height:10px;border-radius:5px;background:linear-gradient(90deg,var(--teal) 0%,#6E8A66 48%,var(--amber) 100%)}
+.axisbar::after{content:"";position:absolute;right:-30px;top:50%;translate:0 -50%;border-left:34px solid var(--amber);border-top:17px solid transparent;border-bottom:17px solid transparent}
+#s01 .axis{left:96px;top:968px;width:1696px}
+#s01 .axl{top:996px;font:800 28px/1.2 var(--sans);letter-spacing:.12em;text-transform:uppercase}
+#s01 .tile{top:952px;width:10px;height:42px;background:var(--ink);border:3px solid var(--paper)}
+
+/* ==========================================================================
+   S04b — Decision #2
+   ========================================================================== */
+#s04b .rules{left:96px;top:136px;width:540px;background:var(--paper-2);border:3px solid var(--ink);box-shadow:var(--card-shadow);padding:24px 28px 26px}
+#s04b .rules h3{margin:0;font:800 30px/1.1 var(--sans);letter-spacing:.14em;text-transform:uppercase}
+#s04b .rules .sub{margin:6px 0 16px;padding-bottom:14px;border-bottom:2px solid var(--ink);font:italic 400 30px/1.2 var(--serif);color:var(--ink-2)}
+#s04b .rules ol{list-style:none;margin:0;padding:0;display:grid;gap:11px}
+#s04b .rules li{display:grid;grid-template-columns:44px 1fr;column-gap:14px;align-items:start;font:500 29px/1.26 var(--sans)}
+#s04b .rules li .cn{margin-top:-4px}
+#s04b .live{left:96px;top:648px;width:540px;font:800 28px/1.2 var(--sans);letter-spacing:.05em;display:flex;gap:10px;align-items:center}
+#s04b .live span{font-weight:500;letter-spacing:0}
+#s04b .timer{left:96px;top:690px;width:540px;height:252px}
+#s04b .timer-num{position:absolute;left:-6px;top:0;font:800 136px/1 var(--sans);font-variant-numeric:tabular-nums;letter-spacing:-.03em;color:var(--teal-deep)}
+#s04b .timer-cap{position:absolute;right:0;top:14px;text-align:right;font:800 44px/1 var(--sans);letter-spacing:.02em;color:var(--teal-deep)}
+#s04b .track-ghost{left:96px;top:900px;width:540px;height:38px;border:2.5px dashed var(--teal);opacity:.55}
+#s04b .timer.is-done .timer-num{color:var(--ink)}
+.track{position:absolute;left:0;top:210px;width:540px;height:38px;background:var(--teal-wash);box-shadow:inset 0 0 0 2.5px var(--teal)}
+.track .fill{position:absolute;inset:0;background:var(--teal);transform-origin:0 50%;transform:scaleX(0)}
+.track .ticks{position:absolute;inset:0;background:linear-gradient(90deg,transparent calc(25% - 2px),var(--paper) calc(25% - 2px) calc(25% + 1px),transparent calc(25% + 1px) calc(50% - 2px),var(--paper) calc(50% - 2px) calc(50% + 1px),transparent calc(50% + 1px) calc(75% - 2px),var(--paper) calc(75% - 2px) calc(75% + 1px),transparent calc(75% + 1px))}
+#s04b .td-row{left:96px;top:852px;height:34px;display:flex;align-items:center;gap:14px}
+.sliver{width:18px;height:34px;background:var(--amber);box-shadow:inset 0 0 0 2.5px var(--amber-glyph)}
+#s04b .td-row .lbl{font:800 28px/1 var(--sans);color:var(--amber-ink);letter-spacing:.04em}
+#s04b .decided{left:84px;top:684px;width:564px;height:150px;z-index:9;background:var(--ink);color:var(--paper);display:flex;align-items:center;justify-content:center;gap:22px;font:italic 500 88px/1 var(--serif);letter-spacing:-.01em;box-shadow:var(--card-shadow)}
+#s04b .decided::before{content:"";width:22px;height:22px;border-radius:50%;background:var(--paper)}
+#s04b .mail{left:690px;top:136px;width:1134px}
+#s04b .fict{left:690px;top:412px;width:1134px;display:flex;align-items:center;gap:20px;color:var(--ink-2)}
+#s04b .fict::after{content:"";flex:1;border-top:2px solid var(--ink)}
+.scn{position:absolute;top:462px;width:480px;height:300px;background:var(--paper-2);border:3px solid var(--ink);box-shadow:var(--card-shadow)}
+.scn .kicker{position:absolute;left:28px;top:26px;color:var(--ink-2)}
+.scn .big{position:absolute;right:26px;top:-2px;font:900 176px/1 var(--serif);letter-spacing:-.02em}
+.scn p{position:absolute;left:28px;right:28px;bottom:24px;margin:0;font:500 33px/1.24 var(--sans)}
+#s04b .scn-t{left:690px} #s04b .scn-m{left:1344px}
+.scn .stamp{left:12px;right:12px;bottom:8px}
+.scn .stamp .ink{justify-content:center;text-align:center}
+#s04b .chips{top:786px;display:flex;gap:14px}
+#s04b .chips-t{left:690px} #s04b .chips-m{left:1344px}
+#s04b .flip{left:1170px;top:516px;width:174px;display:flex;flex-direction:column;align-items:center;z-index:12}
+#s04b .flip svg{width:118px;height:118px;color:var(--amber-ink);stroke-width:5;background:var(--paper);border-radius:50%}
+#s04b .flip .lbl{margin-top:8px;white-space:nowrap;background:var(--amber);color:var(--ink);font:italic 600 32px/1 var(--serif);padding:10px 18px 12px;border-radius:999px;box-shadow:0 0 0 4px var(--paper)}
+#s04b .muller{left:690px;top:876px;width:1134px;border-left:10px solid var(--amber);padding:2px 0 4px 30px}
+#s04b .muller .q{font-size:48px}
+
+/* ==========================================================================
+   S05 — the definition (signature morph target)
+   ========================================================================== */
+#s05 .kick{left:96px;top:134px;font:400 28px/1.2 var(--sans);color:var(--ink-2);display:flex;align-items:center;gap:14px}
+#s05 .kick .kicker{color:var(--ink)}
+#s05 .h1{left:96px;top:176px}
+#s05 .rowrule{left:96px;width:1728px;border-top:2px solid var(--ink)}
+#s05 .rowlbl{left:96px;width:560px;display:flex;align-items:center;gap:14px;font:800 36px/1 var(--sans);letter-spacing:.12em}
+#s05 .meta{left:96px;width:560px;white-space:nowrap;font:500 28px/1.2 var(--sans);color:var(--ink-2)}
+#s05 .def{left:96px;width:556px;margin:0;font:italic 400 36px/1.2 var(--serif)}
+#s05 .mn{left:96px;font:800 28px/1 var(--sans);letter-spacing:.08em;padding:12px 22px 13px;border-radius:999px}
+#s05 .mn-td{background:var(--amber);color:var(--ink)}
+#s05 .mn-c{background:var(--teal);color:var(--paper)}
+#s05 .mn small{font:600 28px/1 var(--sans);letter-spacing:0;text-transform:none}
+.seg{position:absolute;height:42px}
+.seg-disc-td{background:var(--amber);box-shadow:inset 0 0 0 2.5px var(--amber-glyph)}
+.seg-disc-c{background:var(--teal)}
+.seg-impl{clip-path:polygon(0 0,calc(100% - 30px) 0,100% 50%,calc(100% - 30px) 100%,0 100%)}
+.seg-impl-td{background:repeating-linear-gradient(-45deg,var(--amber) 0 9px,var(--amber-tint) 9px 18px)}
+.seg-impl-c{background:var(--teal-tint);box-shadow:inset 0 0 0 0 transparent}
+.seg-impl-c::before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(-45deg,var(--teal) 0 9px,transparent 9px 18px);opacity:.55}
+.seglbl{position:absolute;font:600 28px/1.22 var(--sans);color:var(--ink)}
+.seglbl em{font-style:normal;font-weight:400;color:var(--ink-2)}
+.glyph{position:absolute;line-height:1;margin:0}
+#s05 .gd{left:814px;top:400px;font:800 196px/1 var(--serif);color:var(--amber-glyph)}
+#s05 .gD{left:1276px;top:713px;font:900 196px/1 var(--serif);color:var(--teal)}
+#s05 .callout{position:absolute;margin:0;font:italic 400 33px/1.18 var(--serif);white-space:nowrap}
+#s05 .callout .qm{font-style:normal;font-weight:800}
+.loop{position:absolute;width:74px;height:74px;color:var(--amber-ink)}
+.loop svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+#s05 .flipnote{left:1112px;top:452px;font:italic 500 32px/1 var(--serif);color:var(--amber-ink);white-space:nowrap}
+#s05 .gest{margin-left:auto;display:flex;align-items:center;gap:16px;font:600 28px/1.2 var(--sans);color:var(--ink)}
+#s05 .gest svg{width:60px;height:60px;fill:none;stroke:var(--ink);stroke-width:3.6;stroke-linecap:round;stroke-linejoin:round}
+#s05 .gest .sep{color:var(--ink-2);padding:0 6px}
+
+/* ==========================================================================
+   S08a — Fig. 5.3 map
+   ========================================================================== */
+#s08a .h1{left:96px;top:140px}
+#s08a .axis{left:160px;top:466px;width:1600px}
+.cty{position:absolute;transform:translateX(-50%);font:600 38px/1 var(--sans);white-space:nowrap;letter-spacing:-.005em}
+.cty::after{content:"";position:absolute;left:50%;top:var(--dy);width:16px;height:16px;margin-left:-8px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 4px var(--paper)}
+.cty.up{top:322px;--dy:142px}
+.cty.lo{top:384px;--dy:80px}
+#s08a .axl{top:496px;font:800 32px/1 var(--sans);letter-spacing:.02em}
+#s08a .bells{left:0;top:0;width:1920px;height:1080px;pointer-events:none;overflow:visible}
+.bell{fill:url(#bellFill);stroke:url(#bellStroke);stroke-width:3;transform-box:fill-box;transform-origin:50% 100%;animation:ed-rise .7s var(--ease) both;animation-delay:calc(var(--i) * 45ms)}
+#s08a .bells.is-pending .bell{animation:none}
+#s08a .bellnote{left:96px;top:806px;margin:0;font:italic 400 52px/1.1 var(--serif);display:flex;align-items:baseline;gap:20px}
+#s08a .rel{left:96px;top:888px;font:600 28px/1 var(--sans);padding:12px 24px 13px;border:2.5px solid var(--ink);border-radius:999px;background:var(--paper-2)}
+#s08a .rel b{font-weight:800}
+
+/* ==========================================================================
+   S11b–d — ringi climb
+   ========================================================================== */
+.s11 .h1{left:96px;top:140px;font-size:84px}
+.pyr{position:absolute;left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+.pyr polygon{fill:var(--paper-3)}
+.pyr polygon.cur{fill:var(--ink)}
+.pyr text{font:500 28px var(--sans);fill:var(--ink-2);text-anchor:middle;letter-spacing:.02em}
+.pyr text.b{font-weight:800;fill:var(--ink)}
+.pyr text.cur{fill:var(--paper)}
+.pyr .trail{fill:none;stroke:var(--ink-3);stroke-width:3;stroke-dasharray:2 9;stroke-linecap:round}
+.pyr .was{fill:var(--paper);stroke:var(--ink-3);stroke-width:3}
+.ringi{position:absolute;width:420px;height:224px;background:var(--paper-2);border:3px solid var(--ink);box-shadow:var(--card-shadow);padding:18px 24px 0}
+.ringi::before{content:"";position:absolute;right:100%;top:50%;width:46px;border-top:2.5px solid var(--ink);margin-right:3px}
+.ringi::after{content:"";position:absolute;right:calc(100% + 42px);top:calc(50% - 6px);width:12px;height:12px;border-radius:50%;background:var(--ink)}
+.ringi .rt{font:italic 600 46px/1 var(--serif)}
+.ringi .rs{font:500 28px/1.2 var(--sans);color:var(--ink-2);margin-top:6px}
+.ringi .seals{position:absolute;left:22px;right:22px;bottom:20px;display:flex;justify-content:space-between}
+.ringi .slot{width:56px;height:56px;border-radius:50%;border:2px dashed var(--ink-3);position:relative}
+.hanko{position:absolute;inset:-5px;color:var(--verm)}
+.hanko svg{width:100%;height:100%}
+.hanko-D{position:absolute;inset:-12px;color:var(--teal);display:flex;align-items:center;justify-content:center;border:5px solid currentColor;border-radius:50%;background:var(--paper-2);font:900 52px/1 var(--serif);rotate:-8deg}
+.s11 .side{left:1270px;width:554px}
+.s11 .mori{top:330px}
+.s11 .mori .q{font-size:62px;line-height:1.12}
+.ghost{position:absolute;width:420px;height:224px;border:2.5px dashed var(--ink-3);border-radius:2px}
+.ghost::before{content:"";position:absolute;right:100%;top:50%;width:46px;border-top:2.5px dashed var(--ink-3);margin-right:3px}
+#s11d .meyer{left:1160px;top:262px;width:664px}
+#s11d .meyer .q{font-size:52px;color:var(--teal-deep)}
+#s11d .nema{left:1160px;top:420px;width:664px;height:250px}
+#s11d .plant{position:absolute;left:0;top:0;width:200px;height:250px}
+#s11d .nema-t{position:absolute;left:232px;top:46px;width:432px}
+#s11d .nema-t .w{font:italic 600 58px/1 var(--serif)}
+#s11d .nema-t .eq{font:400 44px/1.15 var(--serif);margin-top:12px}
+#s11d .sheldon{left:1160px;top:704px;width:664px;display:grid;gap:14px}
+#s11d .sheldon .q{font-size:34px;line-height:1.15}
+#s11d .sheldon .cite{margin-top:6px}
+
+/* ==========================================================================
+   S20 — close
+   ========================================================================== */
+#s20 .mail{left:96px;top:140px;width:1050px;padding-bottom:40px}
+#s20 .mail-body{font-size:48px}
+#s20 .mail .stamp-d{right:40px;bottom:-70px}
+#s20 .trig{left:1172px;top:332px}
+#s20 .stand{left:1268px;top:146px;width:556px;margin:0;font:600 56px/1.1 var(--serif);border-left:8px solid var(--ink);padding-left:28px}
+#s20 .gl{left:66px;top:438px;width:930px;height:600px}
+#s20 .gl .D{position:absolute;left:0;top:28px;font:900 600px/1 var(--serif);letter-spacing:-.03em;color:var(--teal)}
+#s20 .gl .qm{position:absolute;left:520px;top:226px;font:italic 300 300px/1 var(--serif);color:var(--ink)}
+#s20 .gl .d{position:absolute;left:690px;top:198px;font:800 350px/1 var(--serif);color:var(--amber-glyph)}
+#s20 .three{left:1044px;top:520px;width:780px;font:700 30px/1.3 var(--sans);letter-spacing:.02em;padding-bottom:18px;border-bottom:2px solid var(--ink)}
+#s20 .ask{left:1044px;top:590px;width:800px;margin:0;font:600 92px/1.02 var(--serif);letter-spacing:-.02em}
+#s20 .qa{left:1044px;top:930px;font:italic 500 46px/1 var(--serif);color:var(--amber-ink)}
+#s20 .hub{right:40px;bottom:30px;font:700 28px/1 var(--sans);padding:8px 16px;border-width:2px;color:var(--ink-2);background:transparent}
+
+/* overlay UI (outside the stage) */
+#black{position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .3s;z-index:100}
+#black.on{opacity:1;pointer-events:auto}
+#jump{position:fixed;right:24px;bottom:20px;z-index:101;font:700 22px/1 system-ui,sans-serif;color:#fff;background:rgba(0,0,0,.7);padding:10px 14px;border-radius:8px;display:none}
+#jump.on{display:block}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arr" viewBox="0 0 24 24"><path d="M3 12h17M14 6l6 6-6 6"/></symbol>
+    <symbol id="i-arr2" viewBox="0 0 32 24"><path d="M3 12h26M9 6l-6 6 6 6M23 6l6 6-6 6"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 48 48"><rect x="4" y="10" width="40" height="28" rx="2"/><path d="M5 12l19 15 19-15"/></symbol>
+    <symbol id="i-flip" viewBox="0 0 64 64"><path d="M14 27a19 19 0 0 1 34.5-7"/><path d="M50.5 9.5l-1.6 11.2-11-2"/><path d="M50 37a19 19 0 0 1-34.5 7"/><path d="M13.5 54.5l1.6-11.2 11 2"/></symbol>
+    <symbol id="i-loop" viewBox="0 0 64 64"><path d="M20 50a22 22 0 1 1 26 1"/><path d="M47 40l-1 12-12-2"/></symbol>
+    <symbol id="i-arms" viewBox="0 0 64 64"><circle cx="32" cy="14" r="6.5"/><path d="M32 22v21M32 43l-8 17M32 43l8 17M32 27L17 7M32 27L47 7"/></symbol>
+    <symbol id="i-finger" viewBox="0 0 64 64"><path d="M27 33V9.5a4.5 4.5 0 0 1 9 0V31"/><path d="M36 30.5a4.2 4.2 0 0 1 8.4 0V34a4.2 4.2 0 0 1 8.4 0v10c0 9-6 15-14 15h-4c-7 0-11-4-13-9l-4-9a4 4 0 0 1 7-4l2 4"/></symbol>
+    <symbol id="i-hanko" viewBox="0 0 64 64"><circle cx="32" cy="32" r="29" fill="currentColor"/><circle cx="32" cy="32" r="21.5" fill="none" stroke="#FBF8F2" stroke-width="2.6"/><rect x="22" y="22" width="20" height="20" rx="3" fill="none" stroke="#FBF8F2" stroke-width="2.6"/><circle cx="32" cy="32" r="3.6" fill="#FBF8F2"/></symbol>
+  </defs>
+</svg>
+
+<div id="viewport">
+<div id="stage">
+
+<!-- =====================================================================
+     S01 · Big D or little d?
+     ===================================================================== -->
+<section class="slide" id="s01" data-transition="fade" aria-label="Big D or little d?">
+  <div class="mast abs">Cross-Cultural Communication · Prof. Sabrina Hegner · HSB · 06.01.2027</div>
+  <div class="bigD abs glyph" data-morph="glyph-D" aria-hidden="true">D</div>
+  <div class="smalld abs glyph" data-morph="glyph-d" aria-hidden="true">d</div>
+  <h1 class="title abs">BIG D <span class="lit">or little d?</span></h1>
+  <p class="sub abs">Who decides — and how?</p>
+  <div class="meta abs">
+    <p>Erin Meyer · <i>The Culture Map</i> · Ch. 5 “Big D or Little d: Who Decides, and How?” (the Deciding scale)</p>
+    <p class="members">[MEMBER 1] · [MEMBER 2] · [MEMBER 3]</p>
+    <p class="route"><span>Definition</span> <i>·</i> <span>Countries</span> <i>·</i> <span>Recommendations</span> <i>·</i> <span>Our cultures</span> <i>·</i> <span>Management implications</span></p>
+  </div>
+  <div class="axisbar axis" data-morph="axis-dec"></div>
+  <div class="tile abs" style="left:654px" data-morph="tile-mu" title="Munich"></div>
+  <div class="tile abs" style="left:1045px" data-morph="tile-ny" title="New York"></div>
+  <div class="axl abs t-teal" style="left:96px">Consensual</div>
+  <div class="axl abs t-amber" style="right:128px">Top-down</div>
+</section>
+
+<!-- =====================================================================
+     S04b · Decision #2: the room decides
+     ===================================================================== -->
+<section class="slide" id="s04b" data-transition="fade" aria-label="Decision #2: the room decides">
+  <header class="runhead"><span class="crumb">I · Decision #2</span><span class="rh-title">Big D or little d?</span><span class="folio"><b>02</b></span></header>
+
+  <div class="rules abs" data-morph="rulecard">
+    <h3>How we decide</h3>
+    <p class="sub">(agreed before we decide)</p>
+    <ol>
+      <li><span class="cn">1</span><span>All agree <svg class="i"><use href="#i-arr"/></svg> stand up (or both hands up)</span></li>
+      <li><span class="cn">2</span><span>Seated = a concern, not a veto</span></li>
+      <li><span class="cn">3</span><span>Deadline: 2:00</span></li>
+      <li><span class="cn">4</span><span>No unanimity? Majority vote. Everyone commits.</span></li>
+      <li><span class="cn">5</span><span>Then: no reopening.</span></li>
+    </ol>
+  </div>
+
+  <div class="live abs">STAND <span>= agree</span> · SEATED <span>= concern</span></div>
+  <div class="track-ghost abs" aria-hidden="true"></div>
+  <div class="timer abs" data-step="1" data-enter="wipe" data-timer="120">
+    <div class="timer-num" data-timer-text>2:00</div>
+    <div class="timer-cap">#2</div>
+    <div class="track" data-morph="clock-cons"><div class="fill" data-timer-bar></div><div class="ticks"></div></div>
+  </div>
+  <div class="td-row abs"><div class="sliver" data-morph="clock-td"></div><span class="lbl">#1 ≈ 3 s</span></div>
+  <div class="decided abs" data-triggered="dT dM vT vM" data-enter="wipe">decided</div>
+
+  <div class="mail abs" data-auto="120" data-enter="notif">
+    <div class="mail-head"><svg class="i"><use href="#i-mail"/></svg>our email · Per-style<span class="dots"><i></i><i></i><i></i></span></div>
+    <div class="mail-body">Hey class — I thought we could practise <b>SCENARIO T</b> at the end of Part I. What do you think?</div>
+  </div>
+  <div class="fict abs kicker" data-auto="520" data-enter="fadeonly">fictional exercises</div>
+
+  <div class="scn scn-t" data-auto="600">
+    <span class="kicker">Scenario</span><span class="big" aria-hidden="true">T</span>
+    <p>Your proposal needs approval at Tokyo HQ. In four weeks.</p>
+    <div class="stamp stamp-d" data-triggered="dT" data-enter="stamp"><span class="ink"><span class="sg">D</span><span class="st">no more<br>discussion!</span></span></div>
+    <div class="stamp stamp-v" data-triggered="vT" data-enter="stamp"><span class="ink"><span class="sg">VOTE</span><span class="st">a top-down technique<br>(Meyer, p. 159)</span></span></div>
+  </div>
+  <div class="scn scn-m" data-auto="720">
+    <span class="kicker">Scenario</span><span class="big" aria-hidden="true">M</span>
+    <p>Your German–American team must pick a supplier. By Friday.</p>
+    <div class="stamp stamp-d" data-triggered="dM" data-enter="stamp"><span class="ink"><span class="sg">D</span><span class="st">no more<br>discussion!</span></span></div>
+    <div class="stamp stamp-v" data-triggered="vM" data-enter="stamp"><span class="ink"><span class="sg">VOTE</span><span class="st">a top-down technique<br>(Meyer, p. 159)</span></span></div>
+  </div>
+
+  <div class="chips chips-t abs" data-auto="800" data-enter="fadeonly">
+    <button class="chip chip-d" data-trigger="dT" data-freeze aria-label="Scenario T: capital D, no more discussion">D</button>
+    <button class="chip chip-v" data-trigger="vT" data-freeze aria-label="Scenario T: decided by vote">vote</button>
+  </div>
+  <div class="chips chips-m abs" data-auto="860" data-enter="fadeonly">
+    <button class="chip chip-d" data-trigger="dM" data-freeze aria-label="Scenario M: capital D, no more discussion">D</button>
+    <button class="chip chip-v" data-trigger="vM" data-freeze aria-label="Scenario M: decided by vote">vote</button>
+  </div>
+
+  <div class="flip abs" data-step="2" data-enter="zoom">
+    <svg class="i" viewBox="0 0 64 64"><use href="#i-flip"/></svg>
+    <span class="lbl">new data?</span>
+  </div>
+  <div class="muller abs" data-step="3">
+    <p class="q">“They casually change the decision every week…”</p>
+    <span class="cite">— M. Müller · German director</span>
+  </div>
+</section>
+
+<!-- =====================================================================
+     S05 · What you just felt has a name
+     ===================================================================== -->
+<section class="slide" id="s05" data-transition="morph" aria-label="What you just felt has a name">
+  <header class="runhead"><span class="crumb">I · Definition</span><span class="rh-title">Big D or little d?</span><span class="folio"><b>03</b></span></header>
+  <div class="kick abs" data-auto="420"><span class="kicker">The Deciding scale</span>·<span>Consensual <svg class="i" viewBox="0 0 32 24" style="width:1.3em"><use href="#i-arr2"/></svg> Top-down</span>·<span>who decides, and how?</span></div>
+  <h2 class="h1 abs" data-auto="480">What you just felt has a name.</h2>
+
+  <!-- row 1: TOP-DOWN (Decision #1 came first) -->
+  <div class="rowrule abs" style="top:326px" data-auto="380" data-enter="wipe"></div>
+  <div class="rowlbl abs t-amber" style="top:352px" data-auto="560">TOP-DOWN</div>
+  <div class="meta abs" style="top:400px" data-auto="600">Decision #1 · one person · ≈ 3 s</div>
+  <p class="def abs" style="top:450px" data-step="2">“Decisions are made by individuals (usually the boss).”</p>
+  <div class="mn mn-td abs" style="top:590px" data-step="4" data-enter="wipe">FAST IN · SLOW OUT <small>(flexible)</small></div>
+
+  <p class="callout abs" style="left:940px;top:352px" data-step="2"><span class="qm t-amber">“</span>each decision is also flexible—a decision with a lowercase d<span class="qm t-amber">”</span></p>
+  <div class="loop" style="left:1030px;top:444px" data-step="1" data-enter="zoom" data-delay="250"><svg viewBox="0 0 64 64"><use href="#i-loop"/></svg></div>
+  <div class="flipnote abs" data-step="1" data-delay="300"><svg class="i" viewBox="0 0 24 24" style="rotate:180deg;width:.9em"><use href="#i-arr"/></svg> our CEO’s flip</div>
+  <div class="loop" style="left:1460px;top:444px" data-step="1" data-enter="zoom" data-delay="450"><svg viewBox="0 0 64 64"><use href="#i-loop"/></svg></div>
+  <div class="loop" style="left:1680px;top:444px" data-step="1" data-enter="zoom" data-delay="650"><svg viewBox="0 0 64 64"><use href="#i-loop"/></svg></div>
+  <div class="seg seg-disc-td" style="left:680px;top:520px;width:128px" data-morph="clock-td"></div>
+  <div class="glyph gd" data-auto="520" data-enter="drop">d</div>
+  <div class="seg seg-impl seg-impl-td" style="left:940px;top:520px;width:884px" data-step="1" data-enter="wipe"></div>
+  <div class="seglbl" style="left:680px;top:576px" data-auto="760" data-enter="fadeonly">Discussion</div>
+  <div class="seglbl" style="left:940px;top:576px;width:884px" data-step="1" data-enter="fadeonly" data-delay="200">Implementation <em>(more discussion, possible revisiting and altering of decision)</em></div>
+
+  <!-- row 2: CONSENSUAL -->
+  <div class="rowrule abs" style="top:664px" data-auto="440" data-enter="wipe"></div>
+  <div class="rowlbl abs t-teal" style="top:690px" data-auto="640">CONSENSUAL</div>
+  <div class="meta abs" style="top:738px" data-auto="680">Decision #2 · consensus rules · minutes</div>
+  <p class="def abs" style="top:786px" data-step="3">“Decisions are made in groups through unanimous agreement.”</p>
+  <div class="mn mn-c abs" style="top:902px" data-step="4" data-enter="wipe" data-delay="150">SLOW IN · FAST OUT</div>
+
+  <p class="callout abs" style="left:700px;top:688px;width:1124px;text-align:right" data-step="3"><span class="qm g-teal">“</span>fixed and inflexible—a decision with a capital D<span class="qm g-teal">”</span></p>
+  <div class="seg seg-disc-c" style="left:680px;top:840px;width:588px" data-morph="clock-cons"></div>
+  <div class="glyph gD" data-auto="640" data-enter="drop">D</div>
+  <div class="seg seg-impl seg-impl-c" style="left:1446px;top:840px;width:250px" data-step="1" data-enter="wipe" data-delay="150"></div>
+  <div class="seglbl" style="left:680px;top:896px" data-auto="800" data-enter="fadeonly">Discussion</div>
+  <div class="seglbl" style="left:1446px;top:896px;width:378px" data-step="1" data-enter="fadeonly" data-delay="350">Implementation<br><em>(no more discussion!)</em></div>
+
+  <footer class="foot" data-auto="700" data-enter="fadeonly">
+    <span class="src">Meyer (2014), Figs. 5.1–5.3 · mnemonic chips: <b>ours</b></span>
+    <span class="gest" data-step="5">
+      <svg viewBox="0 0 64 64"><use href="#i-arms"/></svg><span>Big D = both arms up</span>
+      <span class="sep">·</span>
+      <svg viewBox="0 0 64 64"><use href="#i-finger"/></svg><span>little d = one finger</span>
+    </span>
+  </footer>
+</section>
+
+<!-- =====================================================================
+     S08a · Where does your culture decide? (Fig. 5.3)
+     ===================================================================== -->
+<section class="slide" id="s08a" data-transition="fade" aria-label="Where does your culture decide?">
+  <header class="runhead"><span class="crumb">I · Classification</span><span class="rh-title">Big D or little d?</span><span class="folio"><b>04</b></span></header>
+  <h2 class="h1 abs">Where does your culture decide?</h2>
+
+  <svg class="bells abs" data-step="2" data-enter="fadeonly" viewBox="0 0 1920 1080" aria-hidden="true">
+    <defs>
+      <linearGradient id="bellFill" gradientUnits="userSpaceOnUse" x1="160" y1="0" x2="1760" y2="0">
+        <stop offset="0" stop-color="#0F6E68" stop-opacity=".2"/><stop offset=".5" stop-color="#8C8579" stop-opacity=".13"/><stop offset="1" stop-color="#E9A23B" stop-opacity=".26"/>
+      </linearGradient>
+      <linearGradient id="bellStroke" gradientUnits="userSpaceOnUse" x1="160" y1="0" x2="1760" y2="0">
+        <stop offset="0" stop-color="#0F6E68"/><stop offset=".5" stop-color="#6F695E"/><stop offset="1" stop-color="#AD6800"/>
+      </linearGradient>
+    </defs>
+    <line x1="96" y1="760" x2="1824" y2="760" stroke="#17150F" stroke-width="2"/>
+<path class="bell" style="--i:0" d="M56 757.9 L61 757.3 L65 756.6 L70 755.7 L75 754.6 L79 753.2 L84 751.7 L89 749.8 L93 747.5 L98 744.9 L103 741.8 L107 738.3 L112 734.3 L117 729.7 L121 724.6 L126 718.9 L131 712.6 L135 705.8 L140 698.3 L145 690.3 L149 681.9 L154 673.0 L159 663.8 L163 654.3 L168 644.8 L173 635.2 L177 625.7 L182 616.6 L187 607.9 L191 599.7 L196 592.3 L201 585.8 L205 580.3 L210 575.8 L215 572.6 L219 570.7 L224 570.0 L229 570.7 L233 572.6 L238 575.8 L243 580.3 L247 585.8 L252 592.3 L257 599.7 L261 607.9 L266 616.6 L271 625.7 L275 635.2 L280 644.8 L285 654.3 L289 663.8 L294 673.0 L299 681.9 L303 690.3 L308 698.3 L313 705.8 L317 712.6 L322 718.9 L327 724.6 L331 729.7 L336 734.3 L341 738.3 L345 741.8 L350 744.9 L355 747.5 L359 749.8 L364 751.7 L369 753.2 L373 754.6 L378 755.7 L383 756.6 L387 757.3 L392 757.9 Z"/>
+<path class="bell" style="--i:1" d="M150 757.9 L155 757.3 L159 756.6 L164 755.7 L169 754.6 L173 753.2 L178 751.7 L183 749.8 L187 747.5 L192 744.9 L197 741.8 L201 738.3 L206 734.3 L211 729.7 L215 724.6 L220 718.9 L225 712.6 L229 705.8 L234 698.3 L239 690.3 L243 681.9 L248 673.0 L253 663.8 L257 654.3 L262 644.8 L267 635.2 L271 625.7 L276 616.6 L281 607.9 L285 599.7 L290 592.3 L295 585.8 L299 580.3 L304 575.8 L309 572.6 L313 570.7 L318 570.0 L323 570.7 L327 572.6 L332 575.8 L337 580.3 L341 585.8 L346 592.3 L351 599.7 L355 607.9 L360 616.6 L365 625.7 L369 635.2 L374 644.8 L379 654.3 L383 663.8 L388 673.0 L393 681.9 L397 690.3 L402 698.3 L407 705.8 L411 712.6 L416 718.9 L421 724.6 L425 729.7 L430 734.3 L435 738.3 L439 741.8 L444 744.9 L449 747.5 L453 749.8 L458 751.7 L463 753.2 L467 754.6 L472 755.7 L477 756.6 L481 757.3 L486 757.9 Z"/>
+<path class="bell" style="--i:2" d="M280 757.9 L285 757.3 L289 756.6 L294 755.7 L299 754.6 L303 753.2 L308 751.7 L313 749.8 L317 747.5 L322 744.9 L327 741.8 L331 738.3 L336 734.3 L341 729.7 L345 724.6 L350 718.9 L355 712.6 L359 705.8 L364 698.3 L369 690.3 L373 681.9 L378 673.0 L383 663.8 L387 654.3 L392 644.8 L397 635.2 L401 625.7 L406 616.6 L411 607.9 L415 599.7 L420 592.3 L425 585.8 L429 580.3 L434 575.8 L439 572.6 L443 570.7 L448 570.0 L453 570.7 L457 572.6 L462 575.8 L467 580.3 L471 585.8 L476 592.3 L481 599.7 L485 607.9 L490 616.6 L495 625.7 L499 635.2 L504 644.8 L509 654.3 L513 663.8 L518 673.0 L523 681.9 L527 690.3 L532 698.3 L537 705.8 L541 712.6 L546 718.9 L551 724.6 L555 729.7 L560 734.3 L565 738.3 L569 741.8 L574 744.9 L579 747.5 L583 749.8 L588 751.7 L593 753.2 L597 754.6 L602 755.7 L607 756.6 L611 757.3 L616 757.9 Z"/>
+<path class="bell" style="--i:3" d="M514 757.9 L519 757.3 L523 756.6 L528 755.7 L533 754.6 L537 753.2 L542 751.7 L547 749.8 L551 747.5 L556 744.9 L561 741.8 L565 738.3 L570 734.3 L575 729.7 L579 724.6 L584 718.9 L589 712.6 L593 705.8 L598 698.3 L603 690.3 L607 681.9 L612 673.0 L617 663.8 L621 654.3 L626 644.8 L631 635.2 L635 625.7 L640 616.6 L645 607.9 L649 599.7 L654 592.3 L659 585.8 L663 580.3 L668 575.8 L673 572.6 L677 570.7 L682 570.0 L687 570.7 L691 572.6 L696 575.8 L701 580.3 L705 585.8 L710 592.3 L715 599.7 L719 607.9 L724 616.6 L729 625.7 L733 635.2 L738 644.8 L743 654.3 L747 663.8 L752 673.0 L757 681.9 L761 690.3 L766 698.3 L771 705.8 L775 712.6 L780 718.9 L785 724.6 L789 729.7 L794 734.3 L799 738.3 L803 741.8 L808 744.9 L813 747.5 L817 749.8 L822 751.7 L827 753.2 L831 754.6 L836 755.7 L841 756.6 L845 757.3 L850 757.9 Z"/>
+<path class="bell" style="--i:4" d="M705 757.9 L710 757.3 L714 756.6 L719 755.7 L724 754.6 L728 753.2 L733 751.7 L738 749.8 L742 747.5 L747 744.9 L752 741.8 L756 738.3 L761 734.3 L766 729.7 L770 724.6 L775 718.9 L780 712.6 L784 705.8 L789 698.3 L794 690.3 L798 681.9 L803 673.0 L808 663.8 L812 654.3 L817 644.8 L822 635.2 L826 625.7 L831 616.6 L836 607.9 L840 599.7 L845 592.3 L850 585.8 L854 580.3 L859 575.8 L864 572.6 L868 570.7 L873 570.0 L878 570.7 L882 572.6 L887 575.8 L892 580.3 L896 585.8 L901 592.3 L906 599.7 L910 607.9 L915 616.6 L920 625.7 L924 635.2 L929 644.8 L934 654.3 L938 663.8 L943 673.0 L948 681.9 L952 690.3 L957 698.3 L962 705.8 L966 712.6 L971 718.9 L976 724.6 L980 729.7 L985 734.3 L990 738.3 L994 741.8 L999 744.9 L1004 747.5 L1008 749.8 L1013 751.7 L1018 753.2 L1022 754.6 L1027 755.7 L1032 756.6 L1036 757.3 L1041 757.9 Z"/>
+<path class="bell" style="--i:5" d="M875 757.9 L880 757.3 L884 756.6 L889 755.7 L894 754.6 L898 753.2 L903 751.7 L908 749.8 L912 747.5 L917 744.9 L922 741.8 L926 738.3 L931 734.3 L936 729.7 L940 724.6 L945 718.9 L950 712.6 L954 705.8 L959 698.3 L964 690.3 L968 681.9 L973 673.0 L978 663.8 L982 654.3 L987 644.8 L992 635.2 L996 625.7 L1001 616.6 L1006 607.9 L1010 599.7 L1015 592.3 L1020 585.8 L1024 580.3 L1029 575.8 L1034 572.6 L1038 570.7 L1043 570.0 L1048 570.7 L1052 572.6 L1057 575.8 L1062 580.3 L1066 585.8 L1071 592.3 L1076 599.7 L1080 607.9 L1085 616.6 L1090 625.7 L1094 635.2 L1099 644.8 L1104 654.3 L1108 663.8 L1113 673.0 L1118 681.9 L1122 690.3 L1127 698.3 L1132 705.8 L1136 712.6 L1141 718.9 L1146 724.6 L1150 729.7 L1155 734.3 L1160 738.3 L1164 741.8 L1169 744.9 L1174 747.5 L1178 749.8 L1183 751.7 L1188 753.2 L1192 754.6 L1197 755.7 L1202 756.6 L1206 757.3 L1211 757.9 Z"/>
+<path class="bell" style="--i:6" d="M957 757.9 L962 757.3 L966 756.6 L971 755.7 L976 754.6 L980 753.2 L985 751.7 L990 749.8 L994 747.5 L999 744.9 L1004 741.8 L1008 738.3 L1013 734.3 L1018 729.7 L1022 724.6 L1027 718.9 L1032 712.6 L1036 705.8 L1041 698.3 L1046 690.3 L1050 681.9 L1055 673.0 L1060 663.8 L1064 654.3 L1069 644.8 L1074 635.2 L1078 625.7 L1083 616.6 L1088 607.9 L1092 599.7 L1097 592.3 L1102 585.8 L1106 580.3 L1111 575.8 L1116 572.6 L1120 570.7 L1125 570.0 L1130 570.7 L1134 572.6 L1139 575.8 L1144 580.3 L1148 585.8 L1153 592.3 L1158 599.7 L1162 607.9 L1167 616.6 L1172 625.7 L1176 635.2 L1181 644.8 L1186 654.3 L1190 663.8 L1195 673.0 L1200 681.9 L1204 690.3 L1209 698.3 L1214 705.8 L1218 712.6 L1223 718.9 L1228 724.6 L1232 729.7 L1237 734.3 L1242 738.3 L1246 741.8 L1251 744.9 L1256 747.5 L1260 749.8 L1265 751.7 L1270 753.2 L1274 754.6 L1279 755.7 L1284 756.6 L1288 757.3 L1293 757.9 Z"/>
+<path class="bell" style="--i:7" d="M1017 757.9 L1022 757.3 L1026 756.6 L1031 755.7 L1036 754.6 L1040 753.2 L1045 751.7 L1050 749.8 L1054 747.5 L1059 744.9 L1064 741.8 L1068 738.3 L1073 734.3 L1078 729.7 L1082 724.6 L1087 718.9 L1092 712.6 L1096 705.8 L1101 698.3 L1106 690.3 L1110 681.9 L1115 673.0 L1120 663.8 L1124 654.3 L1129 644.8 L1134 635.2 L1138 625.7 L1143 616.6 L1148 607.9 L1152 599.7 L1157 592.3 L1162 585.8 L1166 580.3 L1171 575.8 L1176 572.6 L1180 570.7 L1185 570.0 L1190 570.7 L1194 572.6 L1199 575.8 L1204 580.3 L1208 585.8 L1213 592.3 L1218 599.7 L1222 607.9 L1227 616.6 L1232 625.7 L1236 635.2 L1241 644.8 L1246 654.3 L1250 663.8 L1255 673.0 L1260 681.9 L1264 690.3 L1269 698.3 L1274 705.8 L1278 712.6 L1283 718.9 L1288 724.6 L1292 729.7 L1297 734.3 L1302 738.3 L1306 741.8 L1311 744.9 L1316 747.5 L1320 749.8 L1325 751.7 L1330 753.2 L1334 754.6 L1339 755.7 L1344 756.6 L1348 757.3 L1353 757.9 Z"/>
+<path class="bell" style="--i:8" d="M1086 757.9 L1091 757.3 L1095 756.6 L1100 755.7 L1105 754.6 L1109 753.2 L1114 751.7 L1119 749.8 L1123 747.5 L1128 744.9 L1133 741.8 L1137 738.3 L1142 734.3 L1147 729.7 L1151 724.6 L1156 718.9 L1161 712.6 L1165 705.8 L1170 698.3 L1175 690.3 L1179 681.9 L1184 673.0 L1189 663.8 L1193 654.3 L1198 644.8 L1203 635.2 L1207 625.7 L1212 616.6 L1217 607.9 L1221 599.7 L1226 592.3 L1231 585.8 L1235 580.3 L1240 575.8 L1245 572.6 L1249 570.7 L1254 570.0 L1259 570.7 L1263 572.6 L1268 575.8 L1273 580.3 L1277 585.8 L1282 592.3 L1287 599.7 L1291 607.9 L1296 616.6 L1301 625.7 L1305 635.2 L1310 644.8 L1315 654.3 L1319 663.8 L1324 673.0 L1329 681.9 L1333 690.3 L1338 698.3 L1343 705.8 L1347 712.6 L1352 718.9 L1357 724.6 L1361 729.7 L1366 734.3 L1371 738.3 L1375 741.8 L1380 744.9 L1385 747.5 L1389 749.8 L1394 751.7 L1399 753.2 L1403 754.6 L1408 755.7 L1413 756.6 L1417 757.3 L1422 757.9 Z"/>
+<path class="bell" style="--i:9" d="M1255 757.9 L1260 757.3 L1264 756.6 L1269 755.7 L1274 754.6 L1278 753.2 L1283 751.7 L1288 749.8 L1292 747.5 L1297 744.9 L1302 741.8 L1306 738.3 L1311 734.3 L1316 729.7 L1320 724.6 L1325 718.9 L1330 712.6 L1334 705.8 L1339 698.3 L1344 690.3 L1348 681.9 L1353 673.0 L1358 663.8 L1362 654.3 L1367 644.8 L1372 635.2 L1376 625.7 L1381 616.6 L1386 607.9 L1390 599.7 L1395 592.3 L1400 585.8 L1404 580.3 L1409 575.8 L1414 572.6 L1418 570.7 L1423 570.0 L1428 570.7 L1432 572.6 L1437 575.8 L1442 580.3 L1446 585.8 L1451 592.3 L1456 599.7 L1460 607.9 L1465 616.6 L1470 625.7 L1474 635.2 L1479 644.8 L1484 654.3 L1488 663.8 L1493 673.0 L1498 681.9 L1502 690.3 L1507 698.3 L1512 705.8 L1516 712.6 L1521 718.9 L1526 724.6 L1530 729.7 L1535 734.3 L1540 738.3 L1544 741.8 L1549 744.9 L1554 747.5 L1558 749.8 L1563 751.7 L1568 753.2 L1572 754.6 L1577 755.7 L1582 756.6 L1586 757.3 L1591 757.9 Z"/>
+<path class="bell" style="--i:10" d="M1324 757.9 L1329 757.3 L1333 756.6 L1338 755.7 L1343 754.6 L1347 753.2 L1352 751.7 L1357 749.8 L1361 747.5 L1366 744.9 L1371 741.8 L1375 738.3 L1380 734.3 L1385 729.7 L1389 724.6 L1394 718.9 L1399 712.6 L1403 705.8 L1408 698.3 L1413 690.3 L1417 681.9 L1422 673.0 L1427 663.8 L1431 654.3 L1436 644.8 L1441 635.2 L1445 625.7 L1450 616.6 L1455 607.9 L1459 599.7 L1464 592.3 L1469 585.8 L1473 580.3 L1478 575.8 L1483 572.6 L1487 570.7 L1492 570.0 L1497 570.7 L1501 572.6 L1506 575.8 L1511 580.3 L1515 585.8 L1520 592.3 L1525 599.7 L1529 607.9 L1534 616.6 L1539 625.7 L1543 635.2 L1548 644.8 L1553 654.3 L1557 663.8 L1562 673.0 L1567 681.9 L1571 690.3 L1576 698.3 L1581 705.8 L1585 712.6 L1590 718.9 L1595 724.6 L1599 729.7 L1604 734.3 L1609 738.3 L1613 741.8 L1618 744.9 L1623 747.5 L1627 749.8 L1632 751.7 L1637 753.2 L1641 754.6 L1646 755.7 L1651 756.6 L1655 757.3 L1660 757.9 Z"/>
+<path class="bell" style="--i:11" d="M1389 757.9 L1394 757.3 L1398 756.6 L1403 755.7 L1408 754.6 L1412 753.2 L1417 751.7 L1422 749.8 L1426 747.5 L1431 744.9 L1436 741.8 L1440 738.3 L1445 734.3 L1450 729.7 L1454 724.6 L1459 718.9 L1464 712.6 L1468 705.8 L1473 698.3 L1478 690.3 L1482 681.9 L1487 673.0 L1492 663.8 L1496 654.3 L1501 644.8 L1506 635.2 L1510 625.7 L1515 616.6 L1520 607.9 L1524 599.7 L1529 592.3 L1534 585.8 L1538 580.3 L1543 575.8 L1548 572.6 L1552 570.7 L1557 570.0 L1562 570.7 L1566 572.6 L1571 575.8 L1576 580.3 L1580 585.8 L1585 592.3 L1590 599.7 L1594 607.9 L1599 616.6 L1604 625.7 L1608 635.2 L1613 644.8 L1618 654.3 L1622 663.8 L1627 673.0 L1632 681.9 L1636 690.3 L1641 698.3 L1646 705.8 L1650 712.6 L1655 718.9 L1660 724.6 L1664 729.7 L1669 734.3 L1674 738.3 L1678 741.8 L1683 744.9 L1688 747.5 L1692 749.8 L1697 751.7 L1702 753.2 L1706 754.6 L1711 755.7 L1716 756.6 L1720 757.3 L1725 757.9 Z"/>
+<path class="bell" style="--i:12" d="M1493 757.9 L1498 757.3 L1502 756.6 L1507 755.7 L1512 754.6 L1516 753.2 L1521 751.7 L1526 749.8 L1530 747.5 L1535 744.9 L1540 741.8 L1544 738.3 L1549 734.3 L1554 729.7 L1558 724.6 L1563 718.9 L1568 712.6 L1572 705.8 L1577 698.3 L1582 690.3 L1586 681.9 L1591 673.0 L1596 663.8 L1600 654.3 L1605 644.8 L1610 635.2 L1614 625.7 L1619 616.6 L1624 607.9 L1628 599.7 L1633 592.3 L1638 585.8 L1642 580.3 L1647 575.8 L1652 572.6 L1656 570.7 L1661 570.0 L1666 570.7 L1670 572.6 L1675 575.8 L1680 580.3 L1684 585.8 L1689 592.3 L1694 599.7 L1698 607.9 L1703 616.6 L1708 625.7 L1712 635.2 L1717 644.8 L1722 654.3 L1726 663.8 L1731 673.0 L1736 681.9 L1740 690.3 L1745 698.3 L1750 705.8 L1754 712.6 L1759 718.9 L1764 724.6 L1768 729.7 L1773 734.3 L1778 738.3 L1782 741.8 L1787 744.9 L1792 747.5 L1796 749.8 L1801 751.7 L1806 753.2 L1810 754.6 L1815 755.7 L1820 756.6 L1824 757.3 L1829 757.9 Z"/>
+  </svg>
+
+  <div class="axisbar axis" data-morph="axis-dec"></div>
+  <div class="axl abs t-teal" style="left:160px">Consensual</div>
+  <div class="axl abs t-amber" style="right:160px">Top-down</div>
+
+  <!-- the six that stay from S07 -->
+  <div class="cty up" style="left:318px">Sweden</div>
+  <div class="cty up" style="left:682px">Germany</div>
+  <div class="cty up" style="left:1043px">US</div>
+  <div class="cty lo" style="left:224px">Japan</div>
+  <div class="cty lo" style="left:448px">Netherlands</div>
+  <div class="cty lo" style="left:1557px">China</div>
+  <!-- click 1: the other seven, staggered from both ends -->
+  <div class="cty lo" style="left:873px"  data-step="1" data-delay="0">UK</div>
+  <div class="cty up" style="left:1661px" data-step="1" data-delay="0">Nigeria</div>
+  <div class="cty lo" style="left:1125px" data-step="1" data-delay="130">Brazil</div>
+  <div class="cty up" style="left:1492px" data-step="1" data-delay="130">India</div>
+  <div class="cty up" style="left:1185px" data-step="1" data-delay="260">France</div>
+  <div class="cty lo" style="left:1423px" data-step="1" data-delay="260">Russia</div>
+  <div class="cty lo" style="left:1254px" data-step="1" data-delay="390">Italy</div>
+
+  <p class="bellnote abs" data-step="2" data-delay="250">A country is a bell curve, not a dot. <span class="ours">(ours)</span></p>
+  <div class="rel abs" data-step="2" data-delay="400" data-enter="wipe"><b>relative</b> · a generalization, not a stereotype (Lecture III, slides 33–34)</div>
+
+  <footer class="foot"><span class="src">Source: Meyer (2014), Fig. 5.3</span></footer>
+</section>
+
+<!-- =====================================================================
+     S11b · Ringi — mid-management
+     ===================================================================== -->
+<section class="slide s11" id="s11b" data-transition="fade" aria-label="Ringi: the decision climbs, stamp by stamp">
+  <header class="runhead"><span class="crumb">I · Case · Ringi</span><span class="rh-title">Big D or little d?</span><span class="folio"><b>05</b></span></header>
+  <h2 class="h1 abs">The decision climbs — stamp by stamp.</h2>
+  <svg class="pyr" viewBox="0 0 1920 1080" aria-hidden="true">
+    <polygon points="340,300 600,300 659.6,462 280.4,462"/>
+    <polygon points="277.5,470 662.5,470 722.1,632 217.9,632"/>
+    <polygon class="cur" points="215,640 725,640 784.6,802 155.4,802"/>
+    <polygon points="152.5,810 787.5,810 847.1,972 92.9,972"/>
+    <text x="470" y="391">top management</text>
+    <text x="470" y="561">senior</text>
+    <text x="470" y="731" class="b cur">mid-management</text>
+    <text x="470" y="901">staff</text>
+  </svg>
+  <div class="ringi" style="left:806px;top:611px" data-morph="ringisho" data-auto="200" data-enter="fade">
+    <div class="rt">ringisho</div><div class="rs">(proposal document)</div>
+    <div class="seals">
+      <span class="slot"><span class="hanko" style="rotate:-10deg" data-auto="650" data-enter="pop"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:7deg" data-auto="750" data-enter="pop"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:-4deg" data-auto="850" data-enter="pop"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"></span><span class="slot"></span><span class="slot"></span>
+    </div>
+  </div>
+  <div class="side mori abs" data-step="1">
+    <p class="q">“…hierarchical, bottom-up, and consensual all at the same time.”</p>
+    <span class="cite">— S. Mori</span>
+  </div>
+  <footer class="foot"><span class="src">Meyer (2014), pp. 156–158</span></footer>
+</section>
+
+<!-- =====================================================================
+     S11c · Ringi — senior
+     ===================================================================== -->
+<section class="slide s11" id="s11c" data-transition="morph" aria-label="Ringi: senior level">
+  <header class="runhead"><span class="crumb">I · Case · Ringi</span><span class="rh-title">Big D or little d?</span><span class="folio"><b>06</b></span></header>
+  <h2 class="h1 abs">The decision climbs — stamp by stamp.</h2>
+  <svg class="pyr" viewBox="0 0 1920 1080" aria-hidden="true">
+    <polygon points="340,300 600,300 659.6,462 280.4,462"/>
+    <polygon class="cur" points="277.5,470 662.5,470 722.1,632 217.9,632"/>
+    <polygon points="215,640 725,640 784.6,802 155.4,802"/>
+    <polygon points="152.5,810 787.5,810 847.1,972 92.9,972"/>
+    <text x="470" y="391">top management</text>
+    <text x="470" y="561" class="cur">senior</text>
+    <path class="trail" d="M758 723 L695 553"/><circle class="was" cx="758" cy="723" r="7"/>
+    <text x="470" y="731" class="b">mid-management</text>
+    <text x="470" y="901">staff</text>
+  </svg>
+  <div class="ringi" style="left:743px;top:441px" data-morph="ringisho">
+    <div class="rt">ringisho</div><div class="rs">(proposal document)</div>
+    <div class="seals">
+      <span class="slot"><span class="hanko" style="rotate:-10deg"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:7deg"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:-4deg"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:12deg" data-auto="900" data-enter="pop"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:-6deg" data-auto="1000" data-enter="pop"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"></span>
+    </div>
+  </div>
+  <div class="side mori abs">
+    <p class="q">“…hierarchical, bottom-up, and consensual all at the same time.”</p>
+    <span class="cite">— S. Mori</span>
+  </div>
+  <footer class="foot"><span class="src">Meyer (2014), pp. 156–158</span></footer>
+</section>
+
+<!-- =====================================================================
+     S11d · Ringi — top: capital D, then nemawashi
+     ===================================================================== -->
+<section class="slide s11" id="s11d" data-transition="morph" aria-label="Ringi and nemawashi">
+  <header class="runhead"><span class="crumb">I · Case · Ringi</span><span class="rh-title">Big D or little d?</span><span class="folio"><b>07</b></span></header>
+  <h2 class="h1 abs">The decision climbs — stamp by stamp.</h2>
+  <svg class="pyr" viewBox="0 0 1920 1080" aria-hidden="true">
+    <polygon class="cur" points="340,300 600,300 659.6,462 280.4,462"/>
+    <polygon points="277.5,470 662.5,470 722.1,632 217.9,632"/>
+    <polygon points="215,640 725,640 784.6,802 155.4,802"/>
+    <polygon points="152.5,810 787.5,810 847.1,972 92.9,972"/>
+    <text x="470" y="391" class="cur">top management</text>
+    <path class="trail" d="M758 723 L695 553 L632 383"/><circle class="was" cx="758" cy="723" r="7"/><circle class="was" cx="695" cy="553" r="7"/>
+    <text x="470" y="561">senior</text>
+    <text x="470" y="731" class="b">mid-management</text>
+    <text x="470" y="901">staff</text>
+  </svg>
+  <div class="ringi" style="left:680px;top:271px" data-morph="ringisho">
+    <div class="rt">ringisho</div><div class="rs">(proposal document)</div>
+    <div class="seals">
+      <span class="slot"><span class="hanko" style="rotate:-10deg"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:7deg"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:-4deg"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:12deg"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko" style="rotate:-6deg"><svg viewBox="0 0 64 64"><use href="#i-hanko"/></svg></span></span>
+      <span class="slot"><span class="hanko-D" data-auto="950" data-enter="stamp" aria-label="capital D">D</span></span>
+    </div>
+  </div>
+
+  <div class="meyer abs" data-step="1">
+    <p class="q">“a decision with a capital D”</p>
+    <span class="cite">— Meyer</span>
+  </div>
+
+  <div class="nema abs" data-step="2">
+    <svg class="plant" viewBox="0 0 240 300" data-enter="wipe-down" aria-hidden="true">
+      <g fill="none" stroke="#17150F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M120 150C117 120 125 92 120 46"/>
+        <path d="M119 104C95 102 77 88 68 64C93 64 111 79 119 104Z"/>
+        <path d="M121 82C143 78 161 62 168 38C144 40 127 56 121 82Z"/>
+        <path d="M120 46C111 36 111 22 120 10C129 22 129 36 120 46Z"/>
+        <path d="M14 150H226" stroke-width="3"/>
+        <path d="M30 150v-6M58 150v-4M182 150v-5M206 150v-6" stroke-width="2.5"/>
+        <ellipse cx="120" cy="210" rx="76" ry="54"/>
+        <path d="M120 152C115 178 99 198 82 216M120 160C127 190 143 206 162 224M118 170C111 202 116 232 106 262M123 168C134 198 129 228 138 262"/>
+        <path d="M104 264C98 276 90 284 80 290M138 264C144 276 152 284 164 290"/>
+      </g>
+      <g fill="none" stroke="#0F6E68" stroke-width="4.5" stroke-linecap="round">
+        <path d="M47 196C88 216 152 216 193 196"/>
+        <path d="M46 222C88 244 152 244 194 222"/>
+        <path d="M74 166L168 254M166 166L72 254"/>
+      </g>
+    </svg>
+    <div class="nema-t">
+      <div class="w">nemawashi</div>
+      <div class="eq">= “root-binding”</div>
+    </div>
+  </div>
+
+  <div class="sheldon abs" data-step="3">
+    <div><p class="q">“…do my ‘root binding’ well before the actual meeting.”</p><span class="cite">— J. Sheldon</span></div>
+    <div><p class="q">“…it becomes very hard to go back on the group decision…”</p><span class="cite">— J. Sheldon</span></div>
+  </div>
+  <footer class="foot"><span class="src">Meyer (2014), pp. 156–158</span></footer>
+</section>
+
+<!-- =====================================================================
+     S20 · So — was that a big D or a little d?
+     ===================================================================== -->
+<section class="slide" id="s20" data-transition="fade" aria-label="So — was that a big D or a little d?">
+  <header class="runhead"><span class="crumb">II · Close</span><span class="rh-title">Big D or little d?</span><span class="folio"><b>08</b></span></header>
+
+  <div class="mail abs" data-auto="150" data-enter="notif">
+    <div class="mail-head"><svg class="i"><use href="#i-mail"/></svg>One last proposal:<span class="dots"><i></i><i></i><i></i></span></div>
+    <div class="mail-body">In your next group project, agree <b>HOW</b> you decide — before you decide.</div>
+    <div class="stamp stamp-d" data-triggered="d20" data-enter="stamp"><span class="ink"><span class="sg">D</span><span class="st">no more<br>discussion!</span></span></div>
+  </div>
+  <button class="chip chip-d trig abs" data-trigger="d20" aria-label="Stamp: capital D">D</button>
+
+  <p class="stand abs" data-step="1">Stand up if you’ll take this with you.</p>
+
+  <div class="gl abs" data-step="2" data-enter="fadeonly" aria-hidden="true">
+    <span class="D" data-morph="glyph-D">D</span>
+    <span class="qm">?</span>
+    <span class="d" data-morph="glyph-d">d</span>
+  </div>
+  <div class="three abs" data-step="2" data-delay="200">Three decisions today: seconds · minutes · yours.</div>
+  <p class="ask abs" data-step="2" data-delay="350">So — was that a <span class="t-teal">big D</span> or a <span class="t-amber">little d</span>?</p>
+  <div class="qa abs" data-step="3">Q&amp;A runs on little d.</div>
+  <button class="chip hub abs" data-goto="h1-hub" aria-label="Go to the Q&amp;A hub (slide 36)">→ 36</button>
+</section>
+
+</div>
+</div>
+<div id="black" aria-hidden="true"></div>
+<div id="jump" aria-live="polite"></div>
+
+<script>
+/* ==========================================================================
+   Minimal deck runtime (shared markup contract)
+   - .slide[data-transition=morph|fade|none] inside #stage (1920x1080, scaled)
+   - [data-step=n] entrance builds · [data-trigger]/[data-triggered] · [data-goto]
+   - [data-timer=sec] countdown (m:ss + bar) · [data-morph] → view-transition-name
+   ========================================================================== */
+(() => {
+  'use strict';
+  const stage = document.getElementById('stage');
+  const viewport = document.getElementById('viewport');
+  const slides = [...stage.querySelectorAll(':scope > .slide')];
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const black = document.getElementById('black');
+  const jumpEl = document.getElementById('jump');
+  let cur = -1, step = 0, digits = '', lastVT = null, raf = 0;
+
+  /* ---------- stage scaling (letterboxed, never scrolls) ---------- */
+  function fit() {
+    const w = innerWidth, h = innerHeight, s = Math.min(w / 1920, h / 1080);
+    stage.style.transform = `translate(${(w - 1920 * s) / 2}px, ${(h - 1080 * s) / 2}px) scale(${s})`;
+  }
+  addEventListener('resize', fit); fit();
+
+  /* ---------- timers ---------- */
+  const timers = [...stage.querySelectorAll('[data-timer]')].map(el => {
+    const t = { el, total: +el.dataset.timer || 120, start: 0, elapsed: 0, running: false, frozen: false,
+      text: el.querySelector('[data-timer-text]'), bar: el.querySelector('[data-timer-bar]') };
+    if (!t.text) { t.text = document.createElement('span'); t.text.setAttribute('data-timer-text', ''); el.append(t.text); }
+    if (!t.bar) { const tr = document.createElement('span'); tr.className = 'track'; t.bar = document.createElement('span'); t.bar.className = 'fill'; tr.append(t.bar); el.append(tr); }
+    el._timer = t; return t;
+  });
+  function renderTimer(t) {
+    const rem = Math.max(0, t.total - t.elapsed), s = Math.ceil(rem - 1e-6);
+    t.text.textContent = Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+    t.bar.style.transform = `scaleX(${Math.min(1, t.elapsed / t.total)})`;
+    t.el.classList.toggle('is-done', rem <= 0);
+    t.el.classList.toggle('is-running', t.running);
+  }
+  function tick(now) {
+    let any = false;
+    for (const t of timers) if (t.running) {
+      t.elapsed = (now - t.start) / 1000;
+      if (t.elapsed >= t.total) { t.elapsed = t.total; t.running = false; }
+      renderTimer(t); any = any || t.running;
+    }
+    raf = any ? requestAnimationFrame(tick) : 0;
+  }
+  function startTimer(t) {
+    if (t.running || t.frozen || t.elapsed > 0) return;
+    t.start = performance.now(); t.running = true; renderTimer(t);
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+  function resetTimer(t) { t.running = false; t.frozen = false; t.elapsed = 0; renderTimer(t); }
+  function freezeTimers(slide) {
+    for (const t of timers) if (slide.contains(t.el) && t.running) {
+      t.elapsed = (performance.now() - t.start) / 1000; t.running = false; t.frozen = true; renderTimer(t);
+    }
+  }
+  const timersIn = el => timers.filter(t => el === t.el || el.contains(t.el));
+  timers.forEach(renderTimer);
+
+  /* ---------- builds ---------- */
+  slides.forEach(s => {
+    s.querySelectorAll('[data-step],[data-triggered]').forEach(el => el.classList.add('is-pending'));
+    s.querySelectorAll('[data-auto]').forEach(el => el.style.setProperty('--auto', (+el.dataset.auto || 0) + 'ms'));
+    s.querySelectorAll('[data-delay]').forEach(el => el.style.setProperty('--delay', (+el.dataset.delay || 0) + 'ms'));
+  });
+  const maxStep = s => Math.max(0, ...[...s.querySelectorAll('[data-step]')].map(e => +e.dataset.step || 0));
+
+  function reveal(el, animate) {
+    if (!el.classList.contains('is-pending')) return;
+    el.classList.remove('is-pending', 'is-in');
+    if (animate && !reduced) { void el.offsetWidth; el.classList.add('is-in'); }
+    if (animate) timersIn(el).forEach(startTimer);
+  }
+  function conceal(el) {
+    if (el.classList.contains('is-pending')) return;
+    el.classList.add('is-pending'); el.classList.remove('is-in');
+    timersIn(el).forEach(resetTimer);
+  }
+  stage.addEventListener('animationend', e => {
+    if (e.target.classList && e.target.classList.contains('is-in') && /^ed-/.test(e.animationName)) e.target.classList.remove('is-in');
+  });
+  function applyStep(s, n, animate) {
+    s.querySelectorAll('[data-step]').forEach(el => (+el.dataset.step <= n ? reveal(el, animate) : conceal(el)));
+  }
+
+  /* ---------- morph names (only during a morph) ---------- */
+  const setNames = (s, on) => s.querySelectorAll('[data-morph]').forEach(el => {
+    el.style.viewTransitionName = on ? 'm-' + el.dataset.morph.replace(/[^a-zA-Z0-9_-]/g, '_') : '';
+  });
+
+  /* ---------- navigation ---------- */
+  function activate(i, atEnd) {
+    const s = slides[i];
+    slides.forEach((x, k) => { if (k !== i) x.classList.remove('is-active', 'is-arriving'); });
+    s.classList.toggle('no-auto', !!atEnd || reduced);
+    step = atEnd ? maxStep(s) : 0;
+    s.querySelectorAll('[data-step]').forEach(el => (+el.dataset.step <= step ? (reveal(el, false), el.classList.remove('is-in')) : conceal(el)));
+    s.classList.add('is-active');
+    cur = i;
+    try { history.replaceState(null, '', '#' + s.id); } catch (_) {}
+  }
+  function go(i, atEnd, kind) {
+    if (i < 0 || i >= slides.length || i === cur) return;
+    const from = slides[cur], to = slides[i];
+    const tr = kind || (i > cur ? to.dataset.transition : from.dataset.transition) || 'fade';
+    if (!from || reduced || tr === 'none') { activate(i, atEnd); return; }
+    const morph = tr === 'morph' && Math.abs(i - cur) === 1;
+    if (document.startViewTransition) {
+      if (morph) setNames(from, true);
+      document.documentElement.dataset.vt = morph ? 'morph' : 'fade';
+      lastVT = document.startViewTransition(() => {
+        if (morph) setNames(from, false);
+        activate(i, atEnd);
+        if (morph) setNames(to, true);
+      });
+      lastVT.finished.finally(() => { setNames(to, false); delete document.documentElement.dataset.vt; });
+    } else {
+      from.classList.add('is-leaving');
+      setTimeout(() => from.classList.remove('is-leaving'), 520);
+      activate(i, atEnd);
+      to.classList.add('is-arriving');
+    }
+  }
+  function next() {
+    const s = slides[cur];
+    if (step < maxStep(s)) { step++; applyStep(s, step, true); }
+    else go(cur + 1, false);
+  }
+  function prev() {
+    const s = slides[cur];
+    if (step > 0) { step--; applyStep(s, step, false); }
+    else go(cur - 1, true);
+  }
+  function jump(i) { if (i >= 0 && i < slides.length) go(i, false, 'fade'); }
+
+  /* ---------- triggers & hotspots ---------- */
+  function fire(btn) {
+    const s = btn.closest('.slide'), name = btn.dataset.trigger;
+    s.querySelectorAll('[data-triggered]').forEach(el => {
+      if (el.dataset.triggered.split(/\s+/).includes(name)) reveal(el, true);
+    });
+    btn.classList.add('is-fired'); btn.setAttribute('aria-pressed', 'true');
+    if (btn.hasAttribute('data-freeze')) freezeTimers(s);
+  }
+  viewport.addEventListener('click', e => {
+    const t = e.target.closest('[data-trigger]');
+    if (t) { e.stopPropagation(); fire(t); t.blur(); return; }
+    const g = e.target.closest('[data-goto]');
+    if (g) { e.stopPropagation(); const i = slides.findIndex(s => s.id === g.dataset.goto); if (i >= 0) go(i, false, 'fade'); g.blur(); return; }
+    if (e.target.closest('button, a, input, select, textarea, [data-noadvance]')) return;
+    next();
+  });
+
+  /* ---------- keyboard ---------- */
+  function showJump() { jumpEl.textContent = digits ? 'Go to ' + digits + ' ↵' : ''; jumpEl.classList.toggle('on', !!digits); }
+  addEventListener('keydown', e => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const k = e.key;
+    if (/^[0-9]$/.test(k)) { digits = (digits + k).slice(-3); showJump(); e.preventDefault(); return; }
+    if (k === 'Enter' && digits) { const n = parseInt(digits, 10); digits = ''; showJump(); jump(n - 1); e.preventDefault(); return; }
+    if (k === 'Escape') { digits = ''; showJump(); return; }
+    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Enter') { e.preventDefault(); next(); }
+    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); prev(); }
+    else if (k === 'Home') { e.preventDefault(); jump(0); }
+    else if (k === 'End') { e.preventDefault(); jump(slides.length - 1); }
+    else if (k === 'b' || k === 'B' || k === '.') { e.preventDefault(); black.classList.toggle('on'); }
+  });
+
+  /* ---------- start ---------- */
+  const fromHash = () => { const id = decodeURIComponent(location.hash.slice(1)); const i = slides.findIndex(s => s.id === id); return i >= 0 ? i : 0; };
+  activate(fromHash(), false);
+
+  /* debug / export hooks */
+  window.deck = {
+    get ids() { return slides.map(s => s.id); }, get index() { return cur; }, get step() { return step; },
+    get lastVT() { return lastVT; },
+    go: (i, atEnd) => { if (i === cur) { activate(i, atEnd); } else go(i, atEnd, 'none'); },
+    goId: (id, atEnd) => window.deck.go(slides.findIndex(s => s.id === id), atEnd),
+    next, prev,
+    fire: name => { const b = slides[cur].querySelector(`[data-trigger="${name}"]`); if (b) fire(b); },
+    setTimer: sec => timers.forEach(t => { if (slides[cur].contains(t.el)) { t.elapsed = sec; t.start = performance.now() - sec * 1000; renderTimer(t); } })
+  };
+})();
+</script>
+</body>
+</html>

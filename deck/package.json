@@ -1,0 +1,17 @@
+{
+  "name": "ccc-deck",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Design-agnostic HTML presentation engine for the CCC group talk (Big D or little d?), with PDF and PPTX export.",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "node tests/run-tests.cjs",
+    "build": "node tools/build.cjs slides/demo.html dist/demo.html",
+    "pdf": "node tools/export-pdf.cjs slides/demo.html dist/demo.pdf",
+    "pptx": "node tools/export-pptx.cjs slides/demo.html dist/demo.pptx",
+    "export": "npm run build && npm run pdf && npm run pptx"
+  },
+  "devDependencies": {
+    "pptxgenjs": "^4.0.1"
+  }
+}

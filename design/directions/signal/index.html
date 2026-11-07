@@ -1,0 +1,1012 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big D or little d? · Kinetic Grid</title>
+<style>
+/* ==========================================================================
+   KINETIC GRID (key: signal)
+   Swiss grid, data-viz heroes, two saturated poles. 1920x1080 canvas.
+   Fonts: Mona Sans (variable wdth 75-125, wght 200-900) + Geist Mono, both SIL OFL 1.1.
+   ========================================================================== */
+@font-face{font-family:"Mona Sans";src:url("fonts/mona-sans-latin-wdth-normal.woff2") format("woff2");font-weight:200 900;font-stretch:75% 125%;font-style:normal;font-display:block}
+@font-face{font-family:"Geist Mono";src:url("fonts/geist-mono-latin-wght-normal.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:block}
+
+:root{
+  /* neutrals */
+  --bg:#0F1215;        /* graphite stage */
+  --surface:#171B20;   /* cards */
+  --surface-2:#1F242B;
+  --line:#2D343D;
+  --ghost:#59616B;     /* non-text only */
+  --mute:#A9B1BA;      /* secondary text, 8.7:1 on --bg */
+  --paper:#F3F0E8;     /* primary text, 16.5:1 */
+  --ink:#0D1013;       /* text on planes / paper */
+  --ink-2:#3D434A;     /* secondary text on paper, 8.8:1 */
+  /* consensual / Big D */
+  --teal:#19B3A1;      /* plane (ink on it 7.3:1) */
+  --teal-hi:#5FDCCB;   /* text on dark 11.3:1 */
+  --teal-deep:#0E7F72; /* on paper */
+  /* top-down / little d */
+  --amber:#F2A531;     /* plane (ink on it 9.3:1) */
+  --amber-hi:#FFBE5C;  /* text on dark 11.4:1 */
+  /* hanko only */
+  --verm:#E2462B;
+
+  --f-sans:"Mona Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"Geist Mono","Cascadia Mono",Consolas,ui-monospace,monospace;
+  --ease-snap:cubic-bezier(.2,.9,.15,1);
+  --ease-morph:cubic-bezier(.72,0,.18,1);
+  --morph-dur:800ms;
+  --grid-x:96px; --col:122px; --gut:24px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:#0A0C0E;overflow:hidden}
+body{font-family:var(--f-sans);color:var(--paper);-webkit-font-smoothing:antialiased;font-synthesis:none;font-kerning:normal;cursor:default}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+b,strong{font-weight:800}
+
+/* ---------- stage ---------- */
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;background:var(--bg);overflow:hidden;
+  transform:translate(-50%,-50%) scale(var(--scale,.5));transform-origin:50% 50%;user-select:none}
+/* the 12-column grid, barely there */
+#stage::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px) 96px 0/146px 100% repeat-x}
+.slide{position:absolute;inset:0;display:none;z-index:1}
+.slide.is-active{display:block}
+.slide.is-leaving{display:block;z-index:0;animation:fx-out 380ms ease both}
+.slide.is-arriving{animation:fx-in 380ms ease both}
+@keyframes fx-out{to{opacity:0}} @keyframes fx-in{from{opacity:0}}
+.slide>*{position:absolute}
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+
+/* ---------- build visibility (entrance-only) ---------- */
+.slide [data-step]:not(.is-revealed),
+.slide [data-triggered]:not(.is-triggered){visibility:hidden;opacity:0}
+
+.deck-anim{animation-name:var(--b-anim,b-fade);animation-duration:var(--b-dur,520ms);animation-timing-function:var(--b-ease,var(--ease-snap));animation-delay:var(--b-delay,0ms);animation-fill-mode:both}
+[data-build="rise"].deck-anim,[data-enter="rise"].deck-anim{--b-anim:b-rise}
+[data-build="drop"].deck-anim,[data-enter="drop"].deck-anim{--b-anim:b-drop;--b-dur:640ms;--b-ease:cubic-bezier(.3,.8,.3,1)}
+[data-build="wipe"].deck-anim,[data-enter="wipe"].deck-anim{--b-anim:b-wipe;--b-dur:650ms;--b-ease:cubic-bezier(.65,0,.25,1)}
+[data-build="wipe-up"].deck-anim,[data-enter="wipe-up"].deck-anim{--b-anim:b-wipe-up;--b-dur:700ms;--b-ease:cubic-bezier(.65,0,.25,1)}
+[data-build="wipe-down"].deck-anim,[data-enter="wipe-down"].deck-anim{--b-anim:b-wipe-down;--b-dur:750ms;--b-ease:cubic-bezier(.65,0,.25,1)}
+[data-build="zoom"].deck-anim,[data-enter="zoom"].deck-anim{--b-anim:b-zoom;--b-dur:380ms;--b-ease:cubic-bezier(.3,1.4,.5,1)}
+[data-build="slam"].deck-anim,[data-enter="slam"].deck-anim{--b-anim:b-slam;--b-dur:340ms;--b-ease:cubic-bezier(.2,.7,.3,1)}
+[data-build="grow"].deck-anim,[data-enter="grow"].deck-anim{--b-anim:b-grow;--b-dur:620ms}
+[data-build="squeeze"].deck-anim,[data-enter="squeeze"].deck-anim{--b-anim:b-squeeze;--b-dur:760ms;--b-ease:cubic-bezier(.2,.8,.2,1)}
+[data-enter="mail"].deck-anim{--b-anim:b-mail;--b-dur:420ms}
+@keyframes b-fade{from{opacity:0}}
+@keyframes b-rise{from{opacity:0;translate:0 28px}}
+@keyframes b-drop{0%{opacity:0;translate:0 -80px}55%{opacity:1;translate:0 8px}100%{}}
+@keyframes b-mail{from{opacity:0;translate:56px -44px}}
+@keyframes b-wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes b-wipe-up{from{clip-path:inset(100% 0 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes b-wipe-down{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes b-zoom{from{opacity:0;scale:.3}}
+@keyframes b-slam{0%{opacity:0;scale:2.2}55%{opacity:1;scale:.94}80%{scale:1.03}100%{}}
+@keyframes b-grow{from{scale:1 0}}
+@keyframes b-squeeze{from{opacity:0;font-stretch:122%;font-weight:300;letter-spacing:.015em}35%{opacity:1}}
+
+/* ---------- view transitions ---------- */
+::view-transition-group(*){animation-duration:var(--morph-dur);animation-timing-function:var(--ease-morph)}
+::view-transition-old(root){animation:vt-out 380ms ease both}
+::view-transition-new(root){animation:vt-in 380ms ease both}
+html[data-vt="morph"]::view-transition-old(root){animation:vt-out 520ms var(--ease-morph) both}
+html[data-vt="morph"]::view-transition-new(root){animation:vt-in 520ms var(--ease-morph) both}
+/* S04b -> S05: the stage clears, only the two clock bars travel, then the timelines build */
+html[data-vt-to="s05"]::view-transition-old(root){animation:vt-out 280ms cubic-bezier(.4,0,1,1) both}
+html[data-vt-to="s05"]::view-transition-new(root){animation:vt-in 440ms cubic-bezier(0,0,.2,1) 300ms both}
+@keyframes vt-out{to{opacity:0}} @keyframes vt-in{from{opacity:0}}
+/* bars stretch instead of scaling proportionally */
+::view-transition-old(m-clockTD),::view-transition-new(m-clockTD),
+::view-transition-old(m-clockCons),::view-transition-new(m-clockCons){height:100%;width:100%;object-fit:fill}
+::view-transition-old(m-clockTD),::view-transition-old(m-clockCons){animation:none;opacity:0}
+::view-transition-new(m-clockTD),::view-transition-new(m-clockCons){animation:none;opacity:1}
+
+@media (prefers-reduced-motion:reduce){
+  .deck-anim{animation:none!important}
+  ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*){animation:none!important}
+  .slide.is-leaving{display:none}
+}
+
+/* ---------- chrome: rail ---------- */
+.rail{left:96px;right:96px;top:36px;height:44px;display:flex;align-items:center;justify-content:space-between;
+  font:500 28px/1 var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mute);z-index:2}
+.rail .crumb{display:flex;align-items:center;gap:16px}
+.rail .crumb::before{content:"";width:18px;height:18px;background:var(--paper)}
+.rail .sid{display:flex;align-items:center;gap:22px;text-transform:none}
+.prog{display:flex;gap:6px}
+.prog i{display:block;width:26px;height:8px;background:var(--line)}
+.prog i.on{background:var(--paper)}
+
+/* ---------- shared type ---------- */
+.mono{font-family:var(--f-mono)}
+.hx{font-weight:820;font-stretch:78%;line-height:.94;letter-spacing:-.012em}
+.tag{font:500 28px/1.1 var(--f-mono);letter-spacing:.02em}
+.q{font-weight:560}
+cite{font:500 28px/1.2 var(--f-mono);font-style:normal;color:var(--mute);letter-spacing:.02em}
+.ours{font:500 28px/1 var(--f-mono);color:var(--mute);border:2px dashed var(--ghost);padding:6px 12px;border-radius:6px;white-space:nowrap}
+svg.glyph{display:block;overflow:visible}
+svg.ic{display:inline-block;width:1em;height:1em;vertical-align:-.12em;overflow:visible}
+
+/* axis: double-headed arrow, teal -> amber */
+.axis{height:40px;background:linear-gradient(90deg,var(--teal) 0%,#8E9A98 50%,var(--amber) 100%);
+  clip-path:polygon(0 50%,44px 0,44px 15px,calc(100% - 44px) 15px,calc(100% - 44px) 0,100% 50%,calc(100% - 44px) 100%,calc(100% - 44px) 25px,44px 25px,44px 100%)}
+
+/* chips (presenter triggers, also legible to the room) */
+.chip{display:inline-flex;align-items:center;justify-content:center;height:60px;min-width:84px;padding:0 20px;border-radius:30px;
+  font:800 30px/1 var(--f-sans);font-stretch:90%;letter-spacing:.01em;border:3px solid currentColor;transition:background-color .2s,color .2s}
+.chip-d{color:var(--teal-hi)} .chip-v{color:var(--amber-hi)}
+.chip-d.is-fired{background:var(--teal);color:var(--ink);border-color:var(--teal)}
+.chip-v.is-fired{background:var(--amber);color:var(--ink);border-color:var(--amber)}
+.chip:focus-visible{outline:3px solid var(--paper);outline-offset:4px}
+
+/* email card (S04b, S20) */
+.mail{background:var(--paper);color:var(--ink);border-radius:6px;display:grid;grid-template-columns:96px 1fr;column-gap:32px;align-content:center;padding:26px 40px 26px 32px;
+  box-shadow:0 30px 60px -30px rgba(0,0,0,.8)}
+.mail .mail-ic{grid-row:1/3;width:96px;height:96px;align-self:center;color:var(--ink)}
+.mail .tag{color:var(--ink-2);margin-bottom:12px}
+.mail-t{font:500 34px/1.28 var(--f-sans)}
+.mail-t b{font-weight:820}
+
+/* stamps */
+.stamp{display:flex;align-items:center;justify-content:center;border-radius:12px;background:var(--bg);z-index:5;pointer-events:none;box-shadow:0 18px 40px -16px rgba(0,0,0,.9)}
+.stamp-d{color:var(--teal-hi);border:9px solid var(--teal-hi);gap:22px;padding:0 28px;transform:rotate(-6deg)}
+.stamp-d svg{width:88px;height:112px;flex:none}
+.stamp-d span{font:820 34px/1.08 var(--f-sans);font-stretch:85%;max-width:170px}
+.stamp-v{color:var(--amber-hi);border:9px solid var(--amber-hi);flex-direction:column;align-items:flex-start;padding:10px 28px;transform:rotate(5deg)}
+.stamp-v b{font:900 86px/.9 var(--f-sans);font-stretch:78%;letter-spacing:.02em}
+.stamp-v span{font:600 28px/1.18 var(--f-sans);margin-top:6px}
+
+/* =========================================================================
+   S01  title
+   ========================================================================= */
+#s01 .s01-src{left:96px;top:56px;width:1728px;font:500 30px/1.3 var(--f-sans);color:var(--mute)}
+#s01 .s01-D{left:96px;top:310px;width:456px;height:580px;color:var(--teal)}
+#s01 .s01-d{left:1620px;top:630px;width:194px;height:260px;color:var(--amber)}
+#s01 .s01-title{left:610px;top:150px;font-weight:900}
+#s01 .s01-title .big{display:block;font:900 300px/.8 var(--f-sans);font-stretch:76%;letter-spacing:-.01em}
+#s01 .s01-title .small{display:block;font:300 150px/1 var(--f-sans);font-stretch:100%;margin-top:22px;letter-spacing:-.01em}
+#s01 .s01-sub{left:614px;top:604px;font:700 64px/1 var(--f-sans);font-stretch:88%}
+#s01 .s01-members{left:614px;top:706px;font:500 34px/1 var(--f-mono);letter-spacing:.02em}
+#s01 .s01-course{left:614px;top:762px;font:500 30px/1.2 var(--f-sans);font-stretch:94%;color:var(--mute);white-space:nowrap}
+#s01 .s01-axis{left:96px;right:96px;top:890px}
+#s01 .tile{top:880px;height:8px;width:96px;background:var(--ghost)}
+#s01 .tile-ny{left:860px} #s01 .tile-mu{left:968px}
+#s01 .pole{top:946px;font:800 40px/1 var(--f-sans);font-stretch:90%}
+#s01 .pole-l{left:96px;color:var(--teal-hi)} #s01 .pole-r{right:96px;color:var(--amber-hi)}
+#s01 .s01-route{left:96px;right:96px;top:1012px;text-align:center;font:500 28px/1 var(--f-mono);color:var(--mute);letter-spacing:.02em}
+
+/* =========================================================================
+   S04b  decision #2
+   ========================================================================= */
+#s04b .rules{left:96px;top:112px;width:516px;height:604px;background:var(--surface);border-top:12px solid var(--paper);padding:30px 34px}
+#s04b .rules h3{font:850 50px/1 var(--f-sans);font-stretch:80%;letter-spacing:.01em}
+#s04b .rules .sub{font:500 28px/1.2 var(--f-sans);color:var(--mute);margin:10px 0 26px}
+#s04b .rules ol{list-style:none;display:grid;gap:18px}
+#s04b .rules li{display:grid;grid-template-columns:52px 1fr;gap:18px;align-items:start;font:500 30px/1.26 var(--f-sans)}
+#s04b .rules li i{font:800 28px/1 var(--f-sans);font-style:normal;width:46px;height:46px;border:3px solid var(--paper);border-radius:50%;display:grid;place-items:center;margin-top:-4px}
+#s04b .mail{left:656px;top:112px;width:1168px;height:180px}
+#s04b .card{top:318px;width:498px;height:232px;background:var(--surface);border:2px solid var(--line);display:grid;grid-template-columns:118px 1fr;column-gap:20px;padding:18px 24px 18px 18px;align-content:center}
+#s04b .card-t{left:656px} #s04b .card-m{left:1326px}
+#s04b .card .L{grid-row:1/3;font:900 180px/.8 var(--f-sans);font-stretch:75%;color:var(--paper);text-align:center;align-self:center}
+#s04b .card .k{font:600 28px/1 var(--f-mono);letter-spacing:.06em;color:var(--mute);margin-bottom:12px}
+#s04b .card .x{font:500 32px/1.2 var(--f-sans)}
+#s04b .chips{top:566px;display:flex;gap:14px}
+#s04b .chips-t{left:656px} #s04b .chips-m{right:96px}
+#s04b .fict{left:1240px;translate:-50% 0;top:578px;font:500 28px/1.1 var(--f-sans);color:var(--mute);border:2px dashed var(--ghost);padding:6px 14px;border-radius:6px;white-space:nowrap}
+#s04b .card .stamp{position:absolute;left:142px;top:20px;width:336px;height:190px}
+#s04b .stamp-v{padding:10px 24px}
+#s04b .flip{left:1163px;top:340px;width:154px;display:flex;flex-direction:column;align-items:center;z-index:4}
+#s04b .flip .disc{width:150px;height:150px;border-radius:50%;background:var(--amber);color:var(--ink);display:grid;place-items:center;box-shadow:0 0 0 10px var(--bg)}
+#s04b .flip .disc svg{width:92px;height:92px}
+#s04b .flip .lab{margin-top:14px;font:800 30px/1 var(--f-sans);font-stretch:90%;color:var(--ink);background:var(--amber);padding:8px 16px;border-radius:22px;white-space:nowrap}
+#s04b .mueller{left:656px;top:648px;width:1168px;display:flex;align-items:baseline;gap:26px;border-left:12px solid var(--amber);padding-left:26px}
+#s04b .mueller .q{font:600 42px/1.1 var(--f-sans);font-stretch:92%}
+/* clock band */
+#s04b .live{left:96px;top:758px;font:600 32px/1 var(--f-sans);color:var(--paper)}
+#s04b .live b{font-weight:850;letter-spacing:.02em}
+#s04b .sliver{left:96px;top:810px;width:34px;height:36px;background:var(--amber)}
+#s04b .sliver-l{left:146px;top:810px;font:800 32px/36px var(--f-sans);color:var(--amber-hi)}
+#s04b .track{left:96px;top:860px;width:1344px;height:80px;background:var(--surface);outline:2px solid var(--line)}
+#s04b .track i{position:absolute;top:0;bottom:0;width:2px;background:var(--line)}
+#s04b .ticks{left:96px;top:956px;width:1344px;height:30px}
+#s04b .ticks span{position:absolute;top:0;font:500 28px/1 var(--f-mono);color:var(--mute);translate:-50% 0}
+#s04b .ticks span:first-child{translate:0 0} #s04b .ticks span:last-child{translate:-100% 0}
+#s04b .readout-ph,#s04b .readout{left:1488px;top:800px;width:336px;height:186px;display:grid;place-items:center;font:900 176px/1 var(--f-sans);font-stretch:75%;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+#s04b .readout-ph{color:#858D97;border:3px dashed var(--line)}
+#s04b .timer{left:0;top:0;width:1920px;height:1080px;pointer-events:none}
+#s04b .timer>*{position:absolute}
+#s04b .fill{left:96px;top:860px;height:80px;width:calc(var(--deck-progress,0) * 1344px);background:var(--teal);transition:width .24s linear}
+#s04b .fill .deck-timer-fill{display:none}
+#s04b .readout{color:var(--teal-hi);background:var(--bg);border:3px solid var(--teal)}
+#s04b .timer[data-timer-state="done"] .readout{color:var(--amber-hi);border-color:var(--amber)}
+#s04b .cover{left:1488px;top:800px;width:336px;height:186px;background:var(--paper);color:var(--ink);display:grid;place-items:center;font:850 76px/1 var(--f-sans);font-stretch:82%;letter-spacing:.01em;z-index:3}
+
+/* =========================================================================
+   S05  what you just felt has a name
+   ========================================================================= */
+#s05 .kicker{left:96px;top:110px;font:600 28px/1 var(--f-mono);letter-spacing:.05em;color:var(--mute)}
+#s05 .kicker b{color:var(--paper);font-weight:700}
+#s05 .s05-h{left:96px;top:152px;font-size:104px;white-space:nowrap}
+#s05 .row{left:96px;width:1728px;height:300px}
+#s05 .row-td{top:286px} #s05 .row-cons{top:596px}
+#s05 .row>*{position:absolute}
+#s05 .rname{left:0;top:0;font:900 62px/1 var(--f-sans);font-stretch:78%;letter-spacing:.01em}
+#s05 .row-td .rname{color:var(--amber-hi)} #s05 .row-cons .rname{color:var(--teal-hi)}
+#s05 .prov{left:0;top:128px;width:330px;font:500 28px/1.25 var(--f-sans);color:var(--mute)}
+#s05 .def{left:384px;top:10px;font:560 34px/1.1 var(--f-sans);white-space:nowrap}
+#s05 .seg{top:124px;height:88px}
+#s05 .disc{left:384px;display:block}
+#s05 .row-td .disc{width:240px;background:var(--amber)}
+#s05 .row-cons .disc{width:860px;background:var(--teal)}
+#s05 .seg-l{top:124px;left:384px;height:88px;padding-left:22px;display:flex;align-items:center;font:800 30px/1 var(--f-sans);color:var(--ink);font-stretch:92%}
+#s05 .dec{top:62px;height:150px}
+#s05 .row-td .dec{left:640px;width:111px;color:var(--amber)}
+#s05 .row-cons .dec{left:1258px;width:118px;color:var(--teal)}
+#s05 .impl{display:flex;flex-direction:column;justify-content:center;padding:0 18px;border:4px solid;font:500 28px/1.12 var(--f-sans);font-stretch:90%;color:var(--paper)}
+#s05 .impl b{font-weight:800}
+#s05 .row-td .impl{left:770px;width:958px;border-color:var(--amber);background:rgba(242,165,49,.07)}
+#s05 .row-cons .impl{left:1392px;width:336px;border-color:var(--teal);background:rgba(25,179,161,.08)}
+#s05 .loop{top:58px;width:58px;height:58px;color:var(--amber-hi)}
+#s05 .loop-l{top:72px;left:1004px;font:600 28px/1 var(--f-mono);color:var(--amber-hi)}
+#s05 .gq{top:230px;font:560 32px/1.15 var(--f-sans);color:var(--paper);white-space:nowrap}
+#s05 .gq::before{content:"";display:inline-block;width:28px;height:4px;background:currentColor;vertical-align:.3em;margin-right:14px;opacity:.6}
+#s05 .row-td .gq{left:640px}
+#s05 .row-cons .gq{right:356px;text-align:right}
+#s05 .row-cons .gq::before{display:none}
+#s05 .row-cons .gq::after{content:"";display:inline-block;width:28px;height:4px;background:currentColor;vertical-align:.3em;margin-left:14px;opacity:.6}
+#s05 .mn{right:0;top:0;display:flex;align-items:baseline;gap:10px;padding:10px 18px;border-radius:8px;font:820 30px/1 var(--f-sans);font-stretch:85%;letter-spacing:.02em;white-space:nowrap}
+#s05 .mn small{font:600 28px/1 var(--f-sans);font-stretch:88%;letter-spacing:0}
+#s05 .row-td .mn{background:var(--amber);color:var(--ink)}
+#s05 .row-cons .mn{background:var(--teal);color:var(--ink)}
+#s05 .foot{left:96px;top:1010px;font:500 28px/1 var(--f-mono);color:var(--mute)}
+#s05 .foot em{font-style:normal;color:var(--paper)}
+#s05 .gest{right:96px;top:940px;display:flex;align-items:center;gap:20px;font:600 30px/1 var(--f-sans);color:var(--paper)}
+#s05 .gest svg{width:58px;height:58px;flex:none}
+#s05 .gest .sep{width:2px;height:48px;background:var(--line);margin:0 6px}
+
+/* =========================================================================
+   S08a  Fig. 5.3 map
+   ========================================================================= */
+#s08a .s08-h{left:96px;top:112px;font-size:118px;white-space:nowrap}
+#s08a .s08-bell{left:96px;top:262px;font:700 46px/1 var(--f-sans);font-stretch:90%;display:flex;align-items:center;gap:20px}
+#s08a .s08-chip{left:96px;top:330px;font:500 28px/1 var(--f-mono);color:var(--paper);border:3px solid var(--paper);padding:10px 16px;border-radius:30px}
+#s08a .curves{left:0;top:0;width:1920px;height:1080px;pointer-events:none;overflow:visible}
+#s08a .curves use{fill:currentColor;fill-opacity:.16;stroke:currentColor;stroke-opacity:.9;stroke-width:3;transform-box:fill-box;transform-origin:50% 100%}
+#s08a .s08-axis{left:96px;width:1728px;top:670px}
+#s08a .map{left:0;top:0;width:1920px;height:1080px}
+#s08a .lab{position:absolute;left:var(--x);translate:-50% 0;font:620 40px/1 var(--f-sans);font-stretch:92%;white-space:nowrap;color:var(--paper);
+  text-shadow:0 0 6px var(--bg),0 0 3px var(--bg),0 0 12px var(--bg)}
+#s08a .lab.up{top:546px} #s08a .lab.lo{top:604px}
+#s08a .dot{position:absolute;left:var(--x);top:690px;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--paper);box-shadow:0 0 0 5px var(--bg)}
+#s08a .plane{top:792px;height:288px;display:flex;align-items:flex-start;padding-top:44px;font:900 100px/1 var(--f-sans);font-stretch:78%;color:var(--ink)}
+#s08a .plane-t{left:0;width:640px;background:var(--teal);padding-left:96px}
+#s08a .plane-a{right:0;width:640px;background:var(--amber);justify-content:flex-end;padding-right:96px}
+#s08a .plane small{position:absolute;bottom:40px;font:600 28px/1.15 var(--f-sans);width:440px}
+#s08a .plane-a small{text-align:right}
+#s08a .s08-src{left:640px;width:640px;top:1000px;text-align:center;font:500 28px/1 var(--f-mono);color:var(--mute)}
+
+/* =========================================================================
+   S11b-d  ringi climb
+   ========================================================================= */
+.s11 .s11-h{left:96px;top:112px;font-size:98px;white-space:nowrap}
+.s11 .lvl{height:160px;background:#1B2027;display:flex;align-items:center;justify-content:flex-end;padding-right:30px;font:500 32px/1 var(--f-sans);color:var(--mute)}
+.s11 .lvl.here{background:#353D47;color:var(--paper);box-shadow:inset 0 10px 0 var(--paper);font-weight:700}
+.s11 .ghost{width:356px;height:160px;border:3px dashed var(--ghost);border-radius:4px}
+.s11 .trail{left:0;top:0;width:1100px;height:1080px;pointer-events:none}
+.s11 .lvl b{font-weight:800}
+.s11 .l4{left:520px;width:520px;top:296px}
+.s11 .l3{left:380px;width:660px;top:468px}
+.s11 .l2{left:240px;width:800px;top:640px}
+.s11 .l1{left:96px;width:944px;top:812px}
+.s11 .base{left:96px;width:944px;top:984px;height:6px;background:var(--line)}
+.s11 .ringisho{width:356px;height:160px;background:var(--paper);color:var(--ink);border-radius:4px;padding:14px 16px;z-index:3;box-shadow:0 24px 50px -20px rgba(0,0,0,.85)}
+.s11 .at-mid{left:96px;top:640px}
+.s11 .at-sen{left:230px;top:468px}
+.s11 .at-top{left:370px;top:296px}
+.s11 .hrow{display:flex;gap:6px}
+.s11 .box{width:50px;height:50px;border:2px solid #A7A39A;border-radius:3px;display:grid;place-items:center;position:relative}
+.s11 .hanko{width:46px;height:46px;color:var(--verm)}
+.s11 .hanko.D{color:var(--teal-deep)}
+.s11 .r-t{font:850 40px/1 var(--f-sans);font-stretch:85%;margin-top:12px}
+.s11 .r-s{font:500 28px/1.1 var(--f-sans);color:var(--ink-2);margin-top:4px}
+.s11 .r-l{margin-top:16px;display:grid;gap:10px}
+.s11 .r-l i{display:block;height:8px;background:#CFCBC1;border-radius:4px}
+.s11 .r-l i:nth-child(2){width:70%}
+.s11 .mori{left:1100px;top:330px;width:724px}
+.s11 .mori .q{font:620 62px/1.1 var(--f-sans);font-stretch:88%}
+.s11 .mori cite{display:block;margin-top:24px}
+.s11 .climb{left:96px;top:950px;font:500 28px/1 var(--f-mono);color:var(--mute)}
+#s11d .meyer{left:1100px;top:290px;width:724px;display:grid;grid-template-columns:96px 1fr;column-gap:28px;align-items:center}
+#s11d .meyer svg{width:96px;height:122px;color:var(--teal);grid-row:1/3}
+#s11d .meyer .q{font:700 46px/1.05 var(--f-sans);font-stretch:88%;color:var(--teal-hi)}
+#s11d .meyer cite{margin-top:10px}
+#s11d .nema{left:1100px;top:452px;width:724px;height:300px}
+#s11d .nema svg{position:absolute;left:0;top:0;width:210px;height:300px;color:var(--paper)}
+#s11d .nema .w{position:absolute;left:246px;top:70px;font:850 62px/1 var(--f-sans);font-stretch:85%}
+#s11d .nema .rb{position:absolute;left:246px;top:150px;font:600 46px/1.05 var(--f-sans);color:var(--teal-hi)}
+#s11d .sheldon{left:1100px;top:786px;width:724px;display:grid;gap:12px}
+#s11d .sheldon .q{font:560 32px/1.22 var(--f-sans)}
+#s11d .sheldon cite{display:block;margin-top:2px}
+
+/* =========================================================================
+   S20  close
+   ========================================================================= */
+#s20 .mail{left:96px;top:112px;width:960px;height:250px}
+#s20 .mail-t{font-size:42px;line-height:1.2}
+#s20 .s20-chip{left:1084px;top:206px}
+#s20 .stamp-d{left:1196px;top:140px;width:336px;height:190px}
+#s20 .stand{left:96px;top:410px;display:flex;align-items:center;gap:24px;font:750 48px/1 var(--f-sans);font-stretch:90%}
+#s20 .stand svg{width:64px;height:64px;color:var(--paper)}
+#s20 .three{left:96px;top:530px;width:1000px}
+#s20 .three .t{font:600 34px/1 var(--f-sans);margin-bottom:22px}
+#s20 .bars{display:flex;align-items:flex-end;gap:40px}
+#s20 .bars div{display:flex;flex-direction:column;gap:14px;font:600 30px/1 var(--f-mono)}
+#s20 .bars i{display:block;height:40px}
+#s20 .bars .b1 i{width:14px;background:var(--amber)}
+#s20 .bars .b2 i{width:250px;background:var(--teal)}
+#s20 .bars .b3 i{width:250px;border:4px dashed var(--paper)}
+#s20 .bars span.sep{color:var(--mute)}
+#s20 .glyphs{left:1240px;top:376px;width:584px;height:392px}
+#s20 .glyphs>*{position:absolute}
+#s20 .gD{left:0;top:0;width:283px;height:360px;color:var(--teal)}
+#s20 .gq{left:318px;top:118px;font:900 210px/1 var(--f-sans);font-stretch:75%;color:var(--paper)}
+#s20 .gd{left:432px;top:160px;width:149px;height:200px;color:var(--amber)}
+#s20 .g-axis{left:0;top:362px;width:584px;height:14px;background:linear-gradient(90deg,var(--teal),#8E9A98,var(--amber))}
+#s20 .s20-q{left:96px;top:790px;font-size:122px;white-space:nowrap}
+#s20 .qa{left:96px;top:960px;display:flex;align-items:center;gap:18px;font:700 44px/1 var(--f-sans);font-stretch:92%}
+#s20 .qa svg{width:40px;height:54px;color:var(--amber)}
+#s20 .corner{right:96px;top:1010px;font:500 28px/1 var(--f-mono);color:var(--mute);padding:6px 10px;border:2px solid var(--line);border-radius:6px}
+
+/* black screen + jump buffer */
+#black{position:fixed;inset:0;background:#000;z-index:50;display:none}
+html.is-black #black{display:block}
+#jump{position:fixed;right:24px;bottom:20px;z-index:60;font:600 22px/1 var(--f-mono);color:#fff;background:rgba(0,0,0,.7);padding:10px 14px;border-radius:8px;display:none}
+#jump.on{display:block}
+</style>
+</head>
+<body>
+
+<!-- ======================= SVG sprite (own drawings) ======================= -->
+<svg class="sprite" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="gradAxisU" gradientUnits="userSpaceOnUse" x1="96" y1="0" x2="1824" y2="0">
+      <stop offset="0" stop-color="#19B3A1"/><stop offset=".5" stop-color="#8E9A98"/><stop offset="1" stop-color="#F2A531"/>
+    </linearGradient>
+    <!-- geometric capital D: stem + half disc, 32-unit stroke -->
+    <symbol id="gD" viewBox="0 0 110 140"><path fill="currentColor" fill-rule="evenodd" d="M0 0H40A70 70 0 0 1 40 140H0Z M32 32V108H40A38 38 0 0 0 40 32Z"/></symbol>
+    <!-- geometric lowercase d: ring + stem -->
+    <symbol id="gd" viewBox="0 0 104 140"><path fill="currentColor" fill-rule="evenodd" d="M0 92a48 48 0 1 0 96 0a48 48 0 1 0-96 0Z M28 92a20 20 0 1 0 40 0a20 20 0 1 0-40 0Z"/><rect fill="currentColor" x="72" y="0" width="32" height="140"/></symbol>
+    <symbol id="i-arr" viewBox="0 0 40 24"><path d="M2 12H34M24 3l11 9-11 9" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="square"/></symbol>
+    <symbol id="i-arrlr" viewBox="0 0 48 24"><path d="M6 12H42M14 4L5 12l9 8M34 4l9 8-9 8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="square"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 96 96"><rect x="6" y="18" width="84" height="60" fill="none" stroke="currentColor" stroke-width="7"/><path d="M8 22L48 52 88 22" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="84" cy="20" r="14" fill="#19B3A1"/></symbol>
+    <symbol id="i-loop" viewBox="0 0 58 58"><path d="M44 17A19 19 0 1 0 48 34" fill="none" stroke="currentColor" stroke-width="6"/><path d="M47 6V20H33" fill="none" stroke="currentColor" stroke-width="6"/></symbol>
+    <symbol id="i-cycle" viewBox="0 0 92 92"><path d="M18 40A29 29 0 0 1 70 26" fill="none" stroke="currentColor" stroke-width="8"/><path d="M74 52A29 29 0 0 1 22 66" fill="none" stroke="currentColor" stroke-width="8"/><path d="M58 22h16V6" fill="none" stroke="currentColor" stroke-width="8"/><path d="M34 70H18v16" fill="none" stroke="currentColor" stroke-width="8"/></symbol>
+    <symbol id="i-arms" viewBox="0 0 60 60"><circle cx="30" cy="14" r="7" fill="currentColor"/><path d="M22 26L10 4M38 26L50 4" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><rect x="22" y="24" width="16" height="20" fill="currentColor"/><path d="M25 44V58M35 44V58" stroke="currentColor" stroke-width="6"/></symbol>
+    <symbol id="i-finger" viewBox="0 0 60 60"><rect x="19" y="27" width="28" height="29" rx="7" fill="currentColor"/><rect x="21" y="2" width="11" height="34" rx="5.5" fill="currentColor"/><rect x="10" y="31" width="13" height="17" rx="6.5" fill="currentColor"/><path d="M35 33h11M35 41h11" stroke="#0F1215" stroke-width="2.5"/></symbol>
+    <symbol id="i-stand" viewBox="0 0 64 64"><circle cx="32" cy="9" r="7" fill="currentColor"/><rect x="24" y="19" width="16" height="22" fill="currentColor"/><path d="M27 41V62M37 41V62M24 22L16 40M40 22L48 40" stroke="currentColor" stroke-width="6"/></symbol>
+    <symbol id="h-1" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4"/><rect x="16" y="16" width="16" height="16" fill="currentColor"/></symbol>
+    <symbol id="h-2" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4"/><path d="M24 13L34 31H14Z" fill="currentColor"/></symbol>
+    <symbol id="h-3" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4"/><path d="M24 12V36M12 24H36" stroke="currentColor" stroke-width="5"/></symbol>
+    <symbol id="h-4" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4"/><circle cx="24" cy="24" r="8" fill="none" stroke="currentColor" stroke-width="5"/></symbol>
+    <symbol id="h-5" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="4"/><path d="M14 19H34M14 29H34" stroke="currentColor" stroke-width="5"/></symbol>
+    <symbol id="h-D" viewBox="0 0 48 48"><rect x="2" y="2" width="44" height="44" rx="5" fill="currentColor"/><g fill="#F3F0E8"><path fill-rule="evenodd" d="M13 9H23A15 15 0 0 1 23 39H13Z M20 16V32H23A8 8 0 0 0 23 16Z"/></g></symbol>
+    <!-- one bell curve, centred on x = 0, sitting on y = 0 -->
+    <path id="bell" d="M-166.4 0 L-166.4 -1.3 L-156.0 -2.3 L-145.6 -4.2 L-135.2 -7.1 L-124.8 -11.8 L-114.4 -18.7 L-104.0 -28.4 L-93.6 -41.6 L-83.2 -58.4 L-72.8 -78.8 L-62.4 -102.2 L-52.0 -127.4 L-41.6 -152.5 L-31.2 -175.4 L-20.8 -193.9 L-10.4 -205.8 L0.0 -210.0 L10.4 -205.8 L20.8 -193.9 L31.2 -175.4 L41.6 -152.5 L52.0 -127.4 L62.4 -102.2 L72.8 -78.8 L83.2 -58.4 L93.6 -41.6 L104.0 -28.4 L114.4 -18.7 L124.8 -11.8 L135.2 -7.1 L145.6 -4.2 L156.0 -2.3 L166.4 -1.3 L166.4 0Z"/>
+  </defs>
+</svg>
+
+<div id="stage">
+
+<!-- =============================== S01 =============================== -->
+<section class="slide" id="s01" data-transition="fade" data-title="Big D or little d?">
+  <p class="s01-src">Erin Meyer · The Culture Map · Ch. 5 “Big D or Little d: Who Decides, and How?” (the Deciding scale)</p>
+  <svg class="glyph s01-D" data-morph="D" data-enter="wipe-up" data-delay="100" viewBox="0 0 110 140" role="img" aria-label="capital D"><use href="#gD"/></svg>
+  <h1 class="s01-title"><span class="big" data-enter="squeeze">BIG D</span><span class="small">or little d?</span></h1>
+  <p class="s01-sub">Who decides — and how?</p>
+  <p class="s01-members">[MEMBER 1] · [MEMBER 2] · [MEMBER 3]</p>
+  <p class="s01-course">Cross-Cultural Communication · Prof. Sabrina Hegner · HSB · 06.01.2027</p>
+  <svg class="glyph s01-d" data-morph="d" data-enter="wipe-up" data-delay="320" viewBox="0 0 104 140" role="img" aria-label="lowercase d"><use href="#gd"/></svg>
+  <div class="axis s01-axis" data-morph="axisDec"></div>
+  <i class="tile tile-ny" data-morph="tileNY" aria-hidden="true"></i>
+  <i class="tile tile-mu" data-morph="tileMU" aria-hidden="true"></i>
+  <p class="pole pole-l">Consensual</p>
+  <p class="pole pole-r">Top-down</p>
+  <p class="s01-route">Definition · Countries · Recommendations · Our cultures · Management implications</p>
+</section>
+
+<!-- =============================== S04b ============================== -->
+<section class="slide" id="s04b" data-transition="fade" data-title="Decision #2: the room decides">
+  <header class="rail"><span class="crumb">I · Decision #2</span><span class="sid"><span class="prog"></span>S04b</span></header>
+
+  <div class="rules" data-morph="ruleCard">
+    <h3>HOW WE DECIDE</h3>
+    <p class="sub">(agreed before we decide)</p>
+    <ol>
+      <li><i>1</i><span>All agree <svg class="ic" style="width:1.2em" aria-label="then"><use href="#i-arr"/></svg> stand up (or both hands up)</span></li>
+      <li><i>2</i><span>Seated = a concern, not a veto</span></li>
+      <li><i>3</i><span>Deadline: 2:00</span></li>
+      <li><i>4</i><span>No unanimity? Majority vote. Everyone commits.</span></li>
+      <li><i>5</i><span>Then: no reopening.</span></li>
+    </ol>
+  </div>
+
+  <div class="mail" data-morph="mail" data-enter="mail" data-delay="120">
+    <svg class="mail-ic" aria-hidden="true"><use href="#i-mail"/></svg>
+    <p class="tag">our email · Per-style</p>
+    <p class="mail-t">Hey class — I thought we could practise <b>SCENARIO T</b> at the end of Part I. What do you think?</p>
+  </div>
+
+  <div class="card card-t" data-morph="cardT" data-enter="rise" data-delay="520">
+    <span class="L" aria-hidden="true">T</span>
+    <p class="k">SCENARIO T</p>
+    <p class="x">Your proposal needs approval at Tokyo HQ. In four weeks.</p>
+    <div class="stamp stamp-d" data-triggered="dT" data-build="slam"><svg viewBox="0 0 110 140" aria-hidden="true"><use href="#gD"/></svg><span>no more discussion!</span></div>
+    <div class="stamp stamp-v" data-triggered="vT" data-build="slam"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+  </div>
+  <div class="card card-m" data-morph="cardM" data-enter="rise" data-delay="640">
+    <span class="L" aria-hidden="true">M</span>
+    <p class="k">SCENARIO M</p>
+    <p class="x">Your German–American team must pick a supplier. By Friday.</p>
+    <div class="stamp stamp-d" data-triggered="dM" data-build="slam"><svg viewBox="0 0 110 140" aria-hidden="true"><use href="#gD"/></svg><span>no more discussion!</span></div>
+    <div class="stamp stamp-v" data-triggered="vM" data-build="slam"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+  </div>
+
+  <div class="chips chips-t">
+    <button class="chip chip-d" data-trigger="dT" data-trigger-group="stamp" data-stop-timer="" data-print="hide" aria-label="Stamp Scenario T: D">D</button>
+    <button class="chip chip-v" data-trigger="vT" data-trigger-group="stamp" data-stop-timer="" data-print="hide" aria-label="Stamp Scenario T: vote">vote</button>
+  </div>
+  <div class="chips chips-m">
+    <button class="chip chip-d" data-trigger="dM" data-trigger-group="stamp" data-stop-timer="" data-print="hide" aria-label="Stamp Scenario M: D">D</button>
+    <button class="chip chip-v" data-trigger="vM" data-trigger-group="stamp" data-stop-timer="" data-print="hide" aria-label="Stamp Scenario M: vote">vote</button>
+  </div>
+  <p class="fict tag">fictional exercises</p>
+
+
+  <div class="flip" data-step="2" data-build="zoom">
+    <div class="disc"><svg aria-hidden="true"><use href="#i-cycle"/></svg></div>
+    <span class="lab">new data?</span>
+  </div>
+  <blockquote class="mueller" data-step="3" data-build="rise">
+    <span class="q">“They casually change the decision every week…”</span><cite>— M. Müller</cite>
+  </blockquote>
+
+  <!-- clock band -->
+  <p class="live"><b>STAND</b> = agree · <b>SEATED</b> = concern</p>
+  <i class="sliver" data-morph="clockTD" aria-hidden="true"></i>
+  <span class="sliver-l">#1 ≈ 3 s</span>
+  <div class="track" aria-hidden="true"><i style="left:25%"></i><i style="left:50%"></i><i style="left:75%"></i></div>
+  <div class="ticks" aria-hidden="true"><span style="left:0">0:00</span><span style="left:25%">0:30</span><span style="left:50%">1:00</span><span style="left:75%">1:30</span><span style="left:100%">2:00</span></div>
+  <div class="readout-ph" aria-hidden="true">2:00</div>
+  <div class="timer" id="clock2" data-step="1" data-timer="120" data-timer-store="decision2.time" data-build="fade" data-print="2:00">
+    <div class="fill" data-timer-bar data-morph="clockCons"></div>
+    <div class="readout" data-timer-text>2:00</div>
+  </div>
+  <div class="cover" data-triggered="dT dM vT vM" data-build="wipe-down">decided</div>
+</section>
+
+<!-- =============================== S05 =============================== -->
+<section class="slide" id="s05" data-transition="morph" data-title="What you just felt has a name">
+  <header class="rail"><span class="crumb">I · Definition</span><span class="sid"><span class="prog"></span>S05</span></header>
+  <p class="kicker"><b>THE DECIDING SCALE</b> · Consensual <svg class="ic" style="width:1.6em" aria-label="to"><use href="#i-arrlr"/></svg> Top-down · who decides, and how?</p>
+  <h2 class="hx s05-h" data-enter="squeeze" data-delay="260">What you just felt has a name.</h2>
+
+  <div class="row row-td">
+    <p class="rname">TOP-DOWN</p>
+    <p class="prov">Decision #1 · one person · ≈ 3 s</p>
+    <p class="def" data-step="2">“Decisions are made by individuals (usually the boss).”</p>
+    <i class="seg disc" data-morph="clockTD" aria-hidden="true"></i>
+    <span class="seg-l">Discussion</span>
+    <div class="seg impl" data-step="1" data-build="wipe"><b>Implementation</b><span>(more discussion, possible revisiting and altering of decision)</span></div>
+    <svg class="loop" style="left:1000px" data-step="1" data-build="zoom" data-delay="380" aria-hidden="true"><use href="#i-loop"/></svg>
+    <span class="loop-l" style="left:1072px" data-step="1" data-delay="380">our CEO's flip</span>
+    <svg class="loop" style="left:1380px" data-step="1" data-build="zoom" data-delay="580" aria-hidden="true"><use href="#i-loop"/></svg>
+    <svg class="loop" style="left:1590px" data-step="1" data-build="zoom" data-delay="780" aria-hidden="true"><use href="#i-loop"/></svg>
+    <svg class="glyph dec" data-morph="dDec" data-enter="drop" data-delay="620" viewBox="0 0 104 140" role="img" aria-label="lowercase d"><use href="#gd"/></svg>
+    <p class="gq" data-step="2">“each decision is also flexible—a decision with a lowercase d”</p>
+    <p class="mn" data-step="4" data-build="rise">FAST IN · SLOW OUT<small>(flexible)</small></p>
+  </div>
+
+  <div class="row row-cons">
+    <p class="rname">CONSENSUAL</p>
+    <p class="prov">Decision #2 · consensus rules · minutes</p>
+    <p class="def" data-step="3">“Decisions are made in groups through unanimous agreement.”</p>
+    <i class="seg disc" data-morph="clockCons" aria-hidden="true"></i>
+    <span class="seg-l">Discussion</span>
+    <div class="seg impl" data-step="1" data-build="wipe" data-delay="160"><b>Implementation</b><span>(no more discussion!)</span></div>
+    <svg class="glyph dec" data-morph="DDec" data-enter="drop" data-delay="720" viewBox="0 0 110 140" role="img" aria-label="capital D"><use href="#gD"/></svg>
+    <p class="gq" data-step="3">“fixed and inflexible—a decision with a capital D”</p>
+    <p class="mn" data-step="4" data-build="rise" data-delay="120">SLOW IN · FAST OUT</p>
+  </div>
+
+  <div class="gest" data-step="5" data-build="rise">
+    <svg aria-hidden="true"><use href="#i-arms"/></svg><span>Big D = both arms up</span>
+    <i class="sep"></i>
+    <svg aria-hidden="true"><use href="#i-finger"/></svg><span>little d = one finger</span>
+  </div>
+  <p class="foot">Meyer (2014), Figs. 5.1–5.3 · mnemonic chips: <em>ours</em></p>
+</section>
+
+<!-- =============================== S08a ============================== -->
+<section class="slide" id="s08a" data-transition="fade" data-title="Where does your culture decide?">
+  <header class="rail"><span class="crumb">I · Classification</span><span class="sid"><span class="prog"></span>S08a</span></header>
+  <h2 class="hx s08-h" data-enter="squeeze" data-delay="120">Where does your culture decide?</h2>
+  <p class="s08-bell" data-step="2" data-build="rise">A country is a bell curve, not a dot. <span class="ours">ours</span></p>
+  <p class="s08-chip" data-step="2" data-build="rise" data-delay="160">relative · a generalization, not a stereotype (Lecture III, slides 33–34)</p>
+
+  <svg class="curves" viewBox="0 0 1920 1080" aria-hidden="true">
+    <use href="#bell" style="color:#26B0A0" x="195"  y="690" data-step="2" data-build="grow" data-delay="0"/>
+    <use href="#bell" style="color:#34AD9F" x="295"  y="690" data-step="2" data-build="grow" data-delay="40"/>
+    <use href="#bell" style="color:#47A99D" x="433"  y="690" data-step="2" data-build="grow" data-delay="80"/>
+    <use href="#bell" style="color:#68A29B" x="681"  y="690" data-step="2" data-build="grow" data-delay="120"/>
+    <use href="#bell" style="color:#849C99" x="883"  y="690" data-step="2" data-build="grow" data-delay="160"/>
+    <use href="#bell" style="color:#9A9B8C" x="1064" y="690" data-step="2" data-build="grow" data-delay="200"/>
+    <use href="#bell" style="color:#A49C81" x="1151" y="690" data-step="2" data-build="grow" data-delay="240"/>
+    <use href="#bell" style="color:#AB9D7A" x="1214" y="690" data-step="2" data-build="grow" data-delay="280"/>
+    <use href="#bell" style="color:#B49E71" x="1288" y="690" data-step="2" data-build="grow" data-delay="320"/>
+    <use href="#bell" style="color:#C9A05C" x="1467" y="690" data-step="2" data-build="grow" data-delay="360"/>
+    <use href="#bell" style="color:#D1A153" x="1540" y="690" data-step="2" data-build="grow" data-delay="400"/>
+    <use href="#bell" style="color:#D9A24B" x="1609" y="690" data-step="2" data-build="grow" data-delay="440"/>
+    <use href="#bell" style="color:#E6A43E" x="1719" y="690" data-step="2" data-build="grow" data-delay="480"/>
+  </svg>
+
+  <div class="axis s08-axis" data-morph="axisDec"></div>
+
+  <!-- Fig. 5.3 label layout, measured from the book: centres as a fraction of the axis -->
+  <div class="map">
+    <!-- the six labels that arrive from S07 -->
+    <span class="lab up" style="--x:295px">Sweden</span><i class="dot" style="--x:295px"></i>
+    <span class="lab up" style="--x:681px">Germany</span><i class="dot" style="--x:681px"></i>
+    <span class="lab up" style="--x:1064px">US</span><i class="dot" style="--x:1064px"></i>
+    <span class="lab lo" style="--x:195px">Japan</span><i class="dot" style="--x:195px"></i>
+    <span class="lab lo" style="--x:433px">Netherlands</span><i class="dot" style="--x:433px"></i>
+    <span class="lab lo" style="--x:1609px">China</span><i class="dot" style="--x:1609px"></i>
+    <!-- click 1: the other seven, staggered in from both ends -->
+    <span class="lab up" style="--x:1719px" data-step="1" data-build="rise" data-delay="0">Nigeria</span><i class="dot" style="--x:1719px" data-step="1" data-build="zoom" data-delay="0"></i>
+    <span class="lab up" style="--x:1540px" data-step="1" data-build="rise" data-delay="90">India</span><i class="dot" style="--x:1540px" data-step="1" data-build="zoom" data-delay="90"></i>
+    <span class="lab lo" style="--x:1467px" data-step="1" data-build="rise" data-delay="180">Russia</span><i class="dot" style="--x:1467px" data-step="1" data-build="zoom" data-delay="180"></i>
+    <span class="lab lo" style="--x:883px" data-step="1" data-build="rise" data-delay="240">UK</span><i class="dot" style="--x:883px" data-step="1" data-build="zoom" data-delay="240"></i>
+    <span class="lab lo" style="--x:1288px" data-step="1" data-build="rise" data-delay="300">Italy</span><i class="dot" style="--x:1288px" data-step="1" data-build="zoom" data-delay="300"></i>
+    <span class="lab up" style="--x:1214px" data-step="1" data-build="rise" data-delay="390">France</span><i class="dot" style="--x:1214px" data-step="1" data-build="zoom" data-delay="390"></i>
+    <span class="lab lo" style="--x:1151px" data-step="1" data-build="rise" data-delay="480">Brazil</span><i class="dot" style="--x:1151px" data-step="1" data-build="zoom" data-delay="480"></i>
+  </div>
+
+  <div class="plane plane-t">Consensual</div>
+  <div class="plane plane-a">Top-down</div>
+  <p class="s08-src">Source: Meyer (2014), Fig. 5.3</p>
+</section>
+
+<!-- =============================== S11b ============================== -->
+<section class="slide s11" id="s11b" data-transition="fade" data-title="The decision climbs — stamp by stamp">
+  <header class="rail"><span class="crumb">I · Case · Ringi</span><span class="sid"><span class="prog"></span>S11b</span></header>
+  <h2 class="hx s11-h" data-morph="s11h" data-enter="squeeze" data-delay="100">The decision climbs — stamp by stamp.</h2>
+  <div class="lvl l4"><span>top management</span></div>
+  <div class="lvl l3"><span>senior</span></div>
+  <div class="lvl l2 here"><span><b>mid-management</b></span></div>
+  <div class="lvl l1"><span>staff</span></div>
+  <i class="base" aria-hidden="true"></i>
+  <div class="ringisho at-mid" data-morph="ringisho">
+    <div class="hrow">
+      <span class="box"><svg class="hanko" style="rotate:-8deg" data-enter="zoom" data-delay="420"><use href="#h-1"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:5deg" data-enter="zoom" data-delay="520"><use href="#h-2"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:-3deg" data-enter="zoom" data-delay="620"><use href="#h-3"/></svg></span>
+      <span class="box"></span><span class="box"></span><span class="box"></span>
+    </div>
+    <p class="r-t">ringisho</p>
+    <p class="r-s">(proposal document)</p>
+      </div>
+  <blockquote class="mori" data-morph="mori" data-step="1" data-build="rise">
+    <span class="q">“…hierarchical, bottom-up, and consensual all at the same time.”</span>
+    <cite>— S. Mori</cite>
+  </blockquote>
+</section>
+
+<!-- =============================== S11c ============================== -->
+<section class="slide s11" id="s11c" data-transition="morph" data-title="The decision climbs — stamp by stamp">
+  <header class="rail"><span class="crumb">I · Case · Ringi</span><span class="sid"><span class="prog"></span>S11c</span></header>
+  <h2 class="hx s11-h" data-morph="s11h">The decision climbs — stamp by stamp.</h2>
+  <div class="lvl l4"><span>top management</span></div>
+  <div class="lvl l3 here"><span>senior</span></div>
+  <div class="lvl l2"><span><b>mid-management</b></span></div>
+  <div class="lvl l1"><span>staff</span></div>
+  <i class="base" aria-hidden="true"></i>
+  <i class="ghost at-mid" aria-hidden="true"></i>
+  <svg class="trail" viewBox="0 0 1100 1080" aria-hidden="true"><path d="M274 720 L408 548" fill="none" stroke="#59616B" stroke-width="4" stroke-dasharray="4 12" stroke-linecap="round"/></svg>
+  <div class="ringisho at-sen" data-morph="ringisho">
+    <div class="hrow">
+      <span class="box"><svg class="hanko" style="rotate:-8deg"><use href="#h-1"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:5deg"><use href="#h-2"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:-3deg"><use href="#h-3"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:7deg" data-enter="zoom" data-delay="860"><use href="#h-4"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:-6deg" data-enter="zoom" data-delay="960"><use href="#h-5"/></svg></span>
+      <span class="box"></span>
+    </div>
+    <p class="r-t">ringisho</p>
+    <p class="r-s">(proposal document)</p>
+      </div>
+  <blockquote class="mori" data-morph="mori">
+    <span class="q">“…hierarchical, bottom-up, and consensual all at the same time.”</span>
+    <cite>— S. Mori</cite>
+  </blockquote>
+</section>
+
+<!-- =============================== S11d ============================== -->
+<section class="slide s11" id="s11d" data-transition="morph" data-title="Ringi & nemawashi">
+  <header class="rail"><span class="crumb">I · Case · Ringi</span><span class="sid"><span class="prog"></span>S11d</span></header>
+  <h2 class="hx s11-h" data-morph="s11h">The decision climbs — stamp by stamp.</h2>
+  <div class="lvl l4 here"><span>top management</span></div>
+  <div class="lvl l3"><span>senior</span></div>
+  <div class="lvl l2"><span><b>mid-management</b></span></div>
+  <div class="lvl l1"><span>staff</span></div>
+  <i class="base" aria-hidden="true"></i>
+  <i class="ghost at-mid" aria-hidden="true"></i>
+  <i class="ghost at-sen" aria-hidden="true"></i>
+  <svg class="trail" viewBox="0 0 1100 1080" aria-hidden="true"><path d="M274 720 L408 548 L548 376" fill="none" stroke="#59616B" stroke-width="4" stroke-dasharray="4 12" stroke-linecap="round"/></svg>
+  <div class="ringisho at-top" data-morph="ringisho">
+    <div class="hrow">
+      <span class="box"><svg class="hanko" style="rotate:-8deg"><use href="#h-1"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:5deg"><use href="#h-2"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:-3deg"><use href="#h-3"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:7deg"><use href="#h-4"/></svg></span>
+      <span class="box"><svg class="hanko" style="rotate:-6deg"><use href="#h-5"/></svg></span>
+      <span class="box"><svg class="hanko D" role="img" aria-label="capital D stamp" data-enter="slam" data-delay="880"><use href="#h-D"/></svg></span>
+    </div>
+    <p class="r-t">ringisho</p>
+    <p class="r-s">(proposal document)</p>
+      </div>
+
+  <div class="meyer" data-step="1" data-build="rise">
+    <svg viewBox="0 0 110 140" aria-hidden="true"><use href="#gD"/></svg>
+    <span class="q">“a decision with a capital D”</span>
+    <cite>— Meyer</cite>
+  </div>
+
+  <div class="nema" data-step="2" data-build="wipe-down">
+    <svg viewBox="0 0 210 300" aria-hidden="true">
+      <!-- line-art plant: leaves, stem, soil line, roots bound for transplanting -->
+      <g fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M105 150V48"/>
+        <path d="M105 92C78 90 58 74 54 48C80 50 100 64 105 92Z"/>
+        <path d="M105 70C126 66 144 50 146 26C122 30 108 44 105 70Z"/>
+        <path d="M105 50C100 36 104 20 116 10"/>
+        <path d="M20 150H190" stroke-width="4" stroke-dasharray="2 12"/>
+        <path d="M105 150C104 176 92 196 76 214M105 150C108 180 122 200 138 220M105 160C100 196 106 230 98 262M90 186C72 190 60 204 56 222M120 190C140 194 152 210 154 230"/>
+      </g>
+      <defs><clipPath id="ballClip"><ellipse cx="105" cy="212" rx="72" ry="60"/></clipPath></defs>
+      <g fill="none" stroke="#5FDCCB" stroke-width="4" stroke-linecap="round" clip-path="url(#ballClip)">
+        <path d="M10 150L190 290M10 190L170 314M30 130L200 262M50 110L210 234M190 150L10 290M200 190L40 314M180 130L10 262M160 110L0 234"/>
+      </g>
+      <g fill="none" stroke="#5FDCCB" stroke-width="6" stroke-linecap="round">
+        <ellipse cx="105" cy="212" rx="72" ry="60"/>
+        <path d="M58 164C80 172 130 172 152 164"/>
+      </g>
+    </svg>
+    <p class="w">nemawashi</p>
+    <p class="rb">= “root-binding”</p>
+  </div>
+
+  <div class="sheldon" data-step="3" data-build="rise">
+    <p class="q">“…do my ‘root binding’ well before the actual meeting.”</p>
+    <p class="q">“…it becomes very hard to go back on the group decision…”</p>
+    <cite>— J. Sheldon</cite>
+  </div>
+</section>
+
+<!-- =============================== S20 =============================== -->
+<section class="slide" id="s20" data-transition="fade" data-title="So — was that a big D or a little d?">
+  <header class="rail"><span class="crumb" style="text-transform:none">Big D or little d?</span><span class="sid"><span class="prog"></span>S20</span></header>
+  <div class="mail">
+    <svg class="mail-ic" aria-hidden="true"><use href="#i-mail"/></svg>
+    <p class="tag">One last proposal:</p>
+    <p class="mail-t">In your next group project, agree <b>HOW</b> you decide — before you decide.</p>
+  </div>
+  <button class="chip chip-d s20-chip" data-trigger="dS20" data-print="hide" aria-label="Stamp: D">D</button>
+  <div class="stamp stamp-d" data-triggered="dS20" data-build="slam"><svg viewBox="0 0 110 140" aria-hidden="true"><use href="#gD"/></svg><span>no more discussion!</span></div>
+
+  <p class="stand" data-step="1" data-build="rise"><svg aria-hidden="true"><use href="#i-stand"/></svg>Stand up if you'll take this with you.</p>
+
+  <div class="three" data-step="2" data-build="rise">
+    <p class="t">Three decisions today:</p>
+    <div class="bars">
+      <div class="b1"><i></i><span>seconds <span class="sep">·</span></span></div>
+      <div class="b2"><i></i><span>minutes <span class="sep">·</span></span></div>
+      <div class="b3"><i></i><span>yours.</span></div>
+    </div>
+  </div>
+
+  <div class="glyphs" data-step="2" data-build="fade">
+    <svg class="glyph gD" data-morph="D" viewBox="0 0 110 140" role="img" aria-label="capital D"><use href="#gD"/></svg>
+    <span class="gq" aria-hidden="true">?</span>
+    <svg class="glyph gd" data-morph="d" viewBox="0 0 104 140" role="img" aria-label="lowercase d"><use href="#gd"/></svg>
+    <i class="g-axis" aria-hidden="true"></i>
+  </div>
+  <h2 class="hx s20-q" data-step="2" data-build="squeeze" data-delay="200">So — was that a big D or a little d?</h2>
+  <p class="qa" data-step="3" data-build="rise"><svg viewBox="0 0 104 140" aria-hidden="true"><use href="#gd"/></svg>Q&amp;A runs on little d.</p>
+  <button class="corner" data-goto="h1" data-print="hide">→ 36</button>
+</section>
+
+</div><!-- /stage -->
+
+<div id="black" aria-hidden="true"></div>
+<div id="jump" aria-live="polite"></div>
+
+<script>
+/* ==========================================================================
+   Minimal runtime for the shared markup contract (prototype only).
+   data-step / data-build / data-enter / data-delay, data-transition,
+   data-morph (View Transitions + crossfade fallback), data-goto,
+   data-trigger / data-trigger-group / data-triggered / data-stop-timer,
+   data-timer. Keys: next/prev, digits+Enter, Home/End, b/. black.
+   ========================================================================== */
+(function () {
+  'use strict';
+  var root = document.documentElement;
+  var stage = document.getElementById('stage');
+  var slides = Array.prototype.slice.call(stage.querySelectorAll(':scope > section.slide'));
+  var RM = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var hasVT = typeof document.startViewTransition === 'function' && !/[?&]novt\b/.test(location.search);
+  var cur = 0, step = 0, vt = null, digits = '', fxTimer = 0;
+  var store = {};
+
+  function q(sel, el) { return Array.prototype.slice.call((el || document).querySelectorAll(sel)); }
+  function maxStep(s) { return q('[data-step]', s).reduce(function (m, e) { return Math.max(m, +e.dataset.step || 0); }, 0); }
+  function hidden(el) { return !!el.closest('[data-step]:not(.is-revealed), [data-triggered]:not(.is-triggered)'); }
+
+  /* ---- scale the 1920x1080 stage, letterboxed ---- */
+  function fit() { stage.style.setProperty('--scale', Math.min(innerWidth / 1920, innerHeight / 1080)); }
+  addEventListener('resize', fit); fit();
+
+  /* ---- rail progress ticks ---- */
+  slides.forEach(function (s, i) {
+    q('.prog', s).forEach(function (p) {
+      p.innerHTML = slides.map(function (_, j) { return '<i class="' + (j === i ? 'on' : '') + '"></i>'; }).join('');
+    });
+  });
+
+  /* ---- entrance animations (always end in the element's own state) ---- */
+  function play(el, extra) {
+    if (RM.matches) return;
+    var d = (+el.dataset.delay || 0) + (extra || 0);
+    el.classList.remove('deck-anim');
+    void el.getBoundingClientRect();
+    el.style.setProperty('--b-delay', d + 'ms');
+    if (el.dataset.duration) el.style.setProperty('--b-dur', el.dataset.duration + 'ms');
+    el.classList.add('deck-anim');
+    clearTimeout(el._animT);
+    el._animT = setTimeout(function () { el.classList.remove('deck-anim'); }, d + 1400);
+  }
+  stage.addEventListener('animationend', function (e) {
+    var el = e.target;
+    if (el.classList && el.classList.contains('deck-anim') && e.animationName.indexOf('b-') === 0) { el.classList.remove('deck-anim'); clearTimeout(el._animT); }
+  });
+
+  /* ---- builds ---- */
+  function reveal(slide, n, animate) {
+    q('[data-step]', slide).forEach(function (el) {
+      var k = +el.dataset.step || 0, on = k <= n, was = el.classList.contains('is-revealed');
+      if (on === was) return;
+      el.classList.toggle('is-revealed', on);
+      if (on) { if (animate && k === n) play(el); timersIn(el, 'start'); }
+      else { el.classList.remove('deck-anim'); timersIn(el, 'reset'); }
+    });
+  }
+
+  /* ---- timers ---- */
+  var T = new Map();
+  function tGet(el) {
+    if (!T.has(el)) {
+      if (!el.querySelector('[data-timer-text]')) { var s = document.createElement('span'); s.setAttribute('data-timer-text', ''); el.appendChild(s); }
+      if (!el.querySelector('[data-timer-bar]')) { var b = document.createElement('span'); b.setAttribute('data-timer-bar', ''); b.innerHTML = '<span class="deck-timer-fill"></span>'; el.appendChild(b); }
+      T.set(el, { dur: +el.dataset.timer || 60, start: 0, stopAt: 0, off: 0, state: 'idle' });
+      el.dataset.timerState = 'idle';
+    }
+    return T.get(el);
+  }
+  function elapsed(t) {
+    if (t.state === 'idle') return 0;
+    var end = t.state === 'running' ? Date.now() : t.stopAt;
+    return Math.max(0, Math.min(t.dur, (end - t.start) / 1000 + t.off));
+  }
+  function fmt(sec) { sec = Math.max(0, Math.ceil(sec - 1e-6)); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
+  function tRender(el) {
+    var t = tGet(el), e = elapsed(t);
+    if (t.state === 'running' && e >= t.dur) { t.state = 'done'; t.stopAt = Date.now(); el.dataset.timerState = 'done'; }
+    q('[data-timer-text]', el).forEach(function (x) { x.textContent = fmt(t.dur - e); });
+    el.style.setProperty('--deck-progress', (e / t.dur).toFixed(4));
+  }
+  function tStart(el) { var t = tGet(el); if (t.state !== 'idle') return; t.start = Date.now(); t.off = 0; t.state = 'running'; el.dataset.timerState = 'running'; tRender(el); }
+  function tReset(el) { var t = tGet(el); t.state = 'idle'; t.off = 0; el.dataset.timerState = 'idle'; tRender(el); }
+  function tStop(el) {
+    var t = tGet(el); if (t.state !== 'running') return;
+    t.stopAt = Date.now(); t.state = 'stopped'; el.dataset.timerState = 'stopped'; tRender(el);
+    if (el.dataset.timerStore) { var e = Math.round(elapsed(t)); store[el.dataset.timerStore] = fmt(e); store[el.dataset.timerStore + '_s'] = String(e); }
+  }
+  function tResume(el) { var t = tGet(el); if (t.state !== 'stopped') return; t.start += Date.now() - t.stopAt; t.state = 'running'; el.dataset.timerState = 'running'; }
+  function timersIn(el, what) {
+    var list = el.matches('[data-timer]') ? [el] : [];
+    list = list.concat(q('[data-timer]', el));
+    list.forEach(function (t) { what === 'start' ? tStart(t) : tReset(t); });
+  }
+  setInterval(function () { T.forEach(function (t, el) { if (t.state === 'running') tRender(el); }); }, 200);
+  q('[data-timer]').forEach(function (el) { tGet(el); tRender(el); });
+
+  /* ---- triggers ---- */
+  function syncTriggered(slide) {
+    var fired = q('[data-trigger].is-fired', slide).map(function (b) { return b.dataset.trigger; });
+    q('[data-triggered]', slide).forEach(function (el) {
+      var on = el.dataset.triggered.split(/\s+/).some(function (k) { return fired.indexOf(k) >= 0; });
+      var was = el.classList.contains('is-triggered');
+      if (on === was) return;
+      el.classList.toggle('is-triggered', on);
+      if (on) play(el); else el.classList.remove('deck-anim');
+    });
+  }
+  function fire(btn) {
+    var slide = btn.closest('.slide'), g = btn.dataset.triggerGroup, on = !btn.classList.contains('is-fired');
+    if (g) q('[data-trigger-group="' + g + '"].is-fired', slide).forEach(function (b) { if (b !== btn) { b.classList.remove('is-fired'); b.setAttribute('aria-pressed', 'false'); } });
+    btn.classList.toggle('is-fired', on); btn.setAttribute('aria-pressed', String(on));
+    if (btn.hasAttribute('data-stop-timer')) {
+      var ids = (btn.dataset.stopTimer || '').trim();
+      var timers = ids ? ids.split(/\s+/).map(function (id) { return document.getElementById(id); }).filter(Boolean) : q('[data-timer]', slide);
+      var anyStop = q('[data-trigger][data-stop-timer].is-fired', slide).length > 0;
+      timers.forEach(function (t) { anyStop ? tStop(t) : tResume(t); });
+    }
+    syncTriggered(slide);
+  }
+
+  /* ---- morph names ---- */
+  function vtName(k) { return 'm-' + String(k).replace(/[^A-Za-z0-9_-]/g, '_'); }
+  function shownAt(el, n) {
+    for (var a = el; a && !a.classList.contains('slide'); a = a.parentElement) {
+      if (a.hasAttribute('data-step') && (+a.dataset.step || 0) > n) return false;
+      if (a.hasAttribute('data-triggered') && !a.classList.contains('is-triggered')) return false;
+    }
+    return true;
+  }
+  function keysAt(s, n) { return q('[data-morph]', s).filter(function (el) { return shownAt(el, n); }).map(function (el) { return el.dataset.morph; }); }
+  var pair = null;
+  function setNames(s) {
+    q('[data-morph]', s).forEach(function (el) {
+      if (!hidden(el) && (!pair || pair.indexOf(el.dataset.morph) >= 0)) el.style.viewTransitionName = vtName(el.dataset.morph);
+    });
+  }
+  function clearNames(s) { q('[data-morph]', s).forEach(function (el) { el.style.viewTransitionName = ''; }); }
+
+  /* ---- navigation ---- */
+  function syncHash() { try { history.replaceState(null, '', '#' + slides[cur].id + (step ? '/' + step : '')); } catch (e) {} }
+  function enterAnims(s) { q('[data-enter]', s).forEach(function (el) { if (!hidden(el)) play(el); }); }
+
+  function go(i, st, dir, kind) {
+    i = Math.max(0, Math.min(slides.length - 1, i));
+    var from = slides[cur], to = slides[i];
+    var target = st === 'max' ? maxStep(to) : Math.min(+st || 0, maxStep(to));
+    if (from === to) { step = target; reveal(to, target, false); syncHash(); return; }
+    kind = kind || (dir >= 0 ? to.dataset.transition : from.dataset.transition) || 'fade';
+    if (kind === 'morph' && Math.abs(i - cur) !== 1) kind = 'fade';
+    function swap() {
+      clearNames(from);
+      from.classList.remove('is-active');
+      to.classList.add('is-active');
+      reveal(to, target, false);
+      cur = i; step = target;
+      if (kind === 'morph') setNames(to);
+      if (dir > 0 && target === 0) enterAnims(to);
+      syncHash();
+    }
+    if (vt) { try { vt.skipTransition(); } catch (e) {} vt = null; }
+    if (RM.matches || kind === 'none') { swap(); return; }
+    if (hasVT) {
+      root.dataset.vt = kind;
+      root.dataset.vtTo = to.id;
+      if (kind === 'morph') {
+        var kTo = keysAt(to, target);
+        pair = keysAt(from, step).filter(function (k) { return kTo.indexOf(k) >= 0; });
+        setNames(from);
+      }
+      var t = document.startViewTransition(swap);
+      vt = t; api.lastVT = t;
+      t.ready.catch(function () {});
+      t.finished.catch(function () {}).then(function () {
+        if (vt === t) { vt = null; delete root.dataset.vt; delete root.dataset.vtTo; pair = null; }
+        clearNames(from); clearNames(to);
+      });
+    } else {
+      clearTimeout(fxTimer);
+      q('.slide.is-leaving').forEach(function (s) { s.classList.remove('is-leaving'); });
+      from.classList.add('is-leaving');
+      swap();
+      to.classList.add('is-arriving');
+      fxTimer = setTimeout(function () { from.classList.remove('is-leaving'); to.classList.remove('is-arriving'); }, 420);
+    }
+  }
+  function lift() { if (root.classList.contains('is-black')) { root.classList.remove('is-black'); return true; } return false; }
+  function next() {
+    if (lift()) return;
+    var s = slides[cur];
+    if (step < maxStep(s)) { step++; reveal(s, step, true); syncHash(); }
+    else if (cur < slides.length - 1) go(cur + 1, 0, 1);
+  }
+  function prev() {
+    if (lift()) return;
+    var s = slides[cur];
+    if (step > 0) { step--; reveal(s, step, false); syncHash(); }
+    else if (cur > 0) go(cur - 1, 'max', -1);
+  }
+  function jump(ref) {
+    var i = /^\d+$/.test(ref) ? (+ref - 1) : slides.findIndex(function (s) { return s.id === ref; });
+    if (i < 0 || i >= slides.length) return false;
+    go(i, 0, i >= cur ? 1 : -1, 'fade'); return true;
+  }
+
+  /* ---- input ---- */
+  var jumpEl = document.getElementById('jump');
+  function showDigits() { jumpEl.textContent = digits ? 'go to ' + digits : ''; jumpEl.classList.toggle('on', !!digits); }
+  addEventListener('keydown', function (e) {
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    if (/^[0-9]$/.test(k)) { digits += k; showDigits(); e.preventDefault(); return; }
+    if (digits) {
+      if (k === 'Enter') { var n = digits; digits = ''; showDigits(); jump(n); e.preventDefault(); return; }
+      if (k === 'Escape') { digits = ''; showDigits(); return; }
+      if (k === 'Backspace') { digits = digits.slice(0, -1); showDigits(); e.preventDefault(); return; }
+    }
+    switch (k) {
+      case 'ArrowRight': case 'ArrowDown': case 'PageDown': case 'Enter': e.preventDefault(); next(); break;
+      case ' ': case 'Spacebar': e.preventDefault(); e.shiftKey ? prev() : next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp': case 'Backspace': e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); go(0, 0, -1, 'fade'); break;
+      case 'End': e.preventDefault(); go(slides.length - 1, 0, 1, 'fade'); break;
+      case 'b': case 'B': case '.': root.classList.toggle('is-black'); break;
+      case 'f': case 'F': if (!document.fullscreenElement) root.requestFullscreen && root.requestFullscreen().catch(function () {}); else document.exitFullscreen(); break;
+    }
+  });
+  document.addEventListener('click', function (e) {
+    var trig = e.target.closest('[data-trigger]');
+    if (trig) { fire(trig); trig.blur(); return; }
+    var g = e.target.closest('[data-goto]');
+    if (g) { jump(g.dataset.goto); g.blur(); return; }
+    if (e.target.closest('button, a, input, select, textarea')) return;
+    if (e.button === 0) next();
+  });
+
+  /* ---- start: hash #id/step or #n ---- */
+  (function init() {
+    var h = decodeURIComponent(location.hash.slice(1)), i = 0, st = 0;
+    if (h) {
+      var p = h.split('/'), id = p[0];
+      i = /^\d+$/.test(id) ? +id - 1 : slides.findIndex(function (s) { return s.id === id; });
+      if (i < 0 || i >= slides.length) i = 0;
+      st = p[1] === 'max' ? maxStep(slides[i]) : Math.min(+p[1] || 0, maxStep(slides[i]));
+    }
+    cur = i; step = st;
+    slides[i].classList.add('is-active');
+    reveal(slides[i], st, false);
+    var go0 = function () { if (st === 0) enterAnims(slides[i]); };
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(go0); else go0();
+  })();
+
+  addEventListener('hashchange', function () {
+    var p = decodeURIComponent(location.hash.slice(1)).split('/');
+    var i = /^\d+$/.test(p[0]) ? +p[0] - 1 : slides.findIndex(function (s) { return s.id === p[0]; });
+    if (i < 0 || i >= slides.length) return;
+    var st = p[1] === 'max' ? 'max' : (+p[1] || 0);
+    if (i !== cur || (st !== 'max' && st !== step)) go(i, st, i >= cur ? 1 : -1, 'none');
+  });
+
+  /* ---- small API (tests, capture, presenter tools) ---- */
+  var api = window.deck = {
+    next: next, prev: prev,
+    go: function (ref, st, kind) { var i = /^\d+$/.test(String(ref)) ? +ref - 1 : slides.findIndex(function (s) { return s.id === ref; }); go(i, st == null ? 0 : st, i >= cur ? 1 : -1, kind); },
+    fire: function (key) { var b = slides[cur].querySelector('[data-trigger="' + key + '"]'); if (b) fire(b); },
+    advanceTimers: function (sec) { T.forEach(function (t, el) { if (t.state !== 'idle') { t.off += sec; tRender(el); } }); },
+    get state() { return { slide: slides[cur].id, index: cur + 1, step: step, max: maxStep(slides[cur]), store: store }; },
+    slides: slides.map(function (s) { return s.id; }),
+    lastVT: null
+  };
+})();
+</script>
+</body>
+</html>
