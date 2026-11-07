@@ -4,6 +4,8 @@
 
 This script is the storyboard for the slides and for the speaking texts written later. Its structure and timing come from the "clarity" concept: a linear default path with low-risk branching and a focus on the exam. It also takes ideas from the other two concepts. From "experience": both decisions happen live before any theory, the rules card is secretly Meyer's own protocol, nemawashi is revealed, and the D/d gesture is used. From "story": strict fact checks, DECISION as stone versus decision as pencil, the two rails, countries as bell curves, the censor bar and the Tokyo table.
 
+> **Format update (07.11.2026):** the deck is built in code (HTML/CSS/JS, runs offline in Chrome/Edge) instead of PowerPoint, with a static PDF and a .pptx export generated from it. The PowerPoint build rules in §2.7–2.8 are superseded by the deck engine in `deck/` (see `deck/README.md`); the slide content, timing and interaction design stay as written. Planning default: two presenters.
+
 **Conventions**
 - `[MEMBER 1: …]`, `[MEMBER 2: …]` and `[MEMBER 3: …]` are slots that one specific person fills in later with their own culture and story.
   - Never fill them in ahead of time, and never guess a nationality.
@@ -439,6 +441,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 - **Before sending:** page through the whole PDF.
 
 **Mid-December email:**
+- Is a browser-based presentation acceptable, with the PDF and a .pptx export attached? (The rules say "Only a PowerPoint presentation without notes".)
 - Is audience movement (standing up) fine?
 - Would she like to play "the boss" in Decision #1?
 - Is a Presenter View timer with an empty notes pane acceptable as a time source?
