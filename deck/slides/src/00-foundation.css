@@ -119,8 +119,14 @@ html.deck-print #s04b .s04b-done { display: none; }
   --lt-x: 1000px; --lt-y: 880px; --lt-s: 1;
   --la-x: 1180px; --la-y: 430px; --la-s: 1;
 }
-#s05 .s05-head { row-gap: 2px; }
+#s05 .s05-head { row-gap: 14px; }   /* the kicker-to-headline gap of every kicker + headline slide */
 #s05 .s05-head .hl { font-size: 88px; }
+/* the two clocks of Part I's pivot: the room's own times, in the side colours */
+#s05 .s05-t { font-weight: 780; font-size: 34px; }
+#s05 .s05-t--td { color: var(--amber); }
+#s05 .s05-t--cons { color: var(--teal); }
+/* the consensual label may run 48 px past the row (nothing sits at x 584–632 at its height), so the bold time stays on its line */
+#s05 .s05-row--cons > .label { width: 560px; max-width: none; }
 #s05 .s05-rowlab { font: 780 42px/1 var(--sans); font-stretch: 125%; letter-spacing: .12em; }
 #s05 .s05-row { --gap: 12px; --w: 512px; }
 #s05 .s05-row--td { --x: 72px; --y: 300px; }

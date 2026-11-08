@@ -186,8 +186,8 @@
 
 #s13 .s13-hint { --y: 862px; right: 114px; left: auto; font: 520 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); text-align: right; }
 #s13 .s13-hint b { font-weight: 800; font-stretch: 125%; }
-#s13 .s13-hint--M b { color: var(--amber); }
-#s13:has(.s13-hint--M:not(.is-if-off)) .s13-skip { color: var(--amber); border-style: solid; }
+#s13 .s13-hint--M b { color: var(--ink); }   /* scenario letters are neutral labels: amber means top-down */
+#s13:has(.s13-hint--M:not(.is-if-off)) .s13-skip { color: var(--ink); border-color: var(--ink); border-style: solid; }
 
 /* ===================================================================== S14a / S14m · Apply */
 :is(#s14a, #s14m) {

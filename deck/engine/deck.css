@@ -506,12 +506,22 @@ html.deck-print .deck-stage .slide {
   break-after: page;
   break-inside: avoid;
 }
+/* static export (engine: exportPlan): slides the export leaves out, and no page break after its last slide */
+html.deck-print .deck-stage .slide.deck-export-omit {
+  display: none !important;
+}
+html.deck-print .deck-stage .slide.deck-print-last,
 html.deck-print .deck-stage .slide:last-child {
   break-after: auto;
 }
 html.deck-print [data-print="hide"],
 html.deck-print .deck-ui,
 html.deck-print .deck-presenter {
+  display: none !important;
+}
+/* An element parked outside the stage (data-offstage: e.g. a morph partner that slides off) is not printed: even
+   inside an overflow:hidden slide, Chromium's print shrink-to-fit counts it and scales every page down to fit it. */
+html.deck-print .deck-stage .slide [data-offstage] {
   display: none !important;
 }
 @media screen {
@@ -521,7 +531,7 @@ html.deck-print .deck-presenter {
   html.deck-print .deck-stage {
     zoom: var(--deck-print-zoom, 1);
   }
-  html.deck-print .deck-stage .slide:not(:last-child) {
+  html.deck-print .deck-stage .slide:not(:last-child):not(.deck-print-last) {
     margin-bottom: 24px;
   }
 }

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 /*
- * export-pptx.cjs: a .pptx with one full-bleed 1920x1080 picture per physical slide (final state).
+ * export-pptx.cjs: a .pptx with one full-bleed 1920x1080 picture per exported slide (final state), in physical order.
+ * Which slides: the engine's static export plan 'pptx' (README "Static exports"): every slide except auto bridges
+ * (S04z), unused member slots and slides marked data-export without "pptx".
  *
  *   node tools/export-pptx.cjs <deck.html> <out.pptx> [--paper] [--jpeg [quality]]
  *     --paper            light paper palette
@@ -10,7 +12,8 @@
  * - every slide gets a real title placeholder (read by screen readers and the accessibility checker),
  *   placed behind the picture so it does not show
  * - the picture carries alt text (the slide's text)
- * - hidden slides stay hidden (show="0"), and are tagged "Variant · chosen live" in the picture
+ * - hidden slides stay in place and hidden (show="0", PowerPoint skips them), tagged "Variant · chosen live" /
+ *   "Backup · hidden slide" in the picture
  * - speaker notes are EMPTY (course rule: a presentation without notes)
  * Needs pptxgenjs (devDependency in deck/package.json: run `npm install` in deck/ once).
  */
@@ -47,7 +50,7 @@ async function exportPptx(deckFile, outFile, opts) {
   } catch {
     throw new Error('pptxgenjs is missing: run `npm install` in the deck/ folder first');
   }
-  const { browser, page, info, errors } = await openPrint(deckFile, { zoom1: true, paper: !!o.paper });
+  const { browser, page, info, errors } = await openPrint(deckFile, { zoom1: true, paper: !!o.paper, kind: 'pptx' });
   const shots = [];
   try {
     for (const s of info.slides) {
@@ -95,7 +98,7 @@ async function exportPptx(deckFile, outFile, opts) {
 
   fs.mkdirSync(path.dirname(path.resolve(outFile)), { recursive: true });
   await pptx.writeFile({ fileName: outFile, compression: true });
-  return { slides: info.slides.length, hidden: info.slides.filter((s) => s.hidden).length, errors, bytes: fs.statSync(outFile).size };
+  return { slides: info.slides.length, of: info.count, hidden: info.slides.filter((s) => s.hidden).length, errors, bytes: fs.statSync(outFile).size };
 }
 
 async function main() {
@@ -110,7 +113,7 @@ async function main() {
   }
   const r = await exportPptx(inFile, outFile, { paper, jpeg });
   r.errors.forEach((e) => console.warn('export-pptx: page error: ' + e));
-  console.log('export-pptx: wrote ' + outFile + ' (' + r.slides + ' slides, ' + r.hidden + ' hidden, notes empty, ' +
+  console.log('export-pptx: wrote ' + outFile + ' (' + r.slides + ' slides, ' + r.hidden + ' hidden, ' + (r.of - r.slides) + ' left out, notes empty, ' +
     (jpeg ? 'JPEG q' + jpeg : 'PNG') + ', ' + (r.bytes / 1048576).toFixed(1) + ' MB)');
 }
 

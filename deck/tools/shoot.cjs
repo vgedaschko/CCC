@@ -7,7 +7,7 @@
  * Per slide (1920x1080 PNG unless --scale):
  *   <id>-b0.png … <id>-b(N-1).png   every build state before the last click (live, no animation)
  *   <id>-final.png                  final build state (live)
- *   <id>-print.png / <id>-paper.png static export (?print) and the paper variant (?print&paper)
+ *   <id>-print.png / <id>-paper.png print look (?print&export=all: every slide, also those a static export leaves out) and the paper variant
  *   <id>-lit.png                    final state in lit-room mode
  *   <id>-beamer.png                 final state under the beamer-washout filter (contrast .75, brightness 1.15, saturate .85)
  *   <id>-fire-<t>.png               with --fire: final state after firing trigger t (one trigger per shot)
@@ -161,7 +161,8 @@ async function main() {
   }
   for (const variant of ['print', 'paper']) {
     if (!states.has(variant)) continue;
-    const { ctx, p } = await page({ query: variant === 'print' ? '?print&zoom=1' : '?print&paper&zoom=1' });
+    // export=all: every slide in physical order, also those a static export leaves out (S04z, an unused slot)
+    const { ctx, p } = await page({ query: variant === 'print' ? '?print&export=all&zoom=1' : '?print&export=all&paper&zoom=1' });
     for (const id of ids) await snap(p, id + '-' + variant, '#stage .slide[id="' + id + '"]');
     await ctx.close();
   }

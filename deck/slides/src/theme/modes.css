@@ -84,6 +84,79 @@ html.deck-print .deck-stage .slide > .deck-variant-tag {
 }
 html.deck-print .deck-stage .slide[data-hidden] > .rh > .rh-title { visibility: hidden; }
 
+/* --------------------------------------------------------------------- static exports: vector, not masks */
+/* Chromium's PDF writer turns every blurred shadow into a 300 dpi mask image and every tiled CSS gradient into a
+   raster tile pattern (Type 3 fonts aside, that was most of a 16 MB PDF). In print (PDF, PPTX, Ctrl+P) these
+   rules swap such effects for vector equivalents that look the same on a static page (checked pixel by pixel:
+   the S11c/d trail is identical; cards and headlines differ by at most a few levels of grey).
+   Builders: no tiled gradient backgrounds (background-size + repeat) and no large blurred shadows for things
+   that must print; when unavoidable, add the print equivalent here. */
+
+/* card drop shadow: 0 30px 80px black at 45 % on a near-black stage is invisible on paper and screen alike,
+   but costs a 6000 x 2600 px mask per card; keep only the vector top highlight */
+html.deck-print:not(.deck-paper):not(.deck-lit) {
+  --shadow-card: inset 0 1px 0 rgba(243, 238, 228, .08);
+  --glow-ink: 0 0 0 transparent;     /* the 8 % halo behind ink headlines: imperceptible, one mask per headline */
+}
+
+/* S11c / S11d climb trail: a radial-gradient dot tiled 8 x 13 px prints as a raster pattern (1.6 MB a page);
+   the same dots as one circle and its unblurred copies every 13 px are vector */
+html.deck-print .g4-trail {
+  background: none !important;
+  overflow: hidden;
+}
+html.deck-print .g4-trail::before {
+  content: "";
+  position: absolute;
+  left: 1.1px;
+  top: 3.6px;
+  width: 5.8px;
+  height: 5.8px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow:
+    0 13px 0 var(--teal),
+    0 26px 0 var(--teal),
+    0 39px 0 var(--teal),
+    0 52px 0 var(--teal),
+    0 65px 0 var(--teal),
+    0 78px 0 var(--teal),
+    0 91px 0 var(--teal),
+    0 104px 0 var(--teal),
+    0 117px 0 var(--teal),
+    0 130px 0 var(--teal),
+    0 143px 0 var(--teal),
+    0 156px 0 var(--teal),
+    0 169px 0 var(--teal),
+    0 182px 0 var(--teal),
+    0 195px 0 var(--teal),
+    0 208px 0 var(--teal),
+    0 221px 0 var(--teal),
+    0 234px 0 var(--teal),
+    0 247px 0 var(--teal),
+    0 260px 0 var(--teal),
+    0 273px 0 var(--teal),
+    0 286px 0 var(--teal),
+    0 299px 0 var(--teal),
+    0 312px 0 var(--teal),
+    0 325px 0 var(--teal),
+    0 338px 0 var(--teal),
+    0 351px 0 var(--teal),
+    0 364px 0 var(--teal),
+    0 377px 0 var(--teal),
+    0 390px 0 var(--teal),
+    0 403px 0 var(--teal),
+    0 416px 0 var(--teal),
+    0 429px 0 var(--teal),
+    0 442px 0 var(--teal),
+    0 455px 0 var(--teal),
+    0 468px 0 var(--teal),
+    0 481px 0 var(--teal),
+    0 494px 0 var(--teal),
+    0 507px 0 var(--teal),
+    0 520px 0 var(--teal);
+}
+
 /* ===================================================================== paper print variant (html.deck-paper) */
 /* Same Noir type system on a light paper palette: the emailed PDF is not a toner-heavy dark print. */
 html.deck-paper {

@@ -114,6 +114,9 @@ html.deck-lit #s10b .g4-roots .rb { stroke-width: 3; }
 }
 #s11a .g4-desk { height: 12px; border-radius: 6px; background: var(--ink-3); }
 #s11a .g4-sm { --z: 5; --w: 64px; --h: 64px; background: var(--bg-raise); box-shadow: 0 0 0 6px var(--bg); }
+/* the seminar group (keys sem-1…10, never paired): arrives once the Tokyo room has left, leaves when the rows
+   swell into the pyramid (two seam helpers at once, so the bare value: motion.css "arrive" + "leave") */
+#s11a .g4-sem { view-transition-class: arrive leave; }
 
 /* ===================================================================== S11b-d · ringi pyramid */
 :is(#s11b, #s11c, #s11d) .s11-body { grid-template-rows: auto 1fr; }

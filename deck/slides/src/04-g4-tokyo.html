@@ -3,10 +3,11 @@
   Only <section class="slide"> elements. Order in the deck comes from manifest.json.
   One morph chain from S10a to S11d: diagrams on the left, words on the right.
     S10a -> S10b   the table glides left, the 8 Japanese seats turn teal (morph recolour)
-    S10b -> S11a   table -> lectern, seats -> classroom rows, the 3-weeks bar -> the scene divider
+    S10b -> S11a   table -> lectern, Sheldon's seat stays his; the Tokyo seats leave and a different group (the
+                   seminar: several, not all, Japanese) arrives in classroom rows (keys sem-1…10, never paired)
     S11a -> S11b   the four desk rows swell into the four pyramid tiers (keys tier-top … tier-staff)
     S11b -> S11c -> S11d   the ringisho climbs; the climb trail and hollow markers stay on passed levels
-  Internal keys (g4 only): g4-kicker, g4-hl, lbl-jp, lbl-nj, lbl-js, bar-3w, bar-3w-lbl, tier-*, tl-*,
+  Internal keys (g4 only): g4-kicker, g4-hl, lbl-jp, lbl-nj, lbl-js, bar-3w, bar-3w-lbl, seat-*, sem-*, tier-*, tl-*,
   ringisho, g4-def, g4-mori, trail-1, mk-mid (hanko travel inside the ringisho card, no keys needed).
 -->
 
@@ -20,7 +21,7 @@
 
   <div class="body s10-body">
     <div class="s10-head stack">
-      <p class="kicker" data-morph="g4-kicker">Tokyo HQ <span class="soft">· a meeting at Astellas</span></p>
+      <p class="kicker" data-morph="g4-kicker">Tokyo HQ <span class="soft">· Astellas · stop testing a new product?</span></p>
       <h2 class="hl s10-hl" data-morph="g4-hl">Three weeks of preparation.<br>Already decided?</h2>
     </div>
   </div>
@@ -59,18 +60,19 @@
 
   <div class="body s10-body">
     <div class="s10-head stack">
-      <p class="kicker vt-leave" data-morph="g4-kicker">Tokyo HQ <span class="soft">· a meeting at Astellas</span></p>
+      <p class="kicker vt-leave" data-morph="g4-kicker">Tokyo HQ <span class="soft">· Astellas · stop testing a new product?</span></p>
       <h2 class="hl s10-hl" data-morph="g4-hl">Three weeks of preparation.<br>Already decided?</h2>
     </div>
     <!-- click 1: both quotes -->
     <blockquote class="quote s10b-quotes">
       <p class="q" data-step="1" data-build="rise">“…it seemed that the decision had already been finalized within the group.”</p>
-      <p class="q q-l s10b-aligned" data-step="1" data-build="rise" data-delay="180">“100 percent aligned”</p>
+      <p class="q q-l s10b-aligned" data-step="1" data-build="rise" data-delay="180">“100 percent aligned against continued testing”</p>
       <p class="who" data-step="1" data-build="fade" data-delay="320"><span class="mono">JS</span><span>J. Sheldon <span class="role">· at Tokyo HQ</span></span></p>
     </blockquote>
   </div>
 
-  <!-- the same room, moved left; the 8 Japanese seats turn teal at the same instant (morph recolour) -->
+  <!-- the same room, moved left; the 8 Japanese seats turn teal at the same instant (morph recolour).
+       On to S11a they leave (vt-leave): the seminar is a different group, so no Tokyo seat travels into it. -->
   <div class="g4-table at" data-morph="table" style="--x:400px;--y:495px;--w:480px;--h:170px"></div>
   <!-- click 2: thin roots grow under the table, back into the weeks before the meeting (nemawashi teaser) -->
   <svg class="g4-roots at" data-step="2" data-build="draw" data-delay="350" data-duration="1300" viewBox="100 660 820 230" style="--x:100px;--y:660px;--w:820px;--h:230px" aria-hidden="true">
@@ -82,16 +84,16 @@
     <path class="rb" pathLength="100" d="M630 762C664 784 690 818 700 852"/>
     <path class="rb" pathLength="100" d="M802 774C782 802 774 834 778 862"/>
   </svg>
-  <i class="seat seat--teal at" data-morph="seat-1" style="--x:444px;--y:423px"></i>
-  <i class="seat seat--teal at" data-morph="seat-2" style="--x:556px;--y:423px"></i>
-  <i class="seat seat--teal at" data-morph="seat-3" style="--x:668px;--y:423px"></i>
-  <i class="seat seat--teal at" data-morph="seat-4" style="--x:780px;--y:423px"></i>
-  <i class="seat seat--teal at" data-morph="seat-5" style="--x:444px;--y:681px"></i>
-  <i class="seat seat--teal at" data-morph="seat-6" style="--x:556px;--y:681px"></i>
-  <i class="seat seat--teal at" data-morph="seat-7" style="--x:668px;--y:681px"></i>
-  <i class="seat seat--teal at" data-morph="seat-8" style="--x:780px;--y:681px"></i>
-  <i class="seat at" data-morph="seat-9" style="--x:324px;--y:517px"></i>
-  <i class="seat at" data-morph="seat-10" style="--x:324px;--y:587px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-1" style="--x:444px;--y:423px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-2" style="--x:556px;--y:423px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-3" style="--x:668px;--y:423px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-4" style="--x:780px;--y:423px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-5" style="--x:444px;--y:681px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-6" style="--x:556px;--y:681px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-7" style="--x:668px;--y:681px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-8" style="--x:780px;--y:681px"></i>
+  <i class="seat vt-leave at" data-morph="seat-9" style="--x:324px;--y:517px"></i>
+  <i class="seat vt-leave at" data-morph="seat-10" style="--x:324px;--y:587px"></i>
   <p class="g4-lbl g4-lbl--c teal vt-leave at" data-morph="lbl-jp" style="--x:440px;--y:360px;--w:400px">8 Japanese managers</p>
   <p class="g4-lbl g4-lbl--r vt-leave at" data-morph="lbl-nj" style="--x:26px;--y:545px;--w:280px">2 non-Japanese<br>“old hands”</p>
   <span class="seat seat--ink g4-js at" data-morph="seat-js" style="--x:930px;--y:550px">JS</span>
@@ -119,14 +121,16 @@
     <!-- click 1: Mori's line -->
     <blockquote class="quote s11a-mori" data-step="1" data-build="rise" data-delay="150">
       <p class="q q-l">“In Japan, decisions tend to be made by group consensus…”</p>
-      <p class="who"><span class="mono mono--teal">SM</span><span>S. Mori<span class="role">, Japanese participant in Meyer’s Astellas seminar</span></span></p>
+      <p class="who"><span class="mono mono--teal">SM</span><span>S. Mori <span class="role">· Japanese participant, Meyer’s Astellas seminar</span></span></p>
     </blockquote>
   </div>
 
   <!-- the scene divider draws across: a change of place and time -->
   <div class="g4-divider at" data-enter="wipe" data-delay="300" data-duration="900" style="--x:72px;--y:226px;--w:1776px;--h:3px"></div>
 
-  <!-- the seminar room: the table becomes the lectern, JS stands at the front, the seats re-form as rows -->
+  <!-- the seminar room: the table becomes the lectern, JS stands at the front. The Tokyo seats have left; a different
+       group sits in the rows (Meyer: "several of the participants were Japanese", p. 155): 5 teal, 5 grey, keys sem-*
+       that pair with nothing (they arrive after the Tokyo room has gone and leave when the rows become the pyramid) -->
   <div class="g4-lectern vt-leave at" data-morph="table" style="--x:560px;--y:280px;--w:160px;--h:44px"></div>
   <span class="seat seat--ink g4-js vt-leave at" data-morph="seat-js" style="--x:744px;--y:272px">JS</span>
   <p class="g4-lbl at" data-enter="fade" data-delay="760" style="--x:830px;--y:284px">JS tells the story</p>
@@ -135,18 +139,18 @@
   <div class="g4-desk at" data-morph="tier-senior" style="--x:512px;--y:536px;--w:256px"></div>
   <div class="g4-desk at" data-morph="tier-mid" style="--x:448px;--y:672px;--w:384px"></div>
   <div class="g4-desk at" data-morph="tier-staff" style="--x:384px;--y:808px;--w:512px"></div>
-  <i class="seat seat--teal vt-leave at" data-morph="seat-2" style="--x:612px;--y:418px"></i>
-  <i class="seat seat--teal vt-leave at" data-morph="seat-1" style="--x:548px;--y:554px"></i>
-  <i class="seat seat--teal vt-leave at" data-morph="seat-3" style="--x:676px;--y:554px"></i>
-  <i class="seat seat--teal vt-leave at" data-morph="seat-5" style="--x:484px;--y:690px"></i>
-  <i class="seat seat--teal vt-leave at" data-morph="seat-6" style="--x:612px;--y:690px"></i>
-  <i class="seat seat--teal vt-leave at" data-morph="seat-4" style="--x:740px;--y:690px"></i>
-  <i class="seat vt-leave at" data-morph="seat-9" style="--x:420px;--y:826px"></i>
-  <i class="seat vt-leave at" data-morph="seat-10" style="--x:548px;--y:826px"></i>
-  <i class="seat seat--teal vt-leave at" data-morph="seat-7" style="--x:676px;--y:826px"></i>
-  <i class="seat seat--teal vt-leave at" data-morph="seat-8" style="--x:804px;--y:826px"></i>
+  <i class="seat g4-sem at" data-morph="sem-1" style="--x:612px;--y:418px"></i>
+  <i class="seat seat--teal g4-sem at" data-morph="sem-2" style="--x:548px;--y:554px"></i>
+  <i class="seat g4-sem at" data-morph="sem-3" style="--x:676px;--y:554px"></i>
+  <i class="seat g4-sem at" data-morph="sem-4" style="--x:484px;--y:690px"></i>
+  <i class="seat seat--teal g4-sem at" data-morph="sem-5" style="--x:612px;--y:690px"></i>
+  <i class="seat seat--teal g4-sem at" data-morph="sem-6" style="--x:740px;--y:690px"></i>
+  <i class="seat seat--teal g4-sem at" data-morph="sem-7" style="--x:420px;--y:826px"></i>
+  <i class="seat g4-sem at" data-morph="sem-8" style="--x:548px;--y:826px"></i>
+  <i class="seat seat--teal g4-sem at" data-morph="sem-9" style="--x:676px;--y:826px"></i>
+  <i class="seat g4-sem at" data-morph="sem-10" style="--x:804px;--y:826px"></i>
   <p class="g4-lbl at" data-enter="fade" data-delay="760" style="--x:880px;--y:683px">Japanese participants<br>confer</p>
-  <!-- click 1: Mori's monogram among the teal seats -->
+  <!-- click 1: Mori's monogram on a teal seat (sem-5) -->
   <span class="mono mono--teal g4-sm at" data-step="1" data-build="zoom" style="--x:608px;--y:686px" aria-hidden="true">SM</span>
 
   <footer class="sf"><p>Meyer (2014), pp. 154–156</p></footer>
@@ -165,7 +169,7 @@
     <div class="s11-col stack">
       <div class="s11-def stack" data-morph="g4-def" data-enter="fade" data-delay="760">
         <p class="kicker">Ringi <span class="soft">· how the proposal climbs</span></p>
-        <p class="text">Each person reads the <i class="ital">ringisho</i>, may suggest changes and adds a stamp of approval. Then it moves up one level.</p>
+        <p class="text">Each person reads the <i class="ital">ringisho</i>, may suggest changes and stamps it. Once everyone at one level has approved, it moves up.</p>
       </div>
       <!-- click 1: Mori's line -->
       <blockquote class="quote s11-mori" data-morph="g4-mori" data-step="1" data-build="rise">
@@ -213,7 +217,7 @@
     <div class="s11-col stack">
       <div class="s11-def stack vt-leave" data-morph="g4-def">
         <p class="kicker">Ringi <span class="soft">· how the proposal climbs</span></p>
-        <p class="text">Each person reads the <i class="ital">ringisho</i>, may suggest changes and adds a stamp of approval. Then it moves up one level.</p>
+        <p class="text">Each person reads the <i class="ital">ringisho</i>, may suggest changes and stamps it. Once everyone at one level has approved, it moves up.</p>
       </div>
       <blockquote class="quote s11-mori vt-leave" data-morph="g4-mori">
         <p class="q q-l">“…hierarchical, bottom-up, and consensual all at the same time.”</p>
@@ -332,10 +336,12 @@
     </div>
   </div>
 
-  <!-- optional nemawashi reveal (script S11b-d): only if the team did its December talks; mouse only, never printed -->
-  <button class="hot hot--goto g4-hook at" data-trigger="nema" data-print="hide" style="--x:1522px;--y:116px"
+  <!-- optional nemawashi reveal (script §2.3): exists only with manifest "options": { "nemawashi": true }, i.e. if the
+       team really held its December talks (assemble leaves data-option="nemawashi" out otherwise). The chip arrives
+       with the nemawashi block (click 2, no extra click); mouse only, never printed. -->
+  <button class="hot hot--goto g4-hook at" data-option="nemawashi" data-step="2" data-build="fade" data-trigger="nema" data-print="hide" style="--x:1522px;--y:116px"
           aria-label="Reveal our own nemawashi (only if we talked to classmates in December)"><svg class="ic" aria-hidden="true"><use href="#ic-roots"/></svg> our nemawashi</button>
-  <div class="card card--solid card--teal g4-reveal at" data-triggered="nema" data-build="notify" style="--x:72px;--y:782px;--w:990px">
+  <div class="card card--solid card--teal g4-reveal at" data-option="nemawashi" data-triggered="nema" data-build="notify" style="--x:72px;--y:782px;--w:990px">
     <p class="kicker">Our nemawashi <span class="soft">· December</span><span class="ours">ours</span></p>
     <p class="lead">Decision #2 had early supporters — the consensus started before the meeting.</p>
   </div>

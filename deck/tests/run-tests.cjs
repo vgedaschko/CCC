@@ -21,6 +21,11 @@ const DEMO_URL = pathToFileURL(DEMO).href;
 const OUT = path.join(DECK, 'dist', 'test');
 const FILTER = process.argv[2] || '';
 const SLIDE_COUNT = 12;
+// static exports of the demo (engine exportPlan): the PDF leaves out the auto bridge s04z and the PPTX-only end copy
+// s07e and moves the hidden slides to an appendix; the PPTX leaves out s04z only, in physical order
+const PDF_PLAN = ['s01', 's02', 's03', 's04', 's05', 's06', 's07', 's02m', 's06m', 'h1'];
+const PPTX_PLAN = ['s01', 's02', 's02m', 's03', 's04', 's05', 's06', 's06m', 's07', 'h1', 's07e'];
+const { countPdfPages, pdfText, pageFill } = require(path.join(DECK, 'tools', 'export-pdf.cjs'));
 
 const tests = [];
 const consoleErrors = [];
@@ -200,7 +205,13 @@ test('goto hotspot sets state and jumps; @back returns to the last slide viewed;
     eq(await where(page), 's02m/0', 'chip jumps to the variant');
     eq(await page.evaluate(() => Deck.store.get('decision1.first')), 'Munich', 'chip data-set applied');
     await page.keyboard.press('ArrowLeft');
-    eq(await where(page), 's02/4', 'prev from a jumped-to slide returns where it came from (final state)');
+    eq(await where(page), 's02/0', 'prev from a jumped-to slide returns where it came from, at the build it left (s02/0)');
+    await goTo(page, 's02', 2);
+    await settle(page);
+    await page.click('#s02 [data-goto="s02m"]');
+    eq(await where(page), 's02m/0', 'chip jumps again (from build 2)');
+    await page.keyboard.press('ArrowLeft');
+    eq(await where(page), 's02/2', 'prev returns to build 2, not to the final state (no build is given away)');
     await goTo(page, 's07', 3);
     await settle(page);
     await page.click('#s07 [data-goto="h1"]');
@@ -351,6 +362,8 @@ test('entrance effects play going forward only (builds, triggers, data-enter), n
     await page.waitForFunction(() => window.__anims.some((a) => a.includes('deck-slam')));
     const a3 = await page.evaluate(() => window.__anims.splice(0));
     assert(a3.includes('stamp-v:deck-slam') && a3.includes('decided:deck-fade'), 'triggered elements animate in: ' + a3);
+    await goTo(page, 's04', 3); // leave s04 at its last build: Prev after a jump returns to the build that was left
+    await settle(page);
     await goTo(page, 's05', 0);
     await settle(page);
     await page.evaluate(() => window.__anims.splice(0));
@@ -360,6 +373,52 @@ test('entrance effects play going forward only (builds, triggers, data-enter), n
     await sleep(200);
     eq(await page.evaluate(() => window.__anims), [], 'nothing animates when entering backward');
     assert(await visible(page, '#s04 .mueller') && await visible(page, '#s04 .mail'), 'final state shown at once');
+  });
+});
+
+test('deck config: clickAdvance false (only hotspots react), clockLead counts the opening slide in, Shift+R asks twice mid-talk, quiet jump overlay with a presenter, presenter preview skips an auto bridge', async () => {
+  const init = () => { window.DECK_CONFIG = { clickAdvance: false, clockLead: 30 }; };
+  await withDeck({ init }, async (page, context) => {
+    // the first advance on the opening slide starts the clock at clockLead
+    await page.keyboard.press('ArrowRight');
+    const c = await page.evaluate(() => Deck.clock.elapsed());
+    assert(c >= 30000 && c < 33000, 'clock counts S01 in: ' + c);
+    // a click on the empty stage does nothing; a hotspot still works; a click lifts the black screen
+    await page.mouse.click(1900, 20);
+    eq(await where(page), 's02/0', 'a click off a hotspot does not advance');
+    await page.click('#s02 [data-goto="s02m"]');
+    eq(await where(page), 's02m/0', 'a hotspot still works');
+    await page.keyboard.press('b');
+    assert(await page.evaluate(() => document.documentElement.classList.contains('deck-is-black')), 'black on');
+    await page.mouse.click(960, 540);
+    assert(!(await page.evaluate(() => document.documentElement.classList.contains('deck-is-black'))), 'a click lifts the black screen');
+    eq(await where(page), 's02m/0', '... without advancing');
+    // Shift+R with the clock past 1:00: the first press only asks
+    await page.evaluate(() => { Deck.store.set('x', '1'); Deck.clock.set(90000); });
+    await page.keyboard.press('Shift+R');
+    eq(await page.evaluate(() => Deck.store.get('x')), '1', 'first Shift+R mid-talk resets nothing');
+    assert(/again/.test(await text(page, '.deck-toast')), 'toast asks for a second press');
+    await page.keyboard.press('Shift+R');
+    eq(await page.evaluate(() => [Deck.store.get('x'), Deck.clock.elapsed()]), [undefined, 0], 'second Shift+R resets');
+    // presenter: the Next preview looks past the auto bridge; a number typed in the deck window stays quiet on the beamer
+    await goTo(page, 's04', 3);
+    const [pres] = await Promise.all([context.waitForEvent('page'), page.keyboard.press('p')]);
+    await pres.waitForLoadState('load');
+    await pres.waitForFunction(() => document.documentElement.classList.contains('dp-connected'), null, { timeout: 5000 });
+    await pres.waitForFunction(() => /s05/.test(document.querySelector('.dp-next .dp-caption').textContent));
+    assert(/after the auto bridge/.test(await text(pres, '.dp-next .dp-caption')), 'next label: ' + await text(pres, '.dp-next .dp-caption'));
+    const nextFrame = pres.frame({ url: /embed=next/ });
+    await nextFrame.waitForFunction(() => Deck.state().id === 's05');
+    await page.bringToFront();
+    await page.keyboard.press('1');
+    await page.keyboard.press('1');
+    eq(await text(page, '.deck-jump'), '→ 11', 'the beamer shows only the digits');
+    await page.keyboard.press('Escape');
+    await pres.keyboard.press('1');
+    await pres.keyboard.press('1');
+    assert(/h1/.test(await text(pres, '.deck-jump')), 'the presenter shows the target: ' + await text(pres, '.deck-jump'));
+    await pres.keyboard.press('Escape');
+    await pres.close();
   });
 });
 
@@ -606,8 +665,14 @@ test('presenter view: P opens it, sync both ways over file://, timer, checkpoint
     await pres.click('.dp-btn[data-dp="toggle"]');
     await page.waitForFunction(() => !JSON.parse(sessionStorage.getItem('deck-live:' + location.pathname)).live.clock.since);
     await pres.waitForFunction(() => document.querySelector('.dp-btn[data-dp="toggle"]').textContent === 'Resume');
+    // Reset is two-step: the first click only arms it (a stray click next to Pause must not wipe the clock)
+    const before = await page.evaluate(() => Deck.clock.elapsed());
+    await pres.click('.dp-btn[data-dp="reset"]');
+    await pres.waitForFunction(() => document.querySelector('.dp-btn[data-dp="reset"]').textContent === 'Reset? click again');
+    eq(await page.evaluate(() => Deck.clock.elapsed()), before, 'one Reset click does not reset the clock');
     await pres.click('.dp-btn[data-dp="reset"]');
     await page.waitForFunction(() => Deck.clock.elapsed() === 0);
+    await pres.waitForFunction(() => document.querySelector('.dp-btn[data-dp="reset"]').textContent === 'Reset');
     await pres.waitForFunction(() => document.querySelector('.dp-elapsed').textContent === '0:00');
     await pres.click('.dp-btn[data-dp="toggle"]');
     await page.waitForFunction(() => Deck.clock.elapsed() > 0);
@@ -636,18 +701,21 @@ test('presenter view: P opens it, sync both ways over file://, timer, checkpoint
 
 /* ------------------------------------------------------------------- print */
 
-test('print mode: every slide in final state, print defaults, tagged variants, page count = slide count', async () => {
+test('print mode: the PDF export plan in final state, print defaults, tagged variants, page count = plan', async () => {
   await withDeck({ query: '?print' }, async (page) => {
     const r = await page.evaluate(() => {
       const vis = (n) => { const cs = getComputedStyle(n); return cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity) > 0 && n.getClientRects().length > 0; };
       const slides = Array.from(document.querySelectorAll('#stage .slide'));
+      const printed = (sel) => Array.from(document.querySelectorAll(sel)).filter((n) => !n.closest('.slide.deck-export-omit'));
       return {
         printClass: document.documentElement.classList.contains('deck-print'),
-        shown: slides.filter((s) => getComputedStyle(s).display !== 'none' && s.offsetHeight === 1080).length,
-        steps: Array.from(document.querySelectorAll('[data-step]')).filter((n) => !vis(n)).map((n) => n.closest('.slide').id + ' ' + n.className),
+        shown: slides.filter((s) => getComputedStyle(s).display !== 'none' && s.offsetHeight === 1080).map((s) => s.id),
+        omitted: slides.filter((s) => s.classList.contains('deck-export-omit')).map((s) => s.id),
+        last: Array.from(document.querySelectorAll('.slide.deck-print-last')).map((s) => s.id),
+        steps: printed('[data-step]').filter((n) => !vis(n)).map((n) => n.closest('.slide').id + ' ' + n.className),
         triggeredShown: Array.from(document.querySelectorAll('[data-triggered]')).filter(vis).length,
-        printOnly: Array.from(document.querySelectorAll('[data-print-only]')).filter(vis).length,
-        printOnlyTotal: document.querySelectorAll('[data-print-only]').length,
+        printOnly: printed('[data-print-only]').filter(vis).length,
+        printOnlyTotal: printed('[data-print-only]').length,
         hiddenInPrint: Array.from(document.querySelectorAll('[data-print="hide"]')).filter(vis).length,
         binds: Array.from(document.querySelectorAll('[data-bind]')).map((n) => n.textContent === n.getAttribute('data-print')),
         timer: document.querySelector('#clock2 [data-timer-text]').textContent,
@@ -657,7 +725,9 @@ test('print mode: every slide in final state, print defaults, tagged variants, p
       };
     });
     assert(r.printClass, 'print class set');
-    eq(r.shown, SLIDE_COUNT, 'all slides laid out at 1080 px');
+    eq(r.shown, PDF_PLAN, 'the PDF plan, laid out at 1080 px in plan order (main flow, then the hidden slides)');
+    eq(r.omitted, ['s04z', 's07e'], 'the auto bridge and the PPTX-only end copy are left out');
+    eq(r.last, ['h1'], 'no page break after the last page');
     eq(r.steps, [], 'every build visible');
     eq(r.triggeredShown, 0, 'triggered elements in their print default (hidden)');
     eq(r.printOnly, r.printOnlyTotal, 'print-only placeholders visible');
@@ -668,8 +738,59 @@ test('print mode: every slide in final state, print defaults, tagged variants, p
     eq(r.tags, ['s02m:Variant · chosen live', 's06m:Variant · chosen live', 'h1:Backup · hidden slide'], 'hidden slides tagged');
     eq(r.names, 0, 'morph disabled');
     const pdf = await page.pdf({ width: '1920px', height: '1080px', printBackground: true, preferCSSPageSize: true });
-    const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page(?![a-zA-Z])/g) || []).length;
-    eq(pages, SLIDE_COUNT, 'PDF page count equals slide count');
+    eq(countPdfPages(pdf), PDF_PLAN.length, 'PDF page count equals the plan');
+  });
+});
+
+test('static export plans: PDF = clicker order + appendix, PPTX = physical order; data-export, auto bridges and unused slots', async () => {
+  await withDeck({}, async (page) => {
+    const r = await page.evaluate(() => ({
+      pdf: Deck.exportPlan('pdf').map((x) => x.id + ':' + x.part),
+      pptx: Deck.exportPlan('pptx').map((x) => x.id + (x.hidden ? '*' : '')),
+      all: Deck.exportPlan('all').length,
+      tags: Deck.exportPlan('pdf').filter((x) => x.tag).map((x) => x.id + ':' + x.tag),
+      exp: Deck.slides.filter((x) => x.exports.join(' ') !== 'pdf pptx').map((x) => x.id + ':' + x.exports.join(' ')),
+    }));
+    eq(r.pdf, PDF_PLAN.map((id) => id + ':' + (['s02m', 's06m', 'h1'].includes(id) ? 'appendix' : 'main')), 'PDF plan');
+    eq(r.pptx, PPTX_PLAN.map((id) => id + (['s02m', 's06m', 'h1'].includes(id) ? '*' : '')), 'PPTX plan');
+    eq(r.all, SLIDE_COUNT, 'all = every slide');
+    eq(r.tags, ['s02m:Variant · chosen live', 's06m:Variant · chosen live', 'h1:Backup · hidden slide'], 'appendix pages keep their tags');
+    eq(r.exp, ['s04z:', 's07e:pptx'], 'Deck.slides[].exports');
+  });
+  await withDeck({ query: '?print&export=pptx' }, async (page) => {
+    eq(await page.evaluate(() => Array.from(document.querySelectorAll('#stage > .slide')).filter((s) => getComputedStyle(s).display !== 'none').map((s) => s.id)), PPTX_PLAN, '?print&export=pptx lays out the PPTX plan');
+  });
+  await withDeck({ query: '?print&export=all' }, async (page) => {
+    eq(await page.evaluate(() => Array.from(document.querySelectorAll('#stage > .slide')).filter((s) => getComputedStyle(s).display !== 'none').length), SLIDE_COUNT, '?print&export=all lays out every slide');
+  });
+  // an unused member slot and data-export="none" (set before the engine starts)
+  const init = () => document.addEventListener('readystatechange', () => {
+    if (document.readyState !== 'interactive') return;
+    document.getElementById('s06m').setAttribute('data-hidden', 'unused');
+    document.getElementById('s03').setAttribute('data-export', 'none');
+  });
+  await withDeck({ init }, async (page) => {
+    const r = await page.evaluate(() => ({
+      pdf: Deck.exportPlan('pdf').map((x) => x.id),
+      pptx: Deck.exportPlan('pptx').map((x) => x.id),
+      kind: document.getElementById('s06m').getAttribute('data-folio-hidden'),
+      tag: !!document.querySelector('#s06m > .deck-variant-tag'),
+      s06m: Deck.slides.find((x) => x.id === 's06m'),
+    }));
+    eq(r.pdf, ['s01', 's02', 's04', 's05', 's06', 's07', 's02m', 'h1'], 'unused slot and data-export="none" left out of the PDF');
+    eq(r.pptx, ['s01', 's02', 's02m', 's04', 's05', 's06', 's07', 'h1', 's07e'], 'and out of the PPTX');
+    eq([r.kind, r.tag, r.s06m.hidden, r.s06m.unused, r.s06m.exports], ['unused', false, true, true, []], 'unused slot: hidden, untagged, never exported');
+    await page.evaluate(() => Deck.go('s06', Deck.slides.find((x) => x.id === 's06').steps));
+    await settle(page);
+    await page.keyboard.press('ArrowRight');
+    await settle(page);
+    eq(await where(page), 's07/0', 'Next skips the unused slot');
+    const pos = await page.evaluate(() => Deck.slides.findIndex((x) => x.id === 's06m') + 1);
+    await page.keyboard.type(String(pos));
+    eq(await page.evaluate(() => document.querySelector('.deck-jump').textContent.includes('no such slide')), true, 'the jump overlay calls an unused slot no slide');
+    await page.keyboard.press('Enter');
+    await settle(page);
+    eq(await where(page), 's07/0', 'typing an unused slot\'s number goes nowhere');
   });
 });
 
@@ -686,6 +807,19 @@ test('Ctrl+P on the live deck prints final states (beforeprint/afterprint)', asy
   });
 });
 
+test('Ctrl+P prints the PDF plan (appendix last, bridge and end copy left out), afterprint restores the physical order', async () => {
+  await withDeck({}, async (page) => {
+    const order = () => page.evaluate(() => Array.from(document.querySelectorAll('#stage > .slide')).map((s) => s.id + (s.classList.contains('deck-export-omit') ? '-' : '')));
+    const physical = await order();
+    await page.evaluate(() => window.dispatchEvent(new Event('beforeprint')));
+    eq((await order()).filter((x) => !x.endsWith('-')), PDF_PLAN, 'print order = PDF plan');
+    await page.evaluate(() => window.dispatchEvent(new Event('afterprint')));
+    eq(await order(), physical, 'physical order and classes restored');
+    await page.keyboard.press('ArrowRight');
+    eq(await where(page), 's02/0', 'navigation still follows the physical order');
+  });
+});
+
 /* ------------------------------------------------------------------- tools */
 
 function run(args) {
@@ -698,7 +832,8 @@ test('tools/build.cjs: one self-contained file that runs offline with no request
   const outFile = path.join(dir, 'demo.html');
   const log = run(['tools/build.cjs', 'slides/demo.html', outFile, '--strict']);
   assert(/2 stylesheet\(s\), 1 script\(s\), 2 asset\(s\)/.test(log), 'build log: ' + log);
-  eq(fs.readdirSync(dir), ['demo.html'], 'single output file');
+  eq(fs.readdirSync(dir), ['OFL.txt', 'demo.html'], 'one output file, plus the licence of the font it embeds');
+  assert(/^<!doctype html>\n<!--\n  Fonts embedded in this file, licensed under the SIL Open Font License/i.test(fs.readFileSync(path.join(dir, 'demo.html'), 'utf8')), 'licence notice after the doctype');
   const html = fs.readFileSync(outFile, 'utf8');
   assert(!/<link[^>]+stylesheet/i.test(html), 'no stylesheet links left');
   assert(!/<script[^>]+\ssrc=/i.test(html), 'no external scripts left');
@@ -728,37 +863,46 @@ test('tools/build.cjs: one self-contained file that runs offline with no request
   }
 });
 
-test('tools/export-pdf.cjs: PDF exists with one 16:9 page per slide and real text', async () => {
+test('tools/export-pdf.cjs: one 16:9 page per slide of the PDF plan, real text, optional lossless size pass', async () => {
   const outFile = path.join(OUT, 'demo.pdf');
   fs.rmSync(outFile, { force: true });
   const log = run(['tools/export-pdf.cjs', 'slides/demo.html', outFile]);
-  assert(log.includes('12 pages for 12 slides'), 'log: ' + log);
+  assert(log.includes('10 pages: 7 main + 3 appendix, of 12 slides'), 'log: ' + log);
+  assert(/lossless pass|size pass skipped/.test(log), 'size pass reported: ' + log);
   const buf = fs.readFileSync(outFile);
   eq(buf.slice(0, 5).toString(), '%PDF-', 'PDF header');
-  const s = buf.toString('latin1');
-  eq((s.match(/\/Type\s*\/Page(?![a-zA-Z])/g) || []).length, SLIDE_COUNT, 'page count');
+  const s = pdfText(buf);
+  eq(countPdfPages(buf), PDF_PLAN.length, 'page count');
+  eq([...new Set(pageFill(buf))], [1], 'every page printed full size');
+  const plain = path.join(OUT, 'demo-plain.pdf');
+  const log2 = run(['tools/export-pdf.cjs', 'slides/demo.html', plain, '--no-shrink']);
+  assert(/size pass skipped: off/.test(log2), '--no-shrink: ' + log2);
+  eq(countPdfPages(fs.readFileSync(plain)), PDF_PLAN.length, '--no-shrink page count');
+  assert(fs.statSync(outFile).size <= fs.statSync(plain).size, 'the size pass never grows the file');
+  fs.rmSync(plain, { force: true });
   const box = s.match(/\/MediaBox\s*\[\s*0\s+0\s+([\d.]+)\s+([\d.]+)\s*\]/);
   assert(box && Math.abs(box[1] / box[2] - 16 / 9) < 0.01, '16:9 page, got ' + (box && box.slice(1)));
   assert(/\/Font\b/.test(s) && /\/ToUnicode\b/.test(s), 'text is embedded as fonts (vector, searchable)');
 });
 
-test('tools/export-pptx.cjs: valid zip, one slide per physical slide, titles, hidden flags, empty notes', async () => {
+test('tools/export-pptx.cjs: valid zip, one slide per slide of the PPTX plan (physical order), titles, hidden flags, empty notes', async () => {
   const outFile = path.join(OUT, 'demo.pptx');
   fs.rmSync(outFile, { force: true });
   const log = run(['tools/export-pptx.cjs', 'slides/demo.html', outFile]);
-  assert(log.includes('12 slides, 3 hidden'), 'log: ' + log);
+  assert(log.includes('11 slides, 3 hidden, 1 left out'), 'log: ' + log);
+  const N = PPTX_PLAN.length;
   const buf = fs.readFileSync(outFile);
   eq(buf.slice(0, 2).toString(), 'PK', 'zip signature');
   const JSZip = require(require.resolve('jszip', { paths: [DECK] }));
   const zip = await JSZip.loadAsync(buf);
   const slideFiles = Object.keys(zip.files).filter((f) => /^ppt\/slides\/slide\d+\.xml$/.test(f));
-  eq(slideFiles.length, SLIDE_COUNT, 'slide parts');
+  eq(slideFiles.length, N, 'slide parts');
   const pres = await zip.file('ppt/presentation.xml').async('string');
-  eq((pres.match(/<p:sldId\b/g) || []).length, SLIDE_COUNT, 'slides listed in presentation.xml');
+  eq((pres.match(/<p:sldId\b/g) || []).length, N, 'slides listed in presentation.xml');
   assert(/<p:sldSz cx="12192000" cy="6858000"/.test(pres), '16:9 widescreen size');
   const titles = [];
   const hidden = [];
-  for (let i = 1; i <= SLIDE_COUNT; i++) {
+  for (let i = 1; i <= N; i++) {
     const x = await zip.file('ppt/slides/slide' + i + '.xml').async('string');
     assert(/type="title"/.test(x), 'slide ' + i + ' has a title placeholder');
     titles.push((x.match(/<a:t>([^<]*)<\/a:t>/) || [])[1]);
@@ -774,10 +918,11 @@ test('tools/export-pptx.cjs: valid zip, one slide per physical slide, titles, hi
     }
   }
   eq(titles[0], 'Big D or little d?', 'first slide title');
-  eq(titles[10], 'Q&amp;A hub', 'hub title (XML-escaped)');
-  eq(hidden, [3, 9, 11], 'hidden slides stay hidden');
+  eq(titles[9], 'Q&amp;A hub', 'hub title (XML-escaped)');
+  eq(titles[10], 'So, was that a big D or a little d? (end)', 'the end copy stays in the PPTX');
+  eq(hidden, [3, 8, 10], 'hidden slides stay hidden, in place');
   const media = Object.keys(zip.files).filter((f) => /^ppt\/media\/.+\.png$/.test(f));
-  eq(media.length, SLIDE_COUNT, 'one picture per slide');
+  eq(media.length, N, 'one picture per slide');
   const png = await zip.file(media[0]).async('nodebuffer');
   eq([png.readUInt32BE(16), png.readUInt32BE(20)], [1920, 1080], 'pictures are 1920x1080');
 });
@@ -1071,13 +1216,13 @@ test('regression: paper print variant: ?print&paper sets deck-paper (dark stays 
   const outFile = path.join(OUT, 'demo-paper.pdf');
   fs.rmSync(outFile, { force: true });
   const log = run(['tools/export-pdf.cjs', 'slides/demo.html', outFile, '--paper']);
-  assert(/paper variant/.test(log) && /12 pages for 12 slides/.test(log), 'export log: ' + log);
+  assert(/paper variant/.test(log) && /10 pages: 7 main \+ 3 appendix, of 12 slides/.test(log), 'export log: ' + log);
   assert(fs.statSync(outFile).size > 10000, 'paper PDF written');
 });
 
 /* ------------------------------------------------------- deck source tools */
 
-test('tools/assemble.cjs: the Noir deck in manifest order (41 slides), private --out copies, --out kept inside slides/', async () => {
+test('tools/assemble.cjs: the Noir deck in manifest order (41 slides), private --out copies, --out kept inside slides/, team size, team options, export overrides', async () => {
   const out = path.join(DECK, 'slides', '.tmp-test-assemble.html');
   fs.rmSync(out, { force: true });
   const log = run(['tools/assemble.cjs', '--out', out]);
@@ -1096,6 +1241,45 @@ test('tools/assemble.cjs: the Noir deck in manifest order (41 slides), private -
     eq([r.s04z.auto, r.s04z.transition], [150, 'fade'], 'S04z is an auto bridge with a fade');
     eq(r.folio, '6', 'S05 folio (S02M hidden, S04z bridge not counted)');
   });
+  // static export membership from the manifest
+  assert(/<section\b[^>]*\bid="s20e"[^>]*\bdata-export="pptx"/.test(html), 'manifest "export": S20E is PPTX-only');
+  // team size: ONE number (manifest "presenters", --presenters overrides it)
+  const sec17b = (h) => (h.match(/<section\b[^>]*\bid="s17b"[^>]*>/) || [''])[0];
+  const team = (h) => ({
+    root: (h.match(/<html\b[^>]*>/) || [''])[0].replace(/\s+lang="en"/, ''),
+    member3: (h.replace(/<!--[\s\S]*?-->/g, '').match(/\sdata-member="3"/g) || []).length,
+    unused: /data-hidden="unused"/.test(sec17b(h)),
+    names: (h.match(/\[MEMBER \d\]<\/span>/g) || []).length,
+  });
+  const variants = {};
+  for (const n of [2, 3]) {
+    const f = path.join(DECK, 'slides', '.tmp-test-team' + n + '.html');
+    const lg = run(['tools/assemble.cjs', '--presenters', String(n), '--out', f]);
+    assert(lg.includes(n + ' presenters'), 'assemble --presenters ' + n + ': ' + lg);
+    variants[n] = team(fs.readFileSync(f, 'utf8'));
+    fs.rmSync(f, { force: true });
+  }
+  const optsAttr = ' data-options="' + (man.options && man.options.nemawashi ? 'nemawashi' : '') + '"';
+  eq(variants[2], { root: '<html class="team-2" data-presenters="2"' + optsAttr + '>', member3: 1, unused: true, names: 2 }, 'two presenters: member-3 elements gone, S17B an unused slot');
+  eq(variants[3].root, '<html class="team-3" data-presenters="3"' + optsAttr + '>', 'three presenters: root');
+  assert(variants[3].member3 >= 10 && !variants[3].unused && variants[3].names === 3, 'three presenters: member-3 elements kept, S17B in the flow: ' + JSON.stringify(variants[3]));
+  eq(team(html).root, '<html class="team-' + man.presenters + '" data-presenters="' + man.presenters + '"' + optsAttr + '>', 'default build = manifest "presenters"');
+  let badTeam = false;
+  try { run(['tools/assemble.cjs', '--presenters', '4', '--out', out]); } catch (e) { badTeam = /presenters must be a whole number from 2 to 3/.test(String(e.stderr)); }
+  assert(badTeam, '--presenters 4 is refused');
+  // team options: manifest "options" (nemawashi off by default), --option name=on|off for one build
+  const nema = (h) => (h.replace(/<!--[\s\S]*?-->/g, '').match(/\sdata-option="nemawashi"/g) || []).length;
+  eq([nema(html), (html.match(/<html\b[^>]*\sdata-options="([^"]*)"/) || [])[1]], [man.options.nemawashi ? 2 : 0, man.options.nemawashi ? 'nemawashi' : ''], 'default build follows manifest "options"');
+  const fo = path.join(DECK, 'slides', '.tmp-test-option.html');
+  assert(run(['tools/assemble.cjs', '--option', 'nemawashi=on', '--out', fo]).includes('options: nemawashi'), '--option nemawashi=on is logged');
+  const ho = fs.readFileSync(fo, 'utf8');
+  eq([nema(ho), /data-options="nemawashi"/.test(ho)], [2, true], '--option nemawashi=on keeps the S11D chip and card');
+  run(['tools/assemble.cjs', '--option', 'nemawashi=off', '--out', fo]);
+  eq(nema(fs.readFileSync(fo, 'utf8')), 0, '--option nemawashi=off leaves them out');
+  fs.rmSync(fo, { force: true });
+  let badOpt = false;
+  try { run(['tools/assemble.cjs', '--option', 'nosuch=on', '--out', out]); } catch (e) { badOpt = /no such option/.test(String(e.stderr)); }
+  assert(badOpt, 'an unknown --option is refused');
   fs.rmSync(out, { force: true });
 });
 

@@ -14,10 +14,13 @@
  *               a fallback is reported with the missing characters
  * Per deck:
  *   builds      <= 6 click builds per slide (and no gaps in data-step numbers)
- *   morph       keys on both sides of every morph transition (singles are reported as notes)
+ *   morph       keys on both sides of every morph transition (singles are reported as notes; seams of an
+ *               unused member slot, data-hidden="unused", are skipped)
  *   goto        every data-goto / data-next / checkpoint target exists
  *   console     zero console errors (live, navigation through every slide, print)
- *   print       PDF page count == number of slides
+ *   print       print layout of every slide (?print&export=all); the static PDF (?print) has one page per slide
+ *               of the engine's export plan (main flow + appendix; S04z, unused slots, PPTX-only slides left out),
+ *               and every page is printed full size (no Chromium shrink-to-fit)
  *   stress      (--stress) each text block in turn gets 40 % more words; any new overlap / overflow /
  *               bounds issue is reported as a warning ("a +40 % text edit must not create overlaps").
  *               Skips the running head, the footer and [data-fixed-text] (logo lockups, generated country labels).
@@ -30,6 +33,7 @@ const fs = require('fs');
 const path = require('path');
 const { pathToFileURL } = require('url');
 const { chromium } = require('playwright');
+const { pageFill } = require('./export-pdf.cjs');
 
 function args() {
   const a = process.argv.slice(2);
@@ -421,8 +425,10 @@ async function main() {
   const morphReport = [];
   for (const [a, b, how] of edges) {
     const mb = info.slides.find((s) => s.id === b);
-    if (mb.transition !== 'morph' || !(inScope(a) || inScope(b))) continue;
     const ma = info.slides.find((s) => s.id === a);
+    // an unused member slot (data-hidden="unused") is not part of the talk: its seams are not reported
+    if (ma.unused || mb.unused) continue;
+    if (mb.transition !== 'morph' || !(inScope(a) || inScope(b))) continue;
     const ka = await keysAt(a, ma.steps);
     const kb = await keysAt(b, 0);
     [[a, ka], [b, kb]].forEach(([sid, k]) => k.dup.forEach((d) => inScope(sid) && note(sid, 'morph', 'duplicate data-morph "' + d + '" (keys must be unique within a slide)')));
@@ -466,20 +472,27 @@ async function main() {
   await page.evaluate(() => window.Deck.reset());
   await ctx.close();
 
-  // ---- print: layout + page count
-  const pr = await open('?print&zoom=1');
+  // ---- print: the layout of every slide (export=all: also those the static exports leave out), then the PDF
+  const pr = await open('?print&export=all&zoom=1');
   for (const s of info.slides) {
     if (!inScope(s.id)) continue;
     const r = await pr.page.evaluate(pageAudit, { id: s.id, state: 'print', minPx: 28 });
     r.issues.forEach((x) => issues.push(Object.assign({ slide: s.id }, x)));
   }
-  let pages = null;
-  if (o.pdf) {
-    const buf = await pr.page.pdf({ width: '1920px', height: '1080px', printBackground: true, preferCSSPageSize: true });
-    pages = (buf.toString('latin1').match(/\/Type\s*\/Page(?![a-zA-Z])/g) || []).length;
-    if (pages !== ids.length) note('', 'print', 'PDF has ' + pages + ' pages for ' + ids.length + ' slides');
-  }
   await pr.ctx.close();
+  let pages = null;
+  let planned = null;
+  if (o.pdf) {
+    const pd = await open('?print');
+    planned = await pd.page.evaluate(() => (typeof window.Deck.exportPlan === 'function' ? window.Deck.exportPlan('pdf').length : window.Deck.slides.length));
+    const buf = await pd.page.pdf({ width: '1920px', height: '1080px', printBackground: true, preferCSSPageSize: true });
+    pages = (buf.toString('latin1').match(/\/Type\s*\/Page(?![a-zA-Z])/g) || []).length;
+    if (pages !== planned) note('', 'print', 'PDF has ' + pages + ' pages for ' + planned + ' slides in the export plan');
+    const fill = pageFill(buf);
+    const small = fill.map((f, i) => [i + 1, f]).filter(([, f]) => f < 0.999);
+    if (small.length) note('', 'print', 'Chromium shrank the PDF pages to ' + Math.round(small[0][1] * 100) + ' % (' + small.length + ' pages): an element sticks out of the stage; mark it data-offstage or keep it inside');
+    await pd.ctx.close();
+  }
   await browser.close();
   consoleErrors.forEach((e) => note('', 'console', e));
 
@@ -490,11 +503,11 @@ async function main() {
     if (x.slide && stubs.has(x.slide)) x.level = 'stub';
   });
   const errors = issues.filter((x) => x.level === 'error');
-  const result = { deck: o.deck, slides: ids.length, scope: o.slides || 'all', stubs: info.stubs, pages, issues, morph: morphReport };
+  const result = { deck: o.deck, slides: ids.length, scope: o.slides || 'all', stubs: info.stubs, pages, planned, issues, morph: morphReport };
   if (o.json) {
     console.log(JSON.stringify(result, null, 2));
   } else {
-    console.log('check-deck: ' + o.deck + ' · ' + ids.length + ' slides · scope ' + (o.slides ? o.slides.join(',') : 'all') + (pages != null ? ' · PDF ' + pages + ' pages' : ''));
+    console.log('check-deck: ' + o.deck + ' · ' + ids.length + ' slides · scope ' + (o.slides ? o.slides.join(',') : 'all') + (pages != null ? ' · PDF ' + pages + ' pages (plan ' + planned + ')' : ''));
     const order = (id) => (id ? ids.indexOf(id) : -1);
     issues.slice().sort((a, b) => order(a.slide) - order(b.slide)).forEach((x) => {
       if (x.level === 'stub') return;

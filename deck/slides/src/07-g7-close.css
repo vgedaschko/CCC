@@ -74,7 +74,7 @@
 /* ===================================================================== H1 · Q&A hub */
 #h1 { --lt-x: 300px; --lt-y: 860px; --lt-s: .8; --la-x: 1640px; --la-y: 260px; --la-s: .7; }
 #h1 .h1-body { row-gap: 30px; }
-#h1 .h1-head { --gap: 10px; }
+#h1 .h1-head { --gap: 14px; }
 #h1 .h1-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 48px; }
 #h1 .h1-tile {
   display: flex; flex-direction: column; gap: 12px; min-width: 0;
@@ -118,14 +118,14 @@
 #h4 .h4-dot { display: inline-block; width: 16px; height: 16px; border-radius: 50%; }
 #h4 .h4-dot--t { background: var(--teal); }
 #h4 .h4-dot--a { margin-left: 18px; background: var(--amber); }
-#h4 .h4-col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+#h4 .h4-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 #h4 .h4-dmis { flex: 1; }
 #h4 .h4-col--l { grid-column: 1 / 6; }
 #h4 .h4-col--r { grid-column: 6 / 13; }
 
 #h4 .h4-blk {
   display: flex; flex-direction: column; gap: 10px; min-width: 0;
-  padding: 14px 24px 18px;
+  padding: 12px 24px 14px;
   border: var(--sw-hair) solid var(--card-edge); border-radius: var(--radius);
   background: var(--card-fill);
 }
@@ -137,7 +137,7 @@
 #h4 .h4-back { --x: 1684px; --y: 1010px; --z: 6; background: var(--bg); }
 
 /* Hofstede: course-script country lists, each country dotted by its side on Meyer's Deciding scale */
-#h4 .h4-rows { display: grid; grid-template-columns: 168px minmax(0, 1fr); align-items: baseline; gap: 8px 18px; }
+#h4 .h4-rows { display: grid; grid-template-columns: 168px minmax(0, 1fr); align-items: baseline; gap: 4px 18px; }
 #h4 .h4-rt { font: 600 var(--fs-min)/1.25 var(--sans); color: var(--ink-2); }
 #h4 .h4-cs { display: flex; flex-wrap: wrap; gap: 4px 22px; }
 #h4 .h4-c { display: inline-flex; align-items: center; gap: 10px; font: 560 30px/1.25 var(--sans); color: var(--ink); }
@@ -147,10 +147,10 @@
 #h4 .h4-note { font: italic 470 32px/1.2 var(--serif); color: var(--ink); text-wrap: pretty; }
 
 /* GLOBE: the two poles of Institutional Collectivism (course-script table), then the "decisive" quote */
-#h4 .h4-vs { display: grid; gap: 8px; }
+#h4 .h4-vs { display: grid; gap: 6px; }
 #h4 .h4-pole {
   display: grid; grid-template-columns: 136px minmax(0, 1fr); align-items: baseline; column-gap: 12px;
-  padding: 4px 14px 6px; border-left: var(--sw-3) solid currentColor; border-radius: 4px;
+  padding: 2px 14px 4px; border-left: var(--sw-3) solid currentColor; border-radius: 4px;
   background: var(--glass); font: 540 var(--fs-min)/1.25 var(--sans); color: var(--ink); text-wrap: pretty;
 }
 #h4 .h4-pole.t { border-left-color: var(--teal); }
@@ -159,6 +159,11 @@
 #h4 .h4-pole.t .h4-pl { color: var(--teal); }
 #h4 .h4-pole.a .h4-pl { color: var(--amber); }
 #h4 .h4-q .q { font-size: 30px; line-height: 1.18; }
+#h4 .h4-src { font: 560 var(--fs-min)/1 var(--sans); font-style: normal; color: var(--ink-3); }
+/* the GLOBE clusters (course script pp. 28–29), dotted by their side on Meyer's scale */
+#h4 .h4-cl { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 20px; padding: 2px 14px 0 18px; }
+#h4 .h4-cls { font: italic 470 32px/1.2 var(--serif); color: var(--ink-2); }
+#h4 .h4-pg { color: var(--ink-3); }
 
 /* Osland & Bird: the lecture's Leading / Deciding rows, redrawn as vector, Japan circled */
 #h4 .h4-def { font-size: 30px; line-height: 1.2; }
@@ -183,14 +188,14 @@
 #h4 .h4-lab.jp { color: var(--ink); font-weight: 760; }
 #h4 .h4-rail--dec .h4-lab.jp { color: var(--teal); }
 #h4 .h4-ends { grid-column: 2; grid-row: 3; display: flex; justify-content: space-between; margin-top: 9px; font: 560 var(--fs-min)/1 var(--sans); color: var(--ink-3); }
-#h4 .h4-ours { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+#h4 .h4-ours { display: flex; flex-direction: column; gap: 10px; padding-top: 4px; }
 #h4 .h4-ours li { font: 520 var(--fs-min)/1.3 var(--sans); color: var(--ink); text-wrap: pretty; }
 #h4 .h4-ours b { font-weight: 720; }
 #h4 .h4-ours i { font-family: var(--serif); font-style: italic; font-size: 1.08em; }
 #h4 .h4-ours .ic { color: var(--ink-2); }
 
 /* Bennett: the five stages as a ladder (a vertical line of nodes); Defense and Adaptation called out */
-#h4 .h4-steps { position: relative; display: grid; gap: 6px; padding-left: 40px; }
+#h4 .h4-steps { position: relative; display: grid; gap: 4px; padding-left: 40px; }
 #h4 .h4-steps::before { content: ""; position: absolute; left: 10px; top: 18px; bottom: 18px; width: 3px; border-radius: 2px; background: var(--line-2); }
 #h4 .h4-steps li { position: relative; display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 22px; align-items: baseline; }
 #h4 .h4-steps li::before {
@@ -201,7 +206,7 @@
 #h4 .h4-call { font: 520 var(--fs-min)/1.25 var(--sans); color: var(--ink); text-wrap: pretty; }
 #h4 .h4-call .soft { color: var(--ink-3); }
 #h4 .nw { white-space: nowrap; }
-#h4 .h4-steps li.def .h4-sn { color: var(--amber); font-weight: 720; }
-#h4 .h4-steps li.def::before { border-color: var(--amber); background: var(--amber); }
-#h4 .h4-steps li.ad .h4-sn { color: var(--teal); font-weight: 720; }
-#h4 .h4-steps li.ad::before { border-color: var(--teal); background: var(--teal); }
+/* the two called-out stages stay neutral ink: teal / amber mean consensual / top-down on this slide's key, and
+   a DMIS stage is not a side of Meyer's scale */
+#h4 .h4-steps :is(li.def, li.ad) .h4-sn { color: var(--ink); font-weight: 720; }
+#h4 .h4-steps :is(li.def, li.ad)::before { border-color: var(--ink); background: var(--ink); }

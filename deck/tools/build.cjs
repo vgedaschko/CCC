@@ -7,6 +7,10 @@
  * Inlines: <link rel="stylesheet"> (recursively, incl. @import), <script src>, url(...) in CSS
  * (fonts, images) and in style="" attributes, <img|source|video|audio|track|input src/poster>,
  * <link rel="icon">. Local files only; anything remote is reported (and fails the build with --strict).
+ *
+ * Font licences: for every inlined font the licence file next to it (OFL-<family>.txt, else OFL.txt / LICENSE*)
+ * is copied next to the output, and an HTML comment after <!doctype html> names the copyright holders and the
+ * SIL Open Font License, so the single file never travels without its notice.
  */
 'use strict';
 
@@ -57,7 +61,7 @@ function isLocal(ref) {
 }
 
 function createBuilder(inFile) {
-  const stats = { css: 0, js: 0, assets: 0, bytes: 0, remote: new Set(), missing: new Set() };
+  const stats = { css: 0, js: 0, assets: 0, bytes: 0, remote: new Set(), missing: new Set(), fonts: new Set() };
 
   function resolve(ref, baseDir) {
     const clean = ref.trim().split(/[?#]/)[0];
@@ -80,6 +84,7 @@ function createBuilder(inFile) {
     const ext = path.extname(file).toLowerCase();
     const mime = MIME[ext] || 'application/octet-stream';
     const buf = fs.readFileSync(file);
+    if (/^font\//.test(mime)) stats.fonts.add(file);
     stats.assets += 1;
     stats.bytes += buf.length;
     return 'data:' + mime + ';base64,' + buf.toString('base64');
@@ -214,6 +219,23 @@ function createBuilder(inFile) {
   return { build, stats };
 }
 
+/** The licence file for each inlined font (same folder; OFL-<family>.txt first) and its copyright line. */
+function fontLicences(fontFiles) {
+  const out = new Map();
+  for (const f of fontFiles) {
+    const dir = path.dirname(f);
+    let names = [];
+    try { names = fs.readdirSync(dir).filter((n) => /^(ofl|licen[cs]e)[^/\\]*\.(txt|md)$/i.test(n)); } catch { names = []; }
+    const fam = path.basename(f).toLowerCase().split(/[-_.]/)[0];
+    const pick = names.find((n) => n.toLowerCase().includes(fam)) || names.find((n) => /^ofl\.txt$/i.test(n)) || (names.length === 1 ? names[0] : null);
+    if (!pick || out.has(path.join(dir, pick))) continue;
+    const text = fs.readFileSync(path.join(dir, pick), 'utf8');
+    const line = (text.split(/\r?\n/).find((l) => /copyright/i.test(l)) || '').replace(/\s+\S+\.(?:ttf|otf):.*$/i, '').replace(/--/g, '-').trim();
+    out.set(path.join(dir, pick), { name: pick, line });
+  }
+  return [...out.entries()].map(([file, v]) => Object.assign({ file }, v));
+}
+
 function main() {
   const args = process.argv.slice(2);
   const strict = args.includes('--strict');
@@ -224,13 +246,22 @@ function main() {
   if (!fs.existsSync(inFile)) usage('input not found: ' + files[0]);
 
   const { build, stats } = createBuilder(inFile);
-  const html = build(fs.readFileSync(inFile, 'utf8'), path.dirname(inFile));
+  let html = build(fs.readFileSync(inFile, 'utf8'), path.dirname(inFile));
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
+  const lic = fontLicences(stats.fonts);
+  if (lic.length) {
+    const note = '<!--\n  Fonts embedded in this file, licensed under the SIL Open Font License, Version 1.1 (https://openfontlicense.org):\n' +
+      lic.filter((l) => l.line).map((l) => '  ' + l.line + '\n').join('') +
+      '  Full licence texts: ' + lic.map((l) => l.name).join(', ') + ' (next to this file).\n-->\n';
+    html = /^\s*<!doctype[^>]*>\s*/i.test(html) ? html.replace(/^(\s*<!doctype[^>]*>)\s*/i, (m, d) => d + '\n' + note) : note + html;
+    lic.forEach((l) => fs.copyFileSync(l.file, path.join(path.dirname(outFile), l.name)));
+  }
   fs.writeFileSync(outFile, html);
 
   const size = fs.statSync(outFile).size;
   console.log('build: wrote ' + path.relative(process.cwd(), outFile) + ' (' + (size / 1024).toFixed(1) + ' KiB): ' +
-    stats.css + ' stylesheet(s), ' + stats.js + ' script(s), ' + stats.assets + ' asset(s) inlined');
+    stats.css + ' stylesheet(s), ' + stats.js + ' script(s), ' + stats.assets + ' asset(s) inlined' +
+    (lic.length ? '; font licence(s) copied: ' + lic.map((l) => l.name).join(', ') : ''));
   stats.missing.forEach((m) => console.warn('build: WARNING missing local file: ' + m));
   stats.remote.forEach((r) => console.warn('build: WARNING remote reference left in place (needs network): ' + r));
   if (strict && (stats.remote.size || stats.missing.size)) {
@@ -240,4 +271,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { createBuilder };
+module.exports = { createBuilder, fontLicences };

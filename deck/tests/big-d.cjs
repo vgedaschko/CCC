@@ -6,12 +6,16 @@
  *   node tests/big-d.cjs hub             run only tests whose name contains "hub"
  *   node tests/big-d.cjs --deck <file>   another assembled copy (e.g. slides/.tmp-int.html or dist/big-d.html)
  *
- * Covers: a full clicker run-through s01 -> s20e counting presses (two presenters: s17b hidden), the visible
- * order, Prev as the README documents it, both S02 paths, all four S04b trigger outcomes (state, cover, stopped
- * timer, elapsed time bound on S05 and read again on S13 / S14a / S14m / S20), the goto chips and their
- * printed numbers, the Q&A hub and every backup, the presenter checkpoints, print (41 pages, hidden slides
- * tagged, live outcomes as dashed outlines), lit-room mode, a run through every real View Transition, and
- * zero console errors. Uses the globally installed Playwright. Exit code 1 on any failure.
+ * Covers: a full clicker run-through s01 -> s20e counting presses (two presenters: s17b an unused slot), the
+ * visible order, Prev as the README documents it, both S02 paths, all four S04b trigger outcomes (state, cover,
+ * stopped timer, elapsed time bound on S05 and read again on S13 / S14a / S14m / S20), the goto chips and their
+ * printed numbers, the Q&A hub and every backup, the presenter checkpoints, the team size (two presenters: no
+ * member-3 element anywhere, the S18 bracket spans the two; three: P3 everywhere, S17B in the flow; Part II morph
+ * keys match on every seam), the static exports (PDF: main flow in clicker order + tagged appendix, S04z / S20E /
+ * the unused slot left out; PPTX plan in physical order), live outcomes as dashed outlines in print, lit-room mode,
+ * a run through every real View Transition, and zero console errors. Uses the globally installed Playwright.
+ * The team size is read from the deck (<html data-presenters>): npm test runs the suite on the default build
+ * and on a three-presenter build (slides/.tmp-team3.html). Exit code 1 on any failure.
  */
 'use strict';
 
@@ -19,6 +23,7 @@ const fs = require('fs');
 const path = require('path');
 const { pathToFileURL } = require('url');
 const { chromium } = require('playwright');
+const { pageFill } = require('../tools/export-pdf.cjs');
 
 const ROOT = path.resolve(__dirname, '..');
 const args = process.argv.slice(2);
@@ -28,12 +33,16 @@ const FILTER = args.filter((a, i) => !a.startsWith('--') && (deckArg < 0 || i !=
 const URL0 = pathToFileURL(DECK).href;
 const MANIFEST = JSON.parse(fs.readFileSync(path.join(ROOT, 'slides', 'src', 'manifest.json'), 'utf8'));
 const ORDER = MANIFEST.order;                          // the 41 physical positions
-// two presenters (default): S17b hidden. With three presenters (data-hidden removed from S17b) the suite adapts.
+// two presenters (manifest default): S17b is an unused slot (hidden, not exported). With three presenters
+// (assemble --presenters 3) it is in the flow; the suite reads the team size from <html data-presenters>.
 let THREE = false;
 let HIDDEN = ['s02m', 's14m', 's17b', 'h1', 'h2', 'h3', 'h4', 'h5'];
 // what a clicker shows, the S04z bridge included (it auto-advances)
 let VISIBLE = ORDER.filter((id) => !HIDDEN.includes(id));
 const CHECKPOINTS = [['s05', '7:30'], ['s09a', '14:45'], ['s12a', '19:30'], ['s15', '25:00']];
+// static exports: the hidden variants and backups form the PDF appendix, in physical order
+const APPENDIX = ['s02m', 's14m', 'h1', 'h2', 'h3', 'h4', 'h5'];
+const TAG = { s02m: 'Variant · chosen live', s14m: 'Variant · chosen live', h1: 'Backup · hidden slide', h2: 'Backup · hidden slide', h3: 'Backup · hidden slide', h4: 'Backup · hidden slide', h5: 'Backup · hidden slide' };
 
 const tests = [];
 const consoleErrors = [];
@@ -104,13 +113,27 @@ test('the assembled deck: 41 physical positions in manifest order, hidden flags,
   await withDeck({}, async (page) => {
     const s = await page.evaluate(() => Deck.slides);
     eq(s.map((x) => x.id), ORDER, 'manifest order');
-    eq(s.filter((x) => x.hidden).map((x) => x.id), HIDDEN, 'hidden slides (' + (THREE ? 'three presenters: s17b shown' : 'two presenters: s17b hidden') + ')');
+    eq(s.filter((x) => x.hidden).map((x) => x.id), HIDDEN, 'hidden slides (' + (THREE ? 'three presenters: s17b shown' : 'two presenters: s17b an unused slot') + ')');
+    eq(s.filter((x) => x.unused).map((x) => x.id), THREE ? [] : ['s17b'], 'unused member slot');
     eq(s.filter((x) => x.auto != null).map((x) => x.id), ['s04z'], 'one auto bridge');
+    eq(s.filter((x) => x.exports.join(' ') !== 'pdf pptx').map((x) => x.id + ':' + x.exports.join(' ')),
+      ['s04z:'].concat(THREE ? [] : ['s17b:'], ['s20e:pptx']), 'static export membership (bridge, unused slot: none; S20E: PPTX only)');
     eq(s.filter((x) => x.next).map((x) => x.id + '>' + x.next), ['s02m>s03', 's14m>s14b'], 'variants rejoin the main line');
     eq(await page.evaluate(() => document.querySelectorAll('[data-stub], .stub-mark, .stub-body').length), 0, 'no stub left');
     const max = Math.max(...s.map((x) => x.steps));
     assert(max <= 6, 'at most 6 clicks per slide, got ' + max);
     eq([pos('s02m'), pos('s13'), pos('s14m'), pos('s15'), pos('s20'), pos('h1'), pos('h2'), pos('h5'), pos('s20e')], [3, 24, 26, 29, 35, 36, 37, 40, 41], 'jump numbers');
+    // team options (manifest "options", assemble --option): the S11D nemawashi chip and card exist only when switched on
+    const opt = await page.evaluate(() => ({
+      on: (document.documentElement.getAttribute('data-options') || '').split(/\s+/).filter(Boolean),
+      nema: document.querySelectorAll('#s11d [data-trigger="nema"], #s11d [data-triggered~="nema"]').length,
+      stray: document.querySelectorAll('[data-option]').length,
+    }));
+    eq(opt.nema, opt.on.includes('nemawashi') ? 2 : 0, 'nemawashi chip + card follow the option (' + (opt.on.includes('nemawashi') ? 'on' : 'off') + ')');
+    if (opt.on.includes('nemawashi')) eq(await page.evaluate(() => document.querySelector('#s11d [data-trigger="nema"]').getAttribute('data-step')), '2', 'the chip arrives with the nemawashi block');
+    // placeholder positions: data-positions="tbd" (dashed markers) may stay only while the slide still has placeholders
+    const tbd = await page.evaluate(() => Array.from(document.querySelectorAll('.slide[data-positions="tbd"]')).map((sl) => [sl.id, sl.querySelectorAll('.ph').length]));
+    tbd.forEach(([id, n]) => assert(n > 0, id + ': every placeholder is filled but data-positions="tbd" is still set: fill in the positions (06-g6-part2.css) and delete it'));
   });
 });
 
@@ -141,7 +164,7 @@ test('clicker run-through s01 -> s20e: visible order, press count, the end stays
   });
 });
 
-test('Prev as documented: back through builds, previous visible slide in its final state, skips the S04z bridge, returns from a jump', async () => {
+test('Prev as documented: back through builds, previous visible slide in its final state, skips the S04z bridge, returns from a jump at the build it left', async () => {
   await withDeck({ hash: '#s05' }, async (page) => {
     await press(page, 'PageUp');
     eq(await where(page), 's04b/' + await stepsOf(page, 's04b'), 'Prev from s05/0 skips the auto bridge to S04b final');
@@ -152,7 +175,7 @@ test('Prev as documented: back through builds, previous visible slide in its fin
     await page.evaluate(() => Deck.go('s18', 0));
     await rest(page);
     await press(page, 'PageUp');
-    eq(await where(page), 's03/' + await stepsOf(page, 's03'), 'Prev after a jump (here Deck.go) returns to where it came from, final state');
+    eq(await where(page), 's03/1', 'Prev after a jump (here Deck.go) returns to where it came from, at the build it left');
     await finalOf(page, 's17');
     await press(page, 'PageDown');
     const p3 = THREE ? 's17b' : 's18';
@@ -199,7 +222,7 @@ test('S02, Munich first: the MUNICH -> 3 chip sets d1.first=MU, S02M runs, Next 
     eq(await where(page), 's02m/' + n, 'Prev from S03 returns to S02M final (arrived by data-next)');
     for (let i = 0; i < n; i++) await press(page, 'PageUp');
     await press(page, 'PageUp');
-    eq(await where(page), 's02/' + await stepsOf(page, 's02'), 'Prev from S02M/0 returns to S02 in its final state (arrived by goto)');
+    eq(await where(page), 's02/1', 'Prev from S02M/0 returns to S02 at the build the chip was clicked (arrived by goto): nothing of S02 is given away');
   });
 });
 
@@ -329,6 +352,24 @@ test('S20 stamp chip: shows the D stamp, sets s20.stand=D without advancing; S20
 
 /* ===================================================================== presenter */
 
+test('mouse and clock: only hotspots react (a near miss on S04B reveals nothing), the first advance counts S01 in (0:30)', async () => {
+  await withDeck({ hash: '#s01' }, async (page) => {
+    eq(await page.evaluate(() => Deck.clock.elapsed()), 0, 'clock idle on S01');
+    await press(page, 'PageDown');
+    const c = await page.evaluate(() => Deck.clock.elapsed());
+    assert(c >= 30000 && c < 35000, 'the first advance starts the clock at 0:30 (S01 counted in): ' + c);
+    await page.evaluate(() => Deck.go('s04b', 1));
+    await rest(page);
+    const box = await page.locator('#s04b [data-trigger="dT"]').boundingBox();
+    await page.mouse.click(box.x + box.width + 20, box.y + box.height / 2); // the gap between two chips
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height + 12); // just below the D chip
+    await page.mouse.click(1900, 1060);
+    await rest(page);
+    eq(await where(page), 's04b/1', 'clicks off the chips do not advance');
+    eq(await page.evaluate(() => Deck.store.get('d2.method')), undefined, 'and fire nothing');
+  });
+});
+
 test('presenter view: the four checkpoints, reached / behind states, backups do not tick them, no notes', async () => {
   await withDeck({ hash: '#s01' }, async (page, context) => {
     const [pres] = await Promise.all([context.waitForEvent('page'), page.keyboard.press('p')]);
@@ -360,15 +401,19 @@ test('presenter view: the four checkpoints, reached / behind states, backups do 
 
 /* ===================================================================== print */
 
-test('print: 41 pages in manifest order, final states, hidden slides tagged, live outcomes as dashed outlines', async () => {
+test('static exports: PDF = main flow in clicker order + tagged appendix (S04z, S20E, an unused slot left out), PPTX = physical order', async () => {
+  const main = VISIBLE.filter((id) => id !== 's04z' && id !== 's20e');
+  const pptx = ORDER.filter((id) => id !== 's04z' && (THREE || id !== 's17b'));
   await withDeck({ query: '?print' }, async (page) => {
     const r = await page.evaluate(() => {
       const sl = Array.from(document.querySelectorAll('#stage > .slide'));
       const vis = (n) => n && getComputedStyle(n).display !== 'none' && getComputedStyle(n).visibility !== 'hidden';
+      const shown = sl.filter((s) => getComputedStyle(s).display !== 'none');
       return {
-        ids: sl.map((s) => s.id),
-        shown: sl.filter((s) => getComputedStyle(s).display !== 'none').length,
-        tags: sl.filter((s) => vis(s.querySelector(':scope > .deck-variant-tag'))).map((s) => s.id + ':' + s.querySelector(':scope > .deck-variant-tag').textContent),
+        ids: shown.map((s) => s.id),
+        plan: Deck.exportPlan('pdf').map((x) => x.id + ':' + x.part),
+        pptx: Deck.exportPlan('pptx').map((x) => x.id + (x.hidden ? '*' : '')),
+        tags: shown.filter((s) => vis(s.querySelector(':scope > .deck-variant-tag'))).map((s) => s.id + ':' + s.querySelector(':scope > .deck-variant-tag').textContent),
         hots: Array.from(document.querySelectorAll('.hot')).filter(vis).length,
         unrevealed: Array.from(document.querySelectorAll('[data-step]')).filter((n) => !n.classList.contains('is-revealed')).length,
         s04b: vis(Array.from(document.querySelectorAll('#s04b [data-print-only]')).find((n) => /decided live by the room/.test(n.textContent))),
@@ -376,16 +421,77 @@ test('print: 41 pages in manifest order, final states, hidden slides tagged, liv
         s20: Array.from(document.querySelectorAll('#s20 [data-print-only]')).some((n) => vis(n) && /stand-up/.test(n.textContent)),
       };
     });
-    eq(r.ids, ORDER, 'print order');
-    eq(r.shown, 41, 'every slide printed');
-    eq(r.tags, ['s02m:Variant · chosen live', 's14m:Variant · chosen live'].concat(THREE ? [] : ['s17b:Member 3 · shown with three presenters'], ['h1', 'h2', 'h3', 'h4', 'h5'].map((h) => h + ':Backup · hidden slide')), 'hidden slides tagged');
+    eq(r.ids, main.concat(APPENDIX), 'PDF pages: the clicker run, then the appendix');
+    eq(r.plan, main.map((id) => id + ':main').concat(APPENDIX.map((id) => id + ':appendix')), 'Deck.exportPlan("pdf")');
+    eq(r.tags, APPENDIX.map((id) => id + ':' + TAG[id]), 'appendix pages keep their print tags; nothing else is tagged');
+    eq(r.pptx, pptx.map((id) => id + (HIDDEN.includes(id) ? '*' : '')), 'Deck.exportPlan("pptx"): physical order, hidden slides in place');
     eq(r.hots, 0, 'no hotspot printed');
     eq(r.unrevealed, 0, 'every build in its final state');
     assert(r.s04b && !r.s04bStamp, 'S04b: dashed "decided live by the room", no stamp');
     assert(r.s20, 'S20: dashed "stand-up — decided live"');
     const pdf = await page.pdf({ width: '1920px', height: '1080px', printBackground: true, preferCSSPageSize: true });
     const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page[^s]/g) || []).length;
-    eq(pages, 41, 'PDF page count');
+    eq(pages, main.length + APPENDIX.length, 'PDF page count (' + (THREE ? '32 + 7' : '31 + 7') + ')');
+    eq([...new Set(pageFill(pdf))], [1], 'every page printed full size (no shrink-to-fit from an element outside the stage)');
+  });
+  await withDeck({ query: '?print&export=pptx' }, async (page) => {
+    eq(await page.evaluate(() => Array.from(document.querySelectorAll('#stage > .slide')).filter((s) => getComputedStyle(s).display !== 'none').map((s) => s.id)), pptx, '?print&export=pptx lays out the PPTX plan');
+  });
+});
+
+/* ===================================================================== team size */
+
+// keys a morph pairs at A's final state (or B's first) — as tools/check-deck.cjs reads them
+const keysAt = async (page, id, step) => {
+  await page.evaluate(([i, s]) => Deck.go(i, s), [id, step]);
+  await rest(page);
+  return page.evaluate((sid) => {
+    const el = document.getElementById(sid);
+    const shown = (n) => { for (let e = n; e && e !== el; e = e.parentElement) { if (e.hasAttribute('data-step') && !e.classList.contains('is-revealed')) return false; if (e.hasAttribute('data-triggered') && !e.classList.contains('is-triggered')) return false; } return true; };
+    return Array.from(el.querySelectorAll('[data-morph]')).filter(shown).map((n) => n.getAttribute('data-morph')).filter((k) => /^(mem|ring)-\d$/.test(k)).sort();
+  }, id);
+};
+
+test('team size: ' + '<html data-presenters> drives the deck; member-3 elements only with three; Part II seams keep their member keys', async () => {
+  await withDeck({ hash: '#s01' }, async (page) => {
+    const n = THREE ? 3 : 2;
+    eq(await page.evaluate(() => [document.documentElement.dataset.presenters, document.documentElement.classList.contains('team-' + document.documentElement.dataset.presenters)]), [String(n), true], 'root data-presenters + team class');
+    // every slide at its final build: no member-3 trace with two presenters (the unused slot itself aside)
+    const slides = await page.evaluate(() => Deck.slides.filter((x) => !x.unused).map((x) => [x.id, x.steps]));
+    const seen = [];
+    for (const [id, steps] of slides) {
+      await page.evaluate(([i, st]) => Deck.go(i, st), [id, steps]);
+      await rest(page);
+      const t = await page.evaluate((sid) => {
+        const el = document.getElementById(sid);
+        const vis = (q) => Array.from(el.querySelectorAll(q)).filter((x) => { const cs = getComputedStyle(x); return cs.display !== 'none' && cs.visibility !== 'hidden' && parseFloat(cs.opacity) > 0 && x.getClientRects().length > 0; }).length;
+        return { text: /MEMBER 3|\bP3\b/.test(el.innerText), m3: el.querySelectorAll('[data-member="3"], .g6-mem--3, .g6-mlab--3, .g6-plab--3, .g6-ring--3, [data-morph="mem-3"], [data-morph="ring-3"]').length, vis3: vis('[data-member="3"]') };
+      }, id);
+      if (t.text || t.m3) seen.push(id + (t.text ? ' text' : '') + (t.m3 ? ' elements:' + t.m3 : '') + (t.vis3 ? ' visible:' + t.vis3 : ''));
+    }
+    if (THREE) eq(seen, ['s01 text elements:1 visible:1', 's15 text elements:3 visible:3', 's16 text elements:2 visible:2', 's17 text elements:2 visible:2', 's17b text elements:4', 's18 text elements:2 visible:2'], 'three presenters: P3 on S01, S15–S18 and its own slide (S17B: the slot of member 3)');
+    else eq(seen, [], 'two presenters: no member-3 element or "MEMBER 3" / "P3" text on any slide');
+    // S15: one dot, label and ring per presenter
+    await finalOf(page, 's15');
+    const s15 = await page.evaluate(() => ['.g6-mem', '.g6-mlab', '.g6-ring'].map((q) => Array.from(document.querySelectorAll('#s15 ' + q)).filter((x) => getComputedStyle(x).opacity > 0).length));
+    eq(s15, [n, n, n], 'S15: dots, labels, rings');
+    // S18: the bracket spans the outermost of the members who are present
+    await finalOf(page, 's18');
+    const br = await page.evaluate(() => {
+      const r = (q) => document.querySelector(q).getBoundingClientRect();
+      const dots = Array.from(document.querySelectorAll('#s18 .g6-mem')).map((d) => { const b = d.getBoundingClientRect(); return b.left + b.width / 2; });
+      const b = r('#s18 .g6-bracket');
+      return { dots: dots.length, l: Math.round(b.left - Math.min(...dots)), r: Math.round(b.right - Math.max(...dots)) };
+    });
+    assert(br.dots === n && Math.abs(br.l) <= 2 && Math.abs(br.r) <= 2, 'S18 bracket spans the outer member dots: ' + JSON.stringify(br));
+    // morph seams through Part II (clicker order): the member keys match on both sides, rings leave on purpose
+    const flow = VISIBLE.slice(VISIBLE.indexOf('s15'), VISIBLE.indexOf('s18') + 1);
+    for (let i = 0; i + 1 < flow.length; i++) {
+      const a = (await keysAt(page, flow[i], await stepsOf(page, flow[i]))).filter((k) => k.startsWith('mem-'));
+      const b = (await keysAt(page, flow[i + 1], 0)).filter((k) => k.startsWith('mem-'));
+      eq(b, a, flow[i] + ' -> ' + flow[i + 1] + ': member keys on both sides');
+      eq(a, Array.from({ length: n }, (_, k) => 'mem-' + (k + 1)), flow[i] + ': one key per presenter');
+    }
   });
 });
 
@@ -443,7 +549,7 @@ test('zero console errors or warnings across every page above', async () => {
   browser = await chromium.launch();
   {
     const { context, page } = await open({ label: 'probe' });
-    THREE = await page.evaluate(() => !Deck.slides.find((x) => x.id === 's17b').hidden);
+    THREE = await page.evaluate(() => (document.documentElement.dataset.presenters ? document.documentElement.dataset.presenters === '3' : !Deck.slides.find((x) => x.id === 's17b').hidden));
     await context.close();
     if (THREE) {
       HIDDEN = HIDDEN.filter((id) => id !== 's17b');

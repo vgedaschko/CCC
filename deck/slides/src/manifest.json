@@ -1,5 +1,11 @@
 {
   "_about": "Slide order (41 physical positions, BUILD_BRIEF §4 / script §2.7) and the group partials. Owned by the foundation. tools/assemble.cjs places each slide by this order, wherever its group file defines it.",
+  "presenters": 2,
+  "_presenters": "Team size: 2 or 3. The ONE number for Part II and the title slide. With 2, every data-member=\"3\" element is left out and S17b stays in place as an unused slot (hidden, not exported). Override for one build: node tools/assemble.cjs --presenters 3 --out slides/.tmp-team3.html",
+  "options": { "nemawashi": false },
+  "_options": "Team options (true or false). nemawashi: true only if the team really held its December talks with classmates (script §2.3); then S11D gets the mouse chip \"our nemawashi\" and its card (data-option=\"nemawashi\"); false leaves both out. Override for one build: node tools/assemble.cjs --option nemawashi=on --out slides/.tmp-nema.html",
+  "export": { "s20e": "pptx" },
+  "_export": "Static exports (engine data-export, set on the slide by assemble): S20E is the live end copy of S20, so the PDF leaves it out; the PPTX keeps it so a slide show does not end on black. Auto bridges (S04z) and unused member slots are left out of both by the engine itself.",
   "template": "deck.template.html",
   "groups": [
     { "file": "00-foundation", "owner": "foundation" },

@@ -191,7 +191,7 @@ These lines work whoever is speaking. The next slide's headline answers the line
   - Part I is split into four packages: S01–S05 (live) · S06–S09 · S10–S13 · S14. Every person presents every package at least once.
   - Every person runs the S02/S04 clicker-plus-hotspot sequence once on a projector or TV with the pointer visible.
   - Every person facilitates Decision #2 once with friends as the audience.
-- **Memorise:** the three checkpoints, the jump numbers 3 · 26 · 36, and each slide's click count.
+- **Memorise:** the four checkpoints, the jump numbers 3 · 26 · 36, and each slide's click count.
 - If at all possible, do one tech run in the actual room on the beamer.
 
 ---
@@ -255,6 +255,7 @@ These lines work whoever is speaking. The next slide's headline answers the line
 - Their input may change how the proposal is worded.
 - There is no script and no fake role. They vote however they like, and they know they will be revealed in S11.
 - If the team is unsure about this, skip it. S11 still works.
+- **Deck switch:** the S11d reveal chip *our nemawashi* and its card exist only if the talks really happened: set `"options": { "nemawashi": true }` in `deck/slides/src/manifest.json` and reassemble (default `false`: no chip, no card).
 
 **In class: running order (block 4:00–7:30, hard ceiling)**
 
@@ -331,7 +332,7 @@ These lines work whoever is speaking. The next slide's headline answers the line
 | 41 | S20e: visible copy of S20's end state | | none | Catches a stray clicker press during Q&A |
 
 - **Memorise only three numbers: 3, 26, 36.** In Slide Show, typing the number + Enter jumps straight there.
-- **Builds are advanced ONLY with the clicker or keyboard, on every slide.** The mouse touches only small, labelled hotspots: the S02 chip, the four S04 trigger chips, the S12b, S13 and S14b skip chips, and the S20 stamp chip.
+- **Builds are advanced ONLY with the clicker or keyboard, on every slide.** The mouse touches only small, labelled hotspots: the S02 chip, the four S04 trigger chips, the S12b, S13 and S14b skip chips, the S20 stamp chip and, only if the team held its December talks (§2.3, manifest option), the S11d chip *our nemawashi* (it arrives with the nemawashi block, click 2). In the coded deck a click anywhere else does nothing (`clickAdvance: false`).
 - Hyperlinks set via *Place in This Document* follow their slide when slides move. The typed numbers and the printed "→ n" labels do not, so re-derive and reprint them once the order is final.
 
 ### 2.8 PowerPoint build rules
@@ -544,7 +545,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - Breadcrumb: I · CASE · MERGER
   - Headline: One word, two rulebooks: decision
   - Left, teal, engraved stone: **DECISION**
-    - "A commitment. A promise." — M. Müller · German director
+    - "…a commitment. A promise." — M. Müller · German director
     - "…they cling to it with their lives." — L. Nicoli · New York
   - Right, amber, pencil: **decision**
     - "If decisions are not flexible, how can we beat the competition?" — L. Nicoli · New York
@@ -559,7 +560,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - `!!ClockTD` stays parked bottom-left. Entrance effects only.
 - **Talking points:**
   - Cue: two German directors, Martina Müller and her boss Matthias Wulf, visited Meyer's Paris office. They were taken aback that the American CEO decided unilaterally. Their previous German chairman had decided through group agreement; even the weekly meeting agendas went round for consensus.
-  - Müller, cue: Americans would close a meeting announcing a decision, but for the Germans saying "we'll do this" is [SCREEN] "A commitment. A promise." She even felt the Americans were trying to trick them.
+  - Müller, cue: Americans would close a meeting announcing a decision, but for the Germans saying "we'll do this" is [SCREEN] "…a commitment. A promise." She even felt the Americans were trying to trick them.
   - Nicoli's view of the Germans, cue: they take weeks to decide, then [SCREEN] "…they cling to it with their lives." His own rule: [SCREEN] "If decisions are not flexible, how can we beat the competition?"
   - Wulf's conclusion after much frustration: [SCREEN] "…a 'decision' is simply an agreement to continue discussions."
   - → "So far, one person decided for you. Now all of you decide — together."
@@ -577,6 +578,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
       - ③ Deadline: 2:00
       - ④ No unanimity? Majority vote. Everyone commits.
       - ⑤ Then: no reopening.
+    - Under the card (B's question): *Can we all live with these rules?*
   - **S04b** (slide 6):
     - Rules card in the left third.
     - `!!Mail` (tag *our email · Per-style*): "Hey class — I thought we could practise SCENARIO T at the end of Part I. What do you think?"
@@ -682,15 +684,15 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
     - Germany — hierarchical, yet consensual
     - US + Germany — "exceptions to the global pattern—but in opposite directions"
     - Japan — "…strongly hierarchical is one of the most consensual societies in the world"
-    - Vietnam — the same zig-zag *(Country Mapping 2022)*
+    - Vietnam — the same zig-zag, level with Germany *(Country Mapping 2022)*
   - Footer: Leading: Erin Meyer, Country Mapping 2022 · Deciding: Meyer (2014), Fig. 5.3 (KR, VN: Country Mapping 2022) · relative, no scores
-- **Visual & motion (the "two rails" shot):** Clicks: 5.
-  - Click 1: the S06 timelines fade, and `!!AxisLead` (top) and `!!AxisDec` (bottom) wipe in.
-  - Click 2: the usual pattern. Dots for SE and NL (left) and CN and KR (right) appear on Leading, and nearly vertical grey connectors wipe down to Deciding.
-  - Click 3: US, slanting hard to the right (amber).
-  - Click 4: Germany, slanting left (teal), plus the "exceptions" tag.
-  - Click 5: Japan and Vietnam, slanting left (teal). A highlight ring fades in around Japan's connector.
-  - **Deciding positions** come from Fig. 5.3 for SE, NL, DE, US, JP and CN, so S08a needs no re-positioning. KR and VN come from the Country Mapping and carry a small "CM" tag.
+- **Visual & motion (the "two rails" shot):** Clicks: 4.
+  - On entry: the S06 timelines fade, and `!!AxisLead` (top) and `!!AxisDec` (bottom) wipe in.
+  - Click 1: the usual pattern. Dots for SE and NL (left) and CN and KR (right) appear on Leading, and nearly vertical grey connectors wipe down to Deciding.
+  - Click 2: US, slanting hard to the right (amber).
+  - Click 3: Germany, slanting left (teal), plus the "exceptions" tag.
+  - Click 4: Japan and Vietnam, slanting left (teal). A highlight ring fades in around Japan's connector.
+  - **Deciding positions** come from Fig. 5.3 for SE, NL, DE, US, JP and CN, so S08a needs no re-positioning. KR and VN come from the Country Mapping and carry a small "CM" tag. One source per rail: on the Country Mapping Vietnam sits level with Germany (both at the same point), so on this Fig. 5.3 rail it takes Germany's place; Korea sits right of China in both sources.
   - **Leading positions** are placed by eye from the Country Mapping: SE and NL far egalitarian; US on the egalitarian side; DE mid-hierarchical; JP, VN, CN and KR hierarchical.
 - **Talking points:**
   - The cliffhanger resolved, cue: Americans judged German hierarchy by its structure (fixed hierarchy, formal distance, formal titles). That is LEADING. Germans judged American hierarchy by how decisions are made. That is DECIDING. Team Larry and Team Matthias are both right.
@@ -777,6 +779,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 - **On screen:**
   - Breadcrumb: I · CASE · SWEDEN
   - Left, teal, *Per on Americans:* "too busy to work as good team members" · "…always trying to impose a decision for decision's sake…"
+  - Under Per's quotes, teal label (our paraphrase of p. 153): UPSIDE · his team felt listened to · rapid implementation
   - Right, amber, *P. Lencioni:* "'consensus' is a four-letter word!"
   - The bar between them: *ethnocentrism*
   - Footer: "…your way is not the only way or even the best way!" — Lecture II, slide 18
@@ -802,7 +805,8 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - Bar: 3 weeks of preparation
   - Table: 8 Japanese managers · 2 non-Japanese "old hands" · **JS** (Jack Sheldon, Astellas) · *outside the group*
   - "…it seemed that the decision had already been finalized within the group."
-  - "100 percent aligned"
+  - "100 percent aligned against continued testing"
+  - Kicker: TOKYO HQ · Astellas · stop testing a new product?
 - **Visual & motion:** Two Morph steps (slides 15–16). Clicks: S10a 1, S10b 2.
   - **S10a** (Fade in, story mode):
     - A top view of `!!Table`: 8 grey `!!Seat1–8` and 2 grey `!!Seat9–10`.
@@ -815,7 +819,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 - **Talking points:**
   - Cue: Jack Sheldon works at Astellas, a Japanese pharmaceutical company with large offices in the UK and the Netherlands. A new product had a problem: should its development and testing stop? He wanted testing to continue, spent three weeks building his argument, prepared some slides, and asked for time on the agenda at Tokyo HQ.
   - The room: eight Japanese managers and two non-Japanese old hands. A Japanese manager opened with a presentation concluding that testing should stop, and the others agreed: [SCREEN] "…it seemed that the decision had already been finalized within the group."
-  - Everyone was polite, but they were [SCREEN] "100 percent aligned" against continued testing, and the group would not budge. Sheldon felt a rush of frustration: all that preparation had made no difference.
+  - Everyone was polite, but they were [SCREEN] "100 percent aligned against continued testing", and the group would not budge. Sheldon felt a rush of frustration: all that preparation had made no difference.
   - → "How does a strongly hierarchical company decide by consensus?"
 - **Source:** Meyer pp. 154–155.
 
@@ -828,12 +832,12 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - Classroom icon · JS tells the story · Japanese participants confer
   - "In Japan, decisions tend to be made by group consensus…" — S. Mori, Japanese participant in Meyer's Astellas seminar
 - **Visual & motion:** Clicks: 1.
-  - Morph from S10b: the table dissolves, and the seats re-form as classroom rows facing a small lectern, with JS at the front.
+  - Morph from S10b: the table becomes a small lectern with JS at the front. The Tokyo seats fade out; new classroom rows fade in (a different group: Meyer says only that "several of the participants were Japanese", p. 155, so the rows are part teal, part grey).
   - A thin divider line and the caption make the change of scene explicit, so Mori is never shown at the Tokyo table.
-  - Click: Mori's monogram (SM) fades in among the teal seats, together with his line.
+  - Click: Mori's monogram (SM) fades in on one of the teal seminar seats, together with his line.
 - **Talking points:**
   - "Sheldon told this story later, in one of Meyer's seminars for Astellas. Meyer asked the Japanese participants what had happened."
-  - After a coffee break, Susumu Mori, speaking for the Japanese participants, explained: [SCREEN] "In Japan, decisions tend to be made by group consensus…", not by the individual.
+  - After a coffee break, Susumi Mori (as printed in Meyer, p. 156), speaking for the Japanese participants, explained: [SCREEN] "In Japan, decisions tend to be made by group consensus…", not by the individual.
   - → "And he showed how it works."
 - **Source:** Meyer pp. 154–156.
 
@@ -858,9 +862,10 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
     - Click 1: Meyer's fragment.
     - Click 2: a line-art plant with wrapped roots (Wipe) and "root-binding".
     - Click 3: Sheldon's two lines.
+    - Optional (manifest option `nemawashi`, §2.3): the mouse chip *our nemawashi* arrives with click 2, top right; clicking it shows the card "Our nemawashi · December".
   - This is the only vermilion in the deck. No motion paths are used; each climb is one clicker press.
 - **Talking points:**
-  - Ringi, cue: low-level managers agree first. The ringisho usually starts at mid-management. Each person reads it, may change it or make suggestions, and adds a stamp of approval. It climbs level by level until the top implements it or not. Mori's summary: [SCREEN].
+  - Ringi, cue: low-level managers agree first. The ringisho usually starts at mid-management. Each person reads it, may change it or make suggestions, and adds a stamp of approval; once everyone at one level has approved, it moves up. It climbs level by level until the top implements it or not. Mori's summary: [SCREEN].
   - Meyer: ringi takes a long time, but once the decision is made it is fixed, and implementation may be very rapid. The result is [SCREEN] "a decision with a capital D".
   - Nemawashi, cue: informal, face-to-face consensus building before anyone signs. The name means [SCREEN] "root-binding": preparing a plant's roots for transplanting so they are not damaged. It protects the organisation from disagreement and weak follow-through.
   - Reveal (only if done): "Hands up if we talked to you in December." "That's why Decision #2 had early supporters — the consensus started before the meeting."
@@ -884,7 +889,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - **Big D:**
     - Expect more meetings and more mail.
     - Stay patient and committed even when the discussion seems endless.
-    - Check in regularly, as Per did with Erin.
+    - Check in regularly to show your commitment — unlike Erin, who hit delete and had to be chased ("Haven't heard from you, what do you think?").
     - Cultivate informal contacts, or a consensus forms without you (Sheldon).
     - Don't push for speed: invest in the quality of the information, because once made, the decision is hard to change.
   - **Little d:**
@@ -973,6 +978,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 - **Speaker:** 2p A · 3p C
 - **On screen:**
   - Breadcrumb: I · RECOMMENDATIONS · EXAM
+  - Kicker: PRACTICE QUESTION · in the Lecture I exam format (our own question; only the format is the lecture's)
   - *Explain the difference between consensual and top-down decision making and give an example.*
     1. Consensual = groups, unanimous agreement → slow decision, fast implementation, fixed **D**. e.g. ringi (Japan), Per's team (Sweden)
     2. Top-down = individuals, usually the boss → fast decision, flexible **d** → continual revision, so implementation can take long. e.g. the US side of the merger
@@ -990,7 +996,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 - **Source:** Lecture I, slide 7 (exam format "Explain the difference between… give an example for…"); Meyer pp. 145–160.
 
 ### S14c — True or false?
-- **Time:** 0:20 (23:55–24:15)
+- **Time:** 0:20 (23:55–24:15). That holds only with one short reason per statement (two 8-s thumb votes + 4 clicks); with full reasons it takes about 0:35 and eats 0:15 of the buffer. It is also the first cut when late (S14b chip "II → 29").
 - **Speaker:** 2p A · 3p C
 - **On screen:**
   - Headline: True or false? Thumbs.
@@ -1011,6 +1017,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 - **Speaker:** 2p B · 3p C
 - **On screen:**
   - Breadcrumb: II · OUR CULTURES
+  - Kicker: PART II · our cultures → how we decided → three moves for managers
   - Headline: Your culture: Big D or little d? Show me.
   - Gesture key
   - Axis with the book's 13 countries as ghost-grey dots, placed at their Country Mapping 2022 positions
@@ -1040,7 +1047,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - Mini rails (Leading over Deciding) with Member 1's connector · badge: [on the diagonal / off the diagonal: paradox]
   - Cue icons: Who decided? · How long? · Changeable afterwards?
   - Episode: [MEMBER 1: 3–5-word title of a real decision]
-  - Where the map is too simple: [MEMBER 1: one keyword]
+  - Where the map is too simple: [MEMBER 1: one keyword] · my blind spot: [MEMBER 1: one line, e.g. "I'd be Erin hitting delete"]
   - In a team I need: [MEMBER 1: ≤ 6 words]
   - Verdict: [D / d]
 - **Visual & motion:** Clicks: 3.
@@ -1132,9 +1139,9 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 | 36 | **H1 Q&A hub** | Tiles → 37–40; "← end" → 35. |
 | 37 | **H2 Is consensus better?** | <ul><li>Per vs Lencioni. Meyer: "Either of these systems can work, as long as everyone understands and follows the rules of the game."</li><li>The ringi ledger: + quicker implementation · + stronger, more trusting relationships | − time-consuming · − lets managers "shirk accountability" · − "the race has likely been lost".</li><li>"Some Japanese companies have moved away from this system… but in Astellas we use a software product which manages the process." — one of Mori's colleagues (Astellas).</li><li>Meyer: "I would have gladly traded group agreement for the initial speed that goes with one person making a decision."</li></ul> |
 | 38 | **H3 Country Mapping by region** | <ul><li>The zone table from §4.3 (relative zones only, no scores).</li><li>Region notes: Europe is a gradient (Nordics and Netherlands far left → Russia far right). Americas: Canada → US → Mexico. The Gulf, India and most mapped African countries are strongly top-down.</li><li>Line: "The 2022 online tool differs in detail from the 2014 book (e.g. Brazil vs US)."</li></ul> |
-| 39 | **H4 Course bridge** | <ul><li>Hofstede doesn't predict Deciding (UAI and individualism lists vs the Deciding positions; §5 Q8).</li><li>GLOBE Institutional Collectivism ("Decisions are made by group consensus" vs "Decisions are made by individuals in power"); the full GLOBE "decisive" quote.</li><li>Hall: Japan is high-context in the script; nemawashi as informal context is *our link*.</li><li>Power Distance ≈ Leading is *our interpretation*.</li><li>Osland & Bird's cultural paradoxes; a thumbnail of Lecture I, slide 10 with Japan circled on Leading and Deciding.</li><li>Bennett's DMIS (Defense → Adaptation).</li></ul> |
+| 39 | **H4 Course bridge** | <ul><li>Hofstede: no dimension sorts Deciding (UAI, individualism and consensus orientation lists vs the Deciding positions; §5 Q8). Closest: Consensus-oriented (Sweden, Netherlands, Denmark) vs "Decisive", yet Japan is "Decisive".</li><li>GLOBE Institutional Collectivism ("Decisions are made by group consensus" vs "Decisions are made by individuals in power"): the poles fit, the clusters split (high: Nordic, Confucian Asia incl. China; low: Germanic Europe, Latin Europe). The GLOBE "decisive" quote (Anglo vs Germany/France), course script p. 26.</li><li>Hall: Japan is high-context in the script; nemawashi as informal context is *our link*.</li><li>Osland & Bird's cultural paradoxes; a thumbnail of Lecture I, slide 10 with Japan circled on Leading and Deciding; Meyer's "seemingly paradoxical pattern" (p. 154).</li><li>Bennett's DMIS (Defense → Adaptation); Lencioni as Defense and "small d or big D?" as Adaptation are *ours*.</li></ul> |
 | 40 | **H5 More rails** | Leading × Deciding for more countries, all from the Country Mapping 2022, e.g. Israel (egalitarian, middle on Deciding), UK (middle on both), France (hierarchical, top-down side). |
-| 41 | **S20e** (visible) | Identical copy of S20's end state, without the stamp. |
+| 41 | **S20e** (visible) | Identical copy of S20's end state (keeps the D stamp if it was fired on S20). |
 
 ---
 
@@ -1152,6 +1159,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - On every Part II slide, positions come from the **Country Mapping 2022** only. This is one source, and it is labelled.
   - State them as **relative zones**, never as numbers.
   - Fig. 5.3 may be mentioned aloud as a cross-check.
+  - Until a member's position is read and entered, the deck draws every member marker (dots, rings, mini rails, the S18 bracket) as a dashed outline: a visible placeholder, never a guessed position. Once all positions are in, delete `data-positions="tbd"` on S15–S18 (`deck/slides/src/06-g6-part2.html`).
 - **Special cases:**
   - A culture that is on neither source: say so openly and use a dashed *self-assessed* marker with a one-line reason.
   - A bicultural member: two dots joined by a line ("I switch between them").
@@ -1285,13 +1293,14 @@ Every member answers the same four questions, which form the slide's cue structu
    - National positions are central tendencies; organisations and individuals vary (Bennett).
 
 8. **"How does this relate to Hofstede and GLOBE?"** → H4.
-   - **Hofstede doesn't predict Deciding.**
+   - **No Hofstede dimension sorts Deciding.**
      - The course script lists Sweden as weak in uncertainty avoidance, yet it is ultra-consensual. It lists South Korea as strong in uncertainty avoidance, yet it is strongly top-down.
      - The script's Greece example ties high uncertainty avoidance to consensus, yet Greece sits on the top-down side of the Country Mapping.
      - Its individualist list includes Sweden, the Netherlands and Germany (consensual) and the US and France (top-down). China and Japan, both listed as collectivist, sit at opposite ends.
+     - Closest is Consensus Orientation (formerly Femininity, pp. 20–21): every country on its consensus-oriented list that Meyer maps (Sweden, Norway, the Netherlands, Denmark, Finland; §4.3 zones) sits on her consensual side — but Japan heads its "Decisive" list and is ultra-consensual on Meyer's scale.
      - That is why Meyer measures Deciding separately.
-   - **GLOBE comes closest:** Institutional Collectivism contrasts decisions made by group consensus with decisions made by individuals in power (shown on H4).
-   - **Power Distance** resembles Meyer's *Leading* scale more than *Deciding*. That is our interpretation, and it is how Japan can be hierarchical and consensual at once. Flag it as ours.
+   - **GLOBE: the words fit, the clusters split.** Institutional Collectivism contrasts decisions made by group consensus with decisions made by individuals in power (p. 26). But its cluster table (p. 28) rates Confucian Asia high (Japan, but also China and South Korea, which are top-down on Meyer's scale) and Germanic Europe low (Germany and the Netherlands, which are consensual). Nordic Europe high and Latin Europe low do match. Shown on H4.
+   - Power Distance is no shortcut either: the script lists Germany and Austria as small power distance (p. 18), while Meyer's Leading scale puts Germany on the hierarchical side.
 
 9. **"Where would you put [country X]?"** → H3.
    - Open the Country Mapping region page, read the dot, and answer relatively: "more consensual than…, more top-down than…".
@@ -1364,6 +1373,6 @@ Every member answers the same four questions, which form the slide's cue structu
 - the "slow in, fast out / fast in, slow out (flexible)" mnemonic
 - Scenarios T and M (fictional exercises), the Per-style class email, and the Charlotte-style question
 - the D/d gesture, the quick-fire cards, and "a country is a bell curve, not a dot"
-- the Hall–nemawashi link, and Power Distance ≈ Leading
+- the Hall–nemawashi link, and Lencioni as DMIS Defense / "small d or big D?" as Adaptation (H4)
 
 The VOTE stamp follows Meyer's own classification of the vote as a top-down technique (p. 159).

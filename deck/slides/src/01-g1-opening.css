@@ -193,3 +193,6 @@ html:is(.deck-lit, .deck-paper) #s03 .s03-stone { filter: drop-shadow(0 4px 0 va
   --lt-x: 960px; --lt-y: 620px; --lt-s: 1.15;
   --la-x: 220px; --la-y: 900px; --la-s: .6;
 }
+
+/* B's question under the card (script §2.3); clear of the parked sliver zone (72–700, 815–860) */
+#s04a .s04a-ask { --x: 527px; --y: 898px; --w: 856px; margin: 0; text-align: center; font: italic 470 44px/1.2 var(--serif); color: var(--ink); }

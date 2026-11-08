@@ -212,8 +212,9 @@
     <button class="chip chip-end" data-goto="s07" data-print="hide">← end</button>
   </section>
 
-  <!-- 12 · visible copy of the close, catches a stray clicker press during Q&A -->
-  <section class="slide" id="s07e" data-transition="none" data-title="So, was that a big D or a little d? (end)">
+  <!-- 12 · visible copy of the close, catches a stray clicker press during Q&A; a duplicate, so the PDF leaves it
+       out (data-export="pptx": the .pptx keeps it, a slide show should not end on black) -->
+  <section class="slide" id="s07e" data-transition="none" data-export="pptx" data-title="So, was that a big D or a little d? (end)">
     <p class="crumb">II · CLOSE</p>
     <h2 class="headline">So, was that a big D or a little d?</h2>
     <div class="mail"><small>our proposal</small>Stand up if this talk was a big D for you.</div>

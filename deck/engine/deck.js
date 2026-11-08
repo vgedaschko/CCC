@@ -10,7 +10,12 @@
  *   data-morph="key"         persistent element, paired across slides by the View Transitions API
  *                            (an incoming element whose partner shows the same text gets data-morph-same
  *                            during the transition, for designs that swap only changed words)
- *   data-hidden[="backup"]   skipped by linear navigation, reachable by number or data-goto
+ *   data-hidden[="backup"|"unused"]   skipped by linear navigation, reachable by number or data-goto
+ *                            "unused": an empty member slot kept for stable numbers (no tag, never exported,
+ *                            not reachable by number)
+ *   data-export="none|pdf|pptx|pdf pptx"   static exports that carry the slide (default: both; auto bridges
+ *                            and unused slots: none). PDF = main flow in clicker order, then the hidden slides
+ *                            as an appendix; PPTX = physical order, hidden slides stay hidden (show="0")
  *   data-next="id"           what Next does at the end of this slide
  *   data-auto="ms"           auto-advance (bridge slides)
  *   data-goto="id|id/step|@back"            hotspot jump
@@ -21,13 +26,15 @@
  *   data-show-if="key==V"    live condition; data-print="show" shows it in print
  *   data-print="hide" / data-print-only          print-time visibility
  *   data-folio-text[="2"]    filled with the slide's visible number (folio), optionally zero-padded
+ * #deck-config (JSON): title, transition, checkpoints [{slide, by}], lateTolerance (s), clockLead (s counted in
+ *   when the first advance leaves the opening slide), clickAdvance (false: a click off a hotspot does nothing)
  * Root classes added by the engine for designs: deck-lit (lit-room mode, key L), deck-paper (?paper).
  */
 (() => {
   'use strict';
   if (window.Deck && window.Deck.version) return;
 
-  const VERSION = '1.2.0';
+  const VERSION = '1.4.0';
   const W = 1920;
   const H = 1080;
   const NS = 'ccc-deck/1';
@@ -42,6 +49,9 @@
       : (params.has('presenter') || rawHash === 'presenter') ? 'presenter'
         : 'audience';
   const PANE = params.get('embed') || '';
+  // which static export a print layout shows: ?print = the PDF (default), &export=pptx, &export=all (every slide, physical order)
+  const EXPORT_KINDS = ['pdf', 'pptx', 'all'];
+  const PRINT_EXPORT = EXPORT_KINDS.includes(params.get('export')) ? params.get('export') : 'pdf';
   const NEXT_KEYS = new Set(['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Spacebar', 'Enter']);
   const PREV_KEYS = new Set(['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace']);
   const TRANSITIONS = ['morph', 'fade', 'none'];
@@ -60,6 +70,7 @@
   let black = false;
   let helpOpen = false;
   let printing = false;
+  let reordered = false;
   let jumpBuf = '';
   let jumpTimer = 0;
   let activeVT = null;
@@ -73,6 +84,8 @@
   let lastRemoteAt = 0;
   let mirrorSig = '';
   let chipClick = { t: -Infinity, x: 0, y: 0 };
+  let resetArmedAt = 0;
+  let resetBtnTimer = 0;
   const doneTimers = new Set();
   const ui = {};
   const handlers = {};
@@ -184,6 +197,7 @@
       const t = (el.getAttribute('data-transition') || config.transition || 'fade').toLowerCase();
       const autoAttr = el.getAttribute('data-auto');
       const hiddenAttr = el.getAttribute('data-hidden');
+      const auto = autoAttr === null ? null : Math.max(0, parseInt(autoAttr, 10) || 0);
       return {
         el,
         id,
@@ -192,7 +206,9 @@
         steps,
         hidden: hiddenAttr !== null,
         hiddenKind: hiddenAttr || '',
-        auto: autoAttr === null ? null : Math.max(0, parseInt(autoAttr, 10) || 0),
+        unused: hiddenAttr === 'unused',
+        auto,
+        exports: exportKinds(el.getAttribute('data-export'), auto != null, hiddenAttr === 'unused'),
         next: el.getAttribute('data-next') || null,
         transition: TRANSITIONS.includes(t) ? t : 'fade',
         title: titleOf(el, id),
@@ -207,6 +223,19 @@
       if (c.index < 0) console.warn('[deck] checkpoint slide "' + c.slide + '" not found');
       return c.index >= 0;
     });
+  }
+
+  /**
+   * Static-export membership of a slide. data-export lists the exports that carry it ("pdf", "pptx", both, or
+   * "none"); without it every slide is in both, except auto-advancing bridges and unused member slots.
+   */
+  function exportKinds(attr, isAuto, isUnused) {
+    if (attr != null && attr.trim()) {
+      const t = tokens(attr.toLowerCase());
+      if (t.includes('none')) return [];
+      return ['pdf', 'pptx'].filter((k) => t.includes(k));
+    }
+    return isAuto || isUnused ? [] : ['pdf', 'pptx'];
   }
 
   function isInteractive(n) {
@@ -227,7 +256,7 @@
     metas.forEach((m) => {
       const el = m.el;
       el.setAttribute('data-folio', m.folio);
-      if (m.hidden) el.setAttribute('data-folio-hidden', m.hiddenKind === 'backup' ? 'backup' : 'variant');
+      if (m.hidden) el.setAttribute('data-folio-hidden', m.hiddenKind === 'backup' || m.unused ? m.hiddenKind : 'variant');
       else el.removeAttribute('data-folio-hidden');
       el.querySelectorAll('[data-folio-text]').forEach((t) => {
         const pad = parseInt(t.getAttribute('data-folio-text'), 10) || 0;
@@ -278,7 +307,7 @@
         }
         if (n.hasAttribute('data-trigger')) n.setAttribute('aria-pressed', 'false');
       });
-      if (m.hidden && !el.querySelector(':scope > .deck-variant-tag')) {
+      if (m.hidden && !m.unused && !el.querySelector(':scope > .deck-variant-tag')) {
         const tag = doc.createElement('div');
         tag.className = 'deck-variant-tag';
         tag.setAttribute('aria-hidden', 'true');
@@ -692,7 +721,13 @@
       applyStepChange(from.step, step);
     } else {
       if (opts.kind === 'linear' || opts.kind === 'auto') pushHistory(index, true);
-      else if (opts.kind === 'jump') pushHistory(index, false);
+      else if (opts.kind === 'jump') {
+        // Remember the build being left, so Prev after the jump returns to it (not to the final state,
+        // which would show the audience every build of the origin slide).
+        const top = live.history[live.history.length - 1];
+        if (top && hIndex(top) === from.index) top.step = from.step;
+        pushHistory(index, false);
+      }
       changeSlide(from.index, index, { backward: !!opts.backward, instant: !!opts.instant, transition: opts.transition });
     }
     afterChange();
@@ -738,7 +773,12 @@
     if (black) { setBlack(false); return false; }
     const t = nextTarget();
     if (!t) return false;
-    if (MODE === 'audience' && !live.clock.since && clockElapsed() === 0 && !(o && o.auto)) clockStart();
+    if (MODE === 'audience' && !live.clock.since && clockElapsed() === 0 && !(o && o.auto)) {
+      // The first advance starts the talk clock. Leaving the opening slide, it counts that slide's own time in
+      // (#deck-config "clockLead", seconds), so the checkpoints are not read early.
+      if (cur.index === firstLinear() && +config.clockLead > 0) live.clock.acc = +config.clockLead * 1000;
+      clockStart();
+    }
     return go(t, { kind: (o && o.auto) ? 'auto' : t.kind });
   }
 
@@ -750,8 +790,10 @@
     if (top && hIndex(top) === cur.index && !top.linear && h.length > 1) {
       h.pop();
       while (h.length > 1 && hIndex(h[h.length - 1]) < 0) h.pop();
-      const ti = hIndex(h[h.length - 1]);
-      if (ti >= 0) return go({ index: ti, step: metas[ti].steps }, { kind: 'back', backward: true });
+      const f = h[h.length - 1];
+      const ti = hIndex(f);
+      // back where the jump started, at the build that was left (older frames without a step: final state)
+      if (ti >= 0) return go({ index: ti, step: f.step != null ? clamp(f.step | 0, 0, metas[ti].steps) : metas[ti].steps }, { kind: 'back', backward: true });
     }
     const j = linearPrev(cur.index);
     if (j < 0) return false;
@@ -782,7 +824,8 @@
 
   function jumpTo(n) {
     const i = (parseInt(n, 10) || 0) - 1;
-    if (i < 0 || i >= metas.length) { toast('No slide ' + n); return false; }
+    // An unused member slot keeps the numbers stable but is not part of the talk: typing its number does nothing.
+    if (i < 0 || i >= metas.length || metas[i].unused) { toast('No slide ' + n); return false; }
     return go({ index: i, step: 0 }, { kind: 'jump' });
   }
 
@@ -898,7 +941,7 @@
     if (e <= 0) return;
     // A Q&A backup (data-hidden="backup") sits after every checkpoint but is not progress through the talk:
     // one visit to the hub would otherwise mark every checkpoint as reached for the rest of the talk.
-    if (metas[cur.index] && metas[cur.index].hiddenKind === 'backup') return;
+    if (metas[cur.index] && (metas[cur.index].hiddenKind === 'backup' || metas[cur.index].unused)) return;
     checkpoints.forEach((cp) => {
       if (live.reached[cp.slide] == null && cur.index >= cp.index) live.reached[cp.slide] = e;
     });
@@ -982,6 +1025,67 @@
 
   /* -------------------------------------------------------------- print */
 
+  // The order a click-through visits the visible slides: from the first one, Next at each slide's last build
+  // (data-next, else the next visible slide). Visible slides no path reaches follow in physical order.
+  function clickerOrder() {
+    const out = [];
+    const seen = new Set();
+    let i = firstLinear();
+    while (i >= 0 && i < metas.length && !seen.has(i)) {
+      seen.add(i);
+      if (!metas[i].hidden) out.push(i);
+      const j = metas[i].next ? indexOfId(metas[i].next) : -1;
+      i = j >= 0 ? j : linearNext(i);
+    }
+    metas.forEach((m, k) => { if (!m.hidden && !seen.has(k)) out.push(k); });
+    return out;
+  }
+
+  /**
+   * The static export plan (one entry per page / picture, in order):
+   *   pdf   the main flow in clicker order (visible slides), then an appendix with the hidden variants and
+   *         backups in physical order (each keeps its print tag); data-export decides membership
+   *   pptx  physical order; hidden slides stay in place (the .pptx marks them hidden)
+   *   all   every slide in physical order (review screenshots, layout checks)
+   */
+  function exportPlan(kind) {
+    const k = EXPORT_KINDS.includes(kind) ? kind : 'pdf';
+    const all = metas.map((m, i) => i);
+    let idx;
+    if (k === 'all') idx = all;
+    else if (k === 'pptx') idx = all.filter((i) => metas[i].exports.includes('pptx'));
+    else {
+      idx = clickerOrder().filter((i) => metas[i].exports.includes('pdf'))
+        .concat(all.filter((i) => metas[i].hidden && metas[i].exports.includes('pdf')));
+    }
+    return idx.map((i) => {
+      const m = metas[i];
+      const tag = m.el.querySelector(':scope > .deck-variant-tag');
+      return { id: m.id, pos: m.pos, title: m.title, hidden: m.hidden, hiddenKind: m.hiddenKind, part: m.hidden ? 'appendix' : 'main', tag: tag ? tag.textContent : '' };
+    });
+  }
+
+  // Print shows the static export: the planned slides in plan order (the DOM is reordered while printing and
+  // restored afterwards), every other slide display:none (.deck-export-omit), no page break after the last one.
+  function applyExportLayout(on) {
+    slides.forEach((el) => el.classList.remove('deck-export-omit', 'deck-print-last'));
+    if (!on) {
+      if (reordered) { slides.forEach((el) => stage.appendChild(el)); reordered = false; }
+      return;
+    }
+    const plan = exportPlan(PRINT_EXPORT);
+    const keep = new Set(plan.map((p) => p.id));
+    const order = plan.map((p) => slides[indexOfId(p.id)]);
+    const inPhysicalOrder = order.every((el, i) => i === 0 || slides.indexOf(order[i - 1]) < slides.indexOf(el));
+    if (!inPhysicalOrder) {
+      order.forEach((el) => stage.appendChild(el));
+      slides.forEach((el) => { if (!keep.has(el.id)) stage.appendChild(el); });
+      reordered = true;
+    }
+    slides.forEach((el) => { if (!keep.has(el.id)) el.classList.add('deck-export-omit'); });
+    if (order.length) order[order.length - 1].classList.add('deck-print-last');
+  }
+
   function setPrinting(on) {
     if (on === printing && MODE !== 'print') return;
     printing = !!on;
@@ -991,7 +1095,9 @@
       clearTimeout(autoTimer);
       setMorphNames(null);
       slides.forEach((el, i) => { stripAnim(el); renderSlide(el, metas[i].id, metas[i].steps, true); });
+      applyExportLayout(true);
     } else {
+      applyExportLayout(false);
       slides.forEach((el, i) => renderSlide(el, metas[i].id, i === cur.index ? cur.step : 0, false));
       showOnly(cur.index, false);
     }
@@ -1064,7 +1170,11 @@
     if (!jumpBuf) { ui.jump.classList.remove('is-on'); return; }
     const i = parseInt(jumpBuf, 10) - 1;
     const m = metas[i];
-    ui.jump.textContent = 'Go to ' + jumpBuf + (m ? ' · ' + m.id + (m.hidden ? ' (hidden)' : '') + ' · ' + m.title : ' · no such slide') + '  ⏎';
+    // On the beamer (a presenter window is open) only the digits show: ids, flags and titles stay off the room's
+    // screen. The presenter window, or a deck without one, shows the full target.
+    const quiet = MODE === 'audience' && presenterWin && !presenterWin.closed;
+    ui.jump.textContent = quiet ? '→ ' + jumpBuf
+      : 'Go to ' + jumpBuf + (m && !m.unused ? ' · ' + m.id + (m.hidden ? ' (hidden)' : '') + ' · ' + m.title : ' · no such slide') + '  ⏎';
     ui.jump.classList.add('is-on');
     jumpTimer = setTimeout(clearJump, 4000);
   }
@@ -1165,7 +1275,7 @@
         clearJump();
         e.preventDefault();
         // Report a bad number where it was typed: from the presenter it must not toast on the beamer.
-        if (!metas[n - 1]) toast('No slide ' + n);
+        if (!metas[n - 1] || metas[n - 1].unused) toast('No slide ' + n);
         else act({ cmd: 'jump', n });
         return;
       }
@@ -1186,7 +1296,17 @@
     else if (k === '?') toggleHelp();
     else if ((k === 'p' || k === 'P') && MODE === 'audience') openPresenter();
     else if (k === 'l' || k === 'L') act({ cmd: 'lit' });
-    else if (k === 'R' && e.shiftKey) act({ cmd: 'reset' });
+    else if (k === 'R' && e.shiftKey) {
+      // Mid-talk (clock past 1:00) a single Shift+R would wipe the clock, stamps and outcomes: ask for a second press.
+      const armed = resetArmedAt && now() - resetArmedAt < 3000;
+      if (!armed && clockElapsed() > 60000) {
+        resetArmedAt = now();
+        toast('Press Shift+R again to reset the live state and the clock');
+      } else {
+        resetArmedAt = 0;
+        act({ cmd: 'reset' });
+      }
+    }
     else handled = false;
     if (handled) e.preventDefault();
   }
@@ -1223,6 +1343,9 @@
       return;
     }
     if (t.closest('a[href], button, input, select, textarea, label, summary, [contenteditable], [data-no-advance]')) return;
+    // #deck-config "clickAdvance": false: only hotspots react to the mouse; a near miss never reveals a build.
+    // (A click on the black screen still lifts it.)
+    if (config.clickAdvance === false && !t.closest('.deck-black')) return;
     const sel = window.getSelection ? String(window.getSelection()) : '';
     if (sel) return;
     act({ cmd: 'next' });
@@ -1300,7 +1423,7 @@
     ui.reset = el('button', 'dp-btn', 'Reset');
     ui.reset.type = 'button';
     ui.reset.dataset.dp = 'reset';
-    clock.append(ui.elapsed, ui.toggle, ui.reset);
+    clock.append(ui.elapsed, ui.toggle);
     const pos = el('div', 'dp-pos');
     ui.slideNo = el('span', 'dp-slide', 'Slide –');
     ui.build = el('span', 'dp-build', 'Build –');
@@ -1308,7 +1431,7 @@
     pos.append(ui.slideNo, ui.build, ui.flags);
     ui.wall = el('span', 'dp-wall', '');
     ui.conn = el('span', 'dp-conn', 'Waiting for the deck window…');
-    bar.append(clock, pos, ui.wall, ui.conn);
+    bar.append(clock, pos, ui.wall, ui.conn, ui.reset);
 
     const main = el('main', 'dp-main');
     const curSec = el('section', 'dp-current');
@@ -1367,7 +1490,19 @@
       b.blur();
       const c = b.dataset.dp;
       if (c === 'toggle') act({ cmd: 'clock', op: 'toggle' });
-      else if (c === 'reset') act({ cmd: 'clock', op: 'reset' });
+      else if (c === 'reset') {
+        // two clicks within 3 s: a stray click next to Pause must not wipe the checkpoint clock
+        clearTimeout(resetBtnTimer);
+        if (b.dataset.armed) {
+          delete b.dataset.armed;
+          b.textContent = 'Reset';
+          act({ cmd: 'clock', op: 'reset' });
+        } else {
+          b.dataset.armed = '1';
+          b.textContent = 'Reset? click again';
+          resetBtnTimer = setTimeout(() => { delete b.dataset.armed; b.textContent = 'Reset'; }, 3000);
+        }
+      }
       else act({ cmd: c });
     });
 
@@ -1379,10 +1514,20 @@
     presenterTick();
   }
 
+  /** What the room sees after the next press: an auto bridge (data-auto) moves on by itself, so look past it. */
+  function previewTarget(c) {
+    const t = nextTarget(c);
+    if (t && t.index !== c.index && metas[t.index].auto != null) {
+      const t2 = nextTarget({ index: t.index, step: metas[t.index].steps });
+      if (t2) return Object.assign({}, t2, { viaAuto: true });
+    }
+    return t;
+  }
+
   function paneState(pane) {
     if (!lastRemote) return null;
     if (pane === 'next') {
-      const t = nextTarget({ index: lastRemote.index, step: lastRemote.step });
+      const t = previewTarget({ index: lastRemote.index, step: lastRemote.step });
       if (!t) return Object.assign({}, lastRemote, { end: true });
       return Object.assign({}, lastRemote, { index: t.index, step: t.step });
     }
@@ -1433,12 +1578,12 @@
     ui.flags.textContent = flags.join(' · ');
     root.classList.toggle('deck-remote-black', black);
     ui.curTitle.textContent = m.title;
-    const t = nextTarget(cur);
+    const t = previewTarget(cur);
     if (!t) ui.nextLabel.textContent = 'End of deck';
     else if (t.index === cur.index) ui.nextLabel.textContent = 'Next build ' + t.step + ' / ' + m.steps + ' on this slide';
     else {
       const n = metas[t.index];
-      ui.nextLabel.textContent = 'Slide ' + n.pos + ' · ' + n.id + (n.hidden ? ' (hidden)' : '') + ' · ' + n.title;
+      ui.nextLabel.textContent = 'Slide ' + n.pos + ' · ' + n.id + (n.hidden ? ' (hidden)' : '') + ' · ' + n.title + (t.viaAuto ? ' (after the auto bridge)' : '');
     }
     root.classList.toggle('dp-at-end', !t);
   }
@@ -1575,8 +1720,10 @@
     get isReady() { return isReady; },
     get lastTransition() { return lastTransition; },
     get slides() {
-      return metas.map((m) => ({ id: m.id, pos: m.pos, folio: m.folio, steps: m.steps, hidden: m.hidden, auto: m.auto, next: m.next, transition: m.transition, title: m.title }));
+      return metas.map((m) => ({ id: m.id, pos: m.pos, folio: m.folio, steps: m.steps, hidden: m.hidden, hiddenKind: m.hiddenKind, unused: m.unused, auto: m.auto, next: m.next, transition: m.transition, title: m.title, exports: m.exports.slice() }));
     },
+    exportPlan: (kind) => exportPlan(kind),
+    get printExport() { return PRINT_EXPORT; },
     get checkpoints() { return checkpoints.map((c) => ({ slide: c.slide, by: c.by, label: c.label })); },
     state,
     next: () => act({ cmd: 'next' }),

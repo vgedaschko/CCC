@@ -9,12 +9,16 @@
  * S15–S18, so every dot, card rail, ring and the S18 bracket stay in sync.
  *   --mN       the culture's dot on Deciding        --mN-lead  the culture's dot on Leading (P card rails)
  *   --rN       my ring: where I place myself (self-assessed)
- * The values below are PLACEHOLDERS (evenly spread) until the members fill them in.
+ * The values below are PLACEHOLDERS until the members fill them in: P1 and P2 at a quarter from each end, so
+ * two presenters are evenly spread; a third presenter (manifest "presenters": 3) sits in the middle.
+ * With two presenters the --m3 / --r3 values are unused (assemble leaves every member-3 element out).
+ * While they are placeholders, S15–S18 carry data-positions="tbd" (06-g6-part2.html): the markers are drawn dashed and
+ * outlines, so nobody mistakes them for real positions. Fill in the values, then delete data-positions="tbd" there.
  * ===================================================================================================== */
 #s15, #s16, #s17, #s17b, #s18 {
-  --m1: .22;  --m1-lead: .30;  --r1: .15;
-  --m2: .50;  --m2-lead: .42;  --r2: .58;
-  --m3: .78;  --m3-lead: .86;  --r3: .70;
+  --m1: .25;  --m1-lead: .33;  --r1: .18;
+  --m2: .75;  --m2-lead: .83;  --r2: .67;
+  --m3: .50;  --m3-lead: .42;  --r3: .58;
 }
 
 /* ---------------------------------------------------------------- shared geometry (axis x 120–1800) */
@@ -282,8 +286,11 @@
 :is(#s16, #s17, #s17b) .g6-cues li { display: flex; align-items: center; gap: 16px; font: 560 30px/1.2 var(--sans); color: var(--ink); }
 :is(#s16, #s17, #s17b) .g6-cues .ic { width: 42px; height: 42px; stroke-width: 2; color: var(--ink-2); }
 
-/* 3–4 · where the map is too simple, what I need */
+/* 3–4 · where the map is too simple (+ my blind spot in the opposite system, script §4.4), what I need */
 :is(#s16, #s17, #s17b) .g6-kw { font: 560 34px/1.25 var(--sans); color: var(--ink); }
+:is(#s16, #s17, #s17b) .g6-blind { font: 520 30px/1.25 var(--sans); color: var(--ink); text-wrap: pretty; }
+:is(#s16, #s17, #s17b) .g6-blind-l { margin-right: 6px; font-weight: 650; color: var(--ink-2); }
+:is(#s16, #s17, #s17b) .g6-blind + .g6-cue-h { margin-top: 14px; }
 :is(#s16, #s17, #s17b) .g6-need { font: italic 460 40px/1.2 var(--serif); color: var(--ink); text-wrap: pretty; }
 
 /* the strip */
@@ -416,5 +423,32 @@
 #s19 .s19-cq { font: 560 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); }
 #s19 .s19-cq b { font-weight: 760; color: var(--ink); letter-spacing: .06em; }
 
+/* =====================================================================================================
+ * Team size (assemble sets :root.team-2 / :root.team-3 from manifest "presenters"). With two presenters the
+ * member-3 elements are not in the deck; these rules re-space what was laid out for three.
+ * ===================================================================================================== */
+/* S18: the bracket and its gap label span the two members who are present */
+:root.team-2 #s18 :is(.g6-bracket, .s18-gap) {
+  --lo: min(var(--m1), var(--m2));
+  --hi: max(var(--m1), var(--m2));
+}
+/* S15: two staggered label rows instead of three, centred between the rail and the legend */
+:root.team-2 #s15 .g6-mlab--1 { --y: 690px; }
+:root.team-2 #s15 .g6-mlab--2 { --y: 752px; }
+
 /* The member dots carry the theme seam helper .vt-collapse (motion.css): a dot may receive a collapsing card;
    "vt-shape" would stretch the incoming dot to the card's size (a white balloon). */
+
+/* =====================================================================================================
+ * Placeholder positions (data-positions="tbd" on S15–S18 until the members fill in --mN / --rN): every position
+ * marker is drawn as a dashed outline (no fill, no glow), so an unfilled deck never shows invented positions as data.
+ * ===================================================================================================== */
+:is(#s15, #s16, #s17, #s17b, #s18)[data-positions="tbd"] :is(.g6-mem, .g6-here) {
+  background: transparent;
+  border: var(--sw-2) dashed var(--ink-2);
+  box-shadow: 0 0 0 4px var(--bg);
+}
+:is(#s15, #s16, #s17, #s17b)[data-positions="tbd"] :is(.g6-ring, .g6-ring-mini) { border-style: dashed; border-color: var(--ink-2); }
+:is(#s16, #s17, #s17b)[data-positions="tbd"] .g6-pt.g6-pt { background: transparent; border: var(--sw-2) dashed var(--ink-2); box-sizing: border-box; }
+:is(#s16, #s17, #s17b)[data-positions="tbd"] .g6-conn { height: 0; border-top: 4px dashed var(--ink-3); background: none; }
+#s18[data-positions="tbd"] .g6-bracket { border-style: dashed; }

@@ -7,15 +7,21 @@
     (keep the span only while the slot is still empty).
   - Positions (S15–S18): one block at the top of 06-g6-part2.css (--m1 … --r3, fractions of the Deciding axis
     read from the member's Country Mapping 2022 region page; 0 = consensual end, 1 = top-down end). Never a score.
+    Until then the sections carry data-positions="tbd": dots, rings, mini rails and the S18 bracket are drawn as dashed
+    outlines (placeholder look). Once the real positions are in, delete data-positions="tbd" from S15, S16, S17, S17b, S18.
   - Verdict on a P slide (and the S18 timeline): change ONE class, g6-v--tbd to g6-v--D or g6-v--d.
   - A culture not on the map: add class is-self to that member's dots (dashed "self-assessed" marker) and say why.
-  - Two presenters: the absent member's P slide gets data-hidden (default: S17b hidden). Their dot stays everywhere.
+  - Team size: ONE number, "presenters" in manifest.json (2 by default; assemble --presenters 3 overrides it).
+    data-member="3" marks everything that belongs to member 3: with two presenters assemble removes those elements
+    (dot, label, ring on S15; strip dot and P3 label on S16 / S17 / S18), and S17b (<section data-member="3">) stays
+    in place as an unused slot (data-hidden="unused": skipped, no folio, not in the PDF or PPTX). Mark any new
+    member-3 element the same way. CSS that re-spaces for two members: :root.team-2 (bottom of 06-g6-part2.css).
   Positions of the ghost countries (incl. Nigeria, Africa II): data/countries.json (cm2022), re-read on the
   Country Mapping PDF.
 -->
 
 <!-- ===================================================================== S15 · the room maps itself -->
-<section class="slide daylight" id="s15" data-transition="fade" data-title="Now us: the room maps itself">
+<section class="slide daylight" id="s15" data-transition="fade" data-title="Now us: the room maps itself" data-positions="tbd">
   <header class="rh">
     <p class="rh-crumb vt-swap" data-morph="rh-crumb">II · <b>Our cultures</b></p>
     <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
@@ -24,7 +30,7 @@
 
   <div class="body L-split s-8-4 s15-body">
     <div class="a stack" style="--gap:14px">
-      <p class="kicker">Part II <span class="soft">· now us: the room maps itself</span></p>
+      <p class="kicker">Part II <span class="soft">· our cultures <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> how we decided <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> three moves for managers</span></p>
       <h2 class="hl s15-hl">Your culture: <span class="g6-bigD">Big D</span> or <span class="g6-littled">little d</span>?<br><span class="s15-show">Show me.</span></h2>
     </div>
     <div class="b stack s15-gest" style="--gap:18px">
@@ -43,15 +49,15 @@
   <!-- click 1: the member dots land on their cultures (positions: FILL-IN block in 06-g6-part2.css) -->
   <i class="mem g6-mem g6-mem--1 at vt-collapse" data-morph="mem-1" data-step="1" data-build="drop" aria-hidden="true"></i>
   <i class="mem g6-mem g6-mem--2 at vt-collapse" data-morph="mem-2" data-step="1" data-build="drop" data-delay="140" aria-hidden="true"></i>
-  <i class="mem g6-mem g6-mem--3 at vt-collapse" data-morph="mem-3" data-step="1" data-build="drop" data-delay="280" aria-hidden="true"></i>
+  <i class="mem g6-mem g6-mem--3 at vt-collapse" data-member="3" data-morph="mem-3" data-step="1" data-build="drop" data-delay="280" aria-hidden="true"></i>
   <p class="g6-mlab g6-mlab--1 at" data-step="1" data-build="rise" data-delay="300"><b>P1</b> <span class="ph">[MEMBER 1: culture]</span></p>
   <p class="g6-mlab g6-mlab--2 at" data-step="1" data-build="rise" data-delay="440"><b>P2</b> <span class="ph">[MEMBER 2: culture]</span></p>
-  <p class="g6-mlab g6-mlab--3 at" data-step="1" data-build="rise" data-delay="580"><b>P3</b> <span class="ph">[MEMBER 3: culture]</span></p>
+  <p class="g6-mlab g6-mlab--3 at" data-member="3" data-step="1" data-build="rise" data-delay="580"><b>P3</b> <span class="ph">[MEMBER 3: culture]</span></p>
 
   <!-- click 2: the hollow rings at each member's own, self-assessed place -->
   <i class="ring vt-leave g6-ring g6-ring--1 at" data-morph="ring-1" data-step="2" data-build="zoom" aria-hidden="true"></i>
   <i class="ring vt-leave g6-ring g6-ring--2 at" data-morph="ring-2" data-step="2" data-build="zoom" data-delay="140" aria-hidden="true"></i>
-  <i class="ring vt-leave g6-ring g6-ring--3 at" data-morph="ring-3" data-step="2" data-build="zoom" data-delay="280" aria-hidden="true"></i>
+  <i class="ring vt-leave g6-ring g6-ring--3 at" data-member="3" data-morph="ring-3" data-step="2" data-build="zoom" data-delay="280" aria-hidden="true"></i>
 
   <!-- legend + reading lens -->
   <div class="s15-legend at stack">
@@ -67,9 +73,9 @@
 </section>
 
 <!-- ===================================================================== S16 · P1 -->
-<!-- P slides: one template. The member's dot unfolds into the card (key mem-n, vt-grow); the other two stay on the strip.
-     Every P slide carries all three mem keys, so any two visible P slides (and S15 / S18) morph. -->
-<section class="slide daylight g6-p" id="s16" data-transition="morph" data-title="P1 · Member 1">
+<!-- P slides: one template. The member's dot unfolds into the card (key mem-n, vt-grow); the others stay on the strip.
+     Every P slide carries every present member's mem key, so any two visible P slides (and S15 / S18) morph. -->
+<section class="slide daylight g6-p" id="s16" data-transition="morph" data-title="P1 · Member 1" data-positions="tbd">
   <header class="rh">
     <p class="rh-crumb vt-swap" data-morph="rh-crumb">II · <b>Our cultures</b></p>
     <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
@@ -113,6 +119,7 @@
     <section class="g6-cue" data-step="3" data-build="rise">
       <p class="g6-cue-h"><span class="num">3</span>Where the map is too simple</p>
       <p class="g6-kw"><span class="ph">[MEMBER 1: one keyword]</span></p>
+      <p class="g6-blind"><span class="g6-blind-l">my blind spot</span> <span class="ph">[MEMBER 1: …]</span></p>
       <p class="g6-cue-h"><span class="num">4</span>In a team I need</p>
       <p class="g6-need"><span class="ph">[MEMBER 1: up to six words]</span></p>
     </section>
@@ -124,16 +131,16 @@
   <p class="g6-end g6-end--r at" data-enter="fade" data-delay="760">Top-down</p>
   <i class="g6-here g6-mem--1 at" data-enter="fade" data-delay="760" aria-hidden="true"></i>
   <i class="mem g6-mem g6-mem--2 at vt-collapse" data-morph="mem-2" aria-hidden="true"></i>
-  <i class="mem g6-mem g6-mem--3 at vt-collapse" data-morph="mem-3" aria-hidden="true"></i>
+  <i class="mem g6-mem g6-mem--3 at vt-collapse" data-member="3" data-morph="mem-3" aria-hidden="true"></i>
   <p class="g6-plab g6-plab--1 is-me at" data-enter="fade" data-delay="760">P1</p>
   <p class="g6-plab g6-plab--2 at" data-enter="fade" data-delay="760">P2</p>
-  <p class="g6-plab g6-plab--3 at" data-enter="fade" data-delay="760">P3</p>
+  <p class="g6-plab g6-plab--3 at" data-member="3" data-enter="fade" data-delay="760">P3</p>
 
   <footer class="sf"><p>Erin Meyer, Country Mapping 2022 (region page for <span class="ph">[MEMBER 1: culture]</span>) · Lecture III, slide 34 (Bennett, 2001)</p></footer>
 </section>
 
 <!-- ===================================================================== S17 · P2 -->
-<section class="slide daylight g6-p" id="s17" data-transition="morph" data-title="P2 · Member 2">
+<section class="slide daylight g6-p" id="s17" data-transition="morph" data-title="P2 · Member 2" data-positions="tbd">
   <header class="rh">
     <p class="rh-crumb vt-swap" data-morph="rh-crumb">II · <b>Our cultures</b></p>
     <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
@@ -177,6 +184,7 @@
     <section class="g6-cue" data-step="3" data-build="rise">
       <p class="g6-cue-h"><span class="num">3</span>Where the map is too simple</p>
       <p class="g6-kw"><span class="ph">[MEMBER 2: one keyword]</span></p>
+      <p class="g6-blind"><span class="g6-blind-l">my blind spot</span> <span class="ph">[MEMBER 2: …]</span></p>
       <p class="g6-cue-h"><span class="num">4</span>In a team I need</p>
       <p class="g6-need"><span class="ph">[MEMBER 2: up to six words]</span></p>
     </section>
@@ -187,16 +195,16 @@
   <p class="g6-end g6-end--r at" data-enter="fade" data-delay="760">Top-down</p>
   <i class="mem g6-mem g6-mem--1 at vt-collapse" data-morph="mem-1" aria-hidden="true"></i>
   <i class="g6-here g6-mem--2 at" data-enter="fade" data-delay="760" aria-hidden="true"></i>
-  <i class="mem g6-mem g6-mem--3 at vt-collapse" data-morph="mem-3" aria-hidden="true"></i>
+  <i class="mem g6-mem g6-mem--3 at vt-collapse" data-member="3" data-morph="mem-3" aria-hidden="true"></i>
   <p class="g6-plab g6-plab--1 at" data-enter="fade" data-delay="760">P1</p>
   <p class="g6-plab g6-plab--2 is-me at" data-enter="fade" data-delay="760">P2</p>
-  <p class="g6-plab g6-plab--3 at" data-enter="fade" data-delay="760">P3</p>
+  <p class="g6-plab g6-plab--3 at" data-member="3" data-enter="fade" data-delay="760">P3</p>
 
   <footer class="sf"><p>Erin Meyer, Country Mapping 2022 (region page for <span class="ph">[MEMBER 2: culture]</span>) · Lecture III, slide 34 (Bennett, 2001)</p></footer>
 </section>
 
-<!-- ===================================================================== S17b · P3 (hidden with two presenters) -->
-<section class="slide daylight g6-p" id="s17b" data-transition="morph" data-hidden data-print-tag="Member 3 · shown with three presenters" data-title="P3 · Member 3">
+<!-- ===================================================================== S17b · P3 (an unused slot with two presenters) -->
+<section class="slide daylight g6-p" id="s17b" data-member="3" data-transition="morph" data-title="P3 · Member 3" data-positions="tbd">
   <header class="rh">
     <p class="rh-crumb vt-swap" data-morph="rh-crumb">II · <b>Our cultures</b></p>
     <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
@@ -240,6 +248,7 @@
     <section class="g6-cue" data-step="3" data-build="rise">
       <p class="g6-cue-h"><span class="num">3</span>Where the map is too simple</p>
       <p class="g6-kw"><span class="ph">[MEMBER 3: one keyword]</span></p>
+      <p class="g6-blind"><span class="g6-blind-l">my blind spot</span> <span class="ph">[MEMBER 3: …]</span></p>
       <p class="g6-cue-h"><span class="num">4</span>In a team I need</p>
       <p class="g6-need"><span class="ph">[MEMBER 3: up to six words]</span></p>
     </section>
@@ -259,7 +268,7 @@
 </section>
 
 <!-- ===================================================================== S18 · how did WE decide? -->
-<section class="slide daylight" id="s18" data-transition="morph" data-title="How did WE decide this presentation?">
+<section class="slide daylight" id="s18" data-transition="morph" data-title="How did WE decide this presentation?" data-positions="tbd">
   <header class="rh">
     <p class="rh-crumb vt-swap" data-morph="rh-crumb">II · Our cultures · <b>Team</b></p>
     <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
@@ -270,16 +279,16 @@
     <h2 class="hl s18-hl" data-enter="fade" data-delay="760">How did <span class="s18-we">WE</span> decide this presentation?</h2>
   </div>
 
-  <!-- the card has collapsed back into its dot: all three members on the axis again -->
+  <!-- the card has collapsed back into its dot: every member on the axis again -->
   <!--@axis {"preset":"room","set":"cm2022","y":424,"show":["se","jp","nl","de","uk","br","us","it","fr","ru","in","cn","ng"],"ghost":true,"labels":false,"ends":false,"id":"s18-axis","class":"g6-ax g6-ax--team"}-->
   <p class="g6-end g6-end--l at" data-enter="fade" data-delay="760">Consensual</p>
   <p class="g6-end g6-end--r at" data-enter="fade" data-delay="760">Top-down</p>
   <i class="mem g6-mem g6-mem--1 at vt-collapse" data-morph="mem-1" aria-hidden="true"></i>
   <i class="mem g6-mem g6-mem--2 at vt-collapse" data-morph="mem-2" aria-hidden="true"></i>
-  <i class="mem g6-mem g6-mem--3 at vt-collapse" data-morph="mem-3" aria-hidden="true"></i>
+  <i class="mem g6-mem g6-mem--3 at vt-collapse" data-member="3" data-morph="mem-3" aria-hidden="true"></i>
   <p class="g6-plab g6-plab--1 at" data-enter="fade" data-delay="760">P1</p>
   <p class="g6-plab g6-plab--2 at" data-enter="fade" data-delay="760">P2</p>
-  <p class="g6-plab g6-plab--3 at" data-enter="fade" data-delay="760">P3</p>
+  <p class="g6-plab g6-plab--3 at" data-member="3" data-enter="fade" data-delay="760">P3</p>
 
   <!-- click 1: the bracket across the widest pair (the two outermost dots, whoever is present) -->
   <div class="bracket g6-bracket at" data-morph="bracket" data-step="1" data-build="wipe" aria-hidden="true"></div>
@@ -335,7 +344,7 @@
       <h3 class="s19-t">Decide how to decide&nbsp;— and label it <span class="D">D</span> or <span class="d">d</span>.</h3>
       <p class="s19-team"><span class="ph">[for X <svg class="ic" aria-hidden="true"><use href="#ic-arrow-lr"/></svg> Y: which protocol question would we answer differently?]</span></p>
       <ul class="s19-pts">
-        <li>In the team charter: vote or boss? 100 percent agreement? A deadline? Flexibility after it? <span class="s19-p">p. 160</span></li>
+        <li>In the team charter: vote or boss? 100% agreement? A deadline? Flexibility after it? <span class="s19-p">p. 160</span></li>
         <li>Label each decision: “a small <span class="d">d</span> or a big <span class="D">D</span>?” <span class="s19-p">pp. 160–161</span></li>
       </ul>
     </article>
@@ -367,16 +376,16 @@
       <h3 class="s19-t">Time your influence. “Decisive” is culturally coded.</h3>
       <p class="s19-team"><span class="ph">[for X <svg class="ic" aria-hidden="true"><use href="#ic-arrow-lr"/></svg> Y: …]</span></p>
       <ul class="s19-pts">
-        <li><b class="teal">Consensual:</b> get in early and informally (nemawashi). <span class="s19-p">pp. 157–158</span></li>
+        <li><b class="teal">Consensual:</b> get in early and informally (<i class="ital">nemawashi</i>). <span class="s19-p">pp. 157–158</span></li>
         <li><b class="amber">Top-down:</b> the boss decides; follow, stay flexible. <span class="s19-p">pp. 159–160</span></li>
       </ul>
       <blockquote class="quote s19-globe">
         <p class="q q-xs">“a leader is decisive if they can make a quick decision”</p>
-        <p class="who"><span>GLOBE <span class="role">· Anglo cultures</span></span></p>
+        <p class="who"><span>GLOBE, Anglo cultures <span class="role">· course script, p. 26</span></span></p>
       </blockquote>
     </article>
   </div>
 
-  <footer class="sf"><p>Meyer (2014), pp. 145–147, 157–161; course script (GLOBE; Thomas; Bennett)</p>
+  <footer class="sf"><p>Meyer (2014), pp. 145–147, 157–161; course script, pp. 11–14, 26</p>
     <p class="sf-end s19-cq" data-step="3" data-build="rise" data-delay="450"><b>CQ:</b> knowledge · mindfulness · competencies</p></footer>
 </section>

@@ -12,7 +12,8 @@ says **how** to build. Engine contract: `deck/README.md`. Reference slides to co
 ```
 deck/slides/src/
   deck.template.html        foundation   head, config (checkpoints), icon sprite, <div id="stage">
-  manifest.json             foundation   slide order (41 positions) + group list
+  manifest.json             foundation   slide order (41 positions), group list, team size ("presenters"),
+                                         team switches ("options", e.g. nemawashi), static-export overrides ("export")
   theme/                    foundation   tokens, fonts, base grid, chrome, components, geometry (registry), motion, modes
   data/countries.json       foundation   the ONE country-position file (Fig. 5.3 measured; Country Mapping 2022 unverified)
   00-foundation.html/.css   foundation   s01, s04b, s04z, s05
@@ -47,6 +48,11 @@ node tools/assemble.cjs --out slides/.tmp-g3.html
 # 2. automated QA: your slides must show 0 errors (stubs of other groups are listed as notes only)
 node tools/check-deck.cjs --deck slides/.tmp-g3.html --slides s09a,s09b,h2
 node tools/check-deck.cjs --deck slides/.tmp-g3.html --slides s09a,s09b,h2 --stress   # +40 % text test (warnings)
+
+# the other team size (default 2, from manifest.json): a private 3-presenter copy (§17)
+node tools/assemble.cjs --presenters 3 --out slides/.tmp-team3.html
+# a team switch for one build (manifest "options", §18): e.g. the S11d nemawashi chip
+node tools/assemble.cjs --option nemawashi=on --out slides/.tmp-nema.html
 
 # 3. screenshots: every build, final, print, paper, lit-room, beamer washout (+ contact sheet)
 node tools/shoot.cjs --deck slides/.tmp-g3.html --slides s09a,s09b,h2 --out <your scratch dir>/shots --contact
@@ -375,9 +381,9 @@ restate the numbers). **Seam** objects only need the key on both sides; their ge
 | `glyph-d` | S12c → S13 | g5: the quick-fire answer d glides into S13's d | S13's D and rule-card fade in |
 | `exam-q` | S14b → S14c | g5: the exam question shrinks into the S14c headline (`vt-text`) | |
 | `per-mail` / `per-mail-txt` | S09a → S09b | g3: card frame (`vt-shape`) / words wrapper (`vt-text`) | revealed at S09a click 3 |
-| `g4-kicker`, `g4-hl`, `table`, `seat-1…10`, `seat-js`, `lbl-jp/nj/js`, `bar-3w`, `bar-3w-lbl` | S10a → S10b → S11a | g4 | seats turn teal by morph (S10b), table → lectern and seats → desk rows (S11a) |
+| `g4-kicker`, `g4-hl`, `table`, `seat-1…10`, `seat-js`, `lbl-jp/nj/js`, `bar-3w`, `bar-3w-lbl`, `sem-1…10` | S10a → S10b → S11a | g4 | seats turn teal by morph (S10b); table → lectern, `seat-js` stays Sheldon's (S11a). The Tokyo seats `seat-1…10` never reach S11a: they leave (`vt-leave`) and the seminar group `sem-1…10` (5 teal, 5 grey; Mori on a teal one) arrives unpaired, because the seminar is a different group of people |
 | `tier-top/senior/mid/staff`, `tl-*`, `ringisho`, `g4-def`, `g4-mori`, `trail-1/2`, `mk-mid/senior` | S11a → S11b → S11c → S11d | g4: desk rows → pyramid tiers; ringisho 312 x 179 at x 484, y 613 / 426 / 268 (`.g-ringisho` unused); hanko travel inside the card (no keys) | |
-| `mem-1…3`, `ring-1…3`, `bracket` | S15 → S16 → S17 → S17b → S18 | g6: every P slide carries all three `mem` | any two visible P slides must morph |
+| `mem-1…3`, `ring-1…3`, `bracket` | S15 → S16 → S17 → S17b → S18 | g6: every P slide carries the `mem` key of every present member; member-3 elements carry `data-member="3"` (left out with two presenters, §17) | any two visible P slides must morph |
 
 Stamps and chips never morph. Morph pairs only with the slide shown immediately before (incl. jumps).
 
@@ -399,15 +405,35 @@ Stamps and chips never morph. Morph pairs only with the slide shown immediately 
 Every `data-show-if` / `data-bind` needs its print state: `data-print="show"` (show-if) or `data-print="…"`
 (text). Shift+R resets the store. New keys: ask the foundation (registry first).
 
-## 13. Print rules (`?print`, PDF, PPTX)
+## 13. Print rules and static exports (`?print`, PDF, PPTX)
 
-Print shows every slide in its final build state, one page per slide, triggers hidden.
+Print shows a static export, every slide in its final build state, one page per slide, triggers hidden.
+
+**Static-export semantics** (engine `Deck.exportPlan`; README "Print defaults"):
+
+| Export | Pages / pictures | Left out |
+|---|---|---|
+| PDF (`?print`, Ctrl+P, `export-pdf`) | main flow in clicker order (visible slides), then an **appendix** of the hidden variants and backups in physical order (S02M, S14M, H1–H5), each with its print tag | auto bridges (S04z), unused member slots (`data-hidden="unused"`: S17b with two presenters), S20E (`data-export="pptx"`, from manifest `"export"`) |
+| PPTX (`?print&export=pptx`, `export-pptx`) | physical order; hidden slides stay in place, hidden (`show="0"`) | S04z, unused member slots; S20E stays (a show must not end on black) |
+| review (`?print&export=all`) | every slide, physical order (`shoot` print/paper shots, `check-deck` print audit) | nothing |
+
+A slide's membership: `data-export="pdf"`, `"pptx"`, `"pdf pptx"` or `"none"` on the section (default both;
+auto bridges and unused slots none). Group files do not set it; the foundation sets overrides in
+`manifest.json` → `"export"` (assemble writes the attribute).
+
+**Print must stay vector and small.** Chromium's PDF writer turns every blurred `box-shadow` / `text-shadow` /
+`filter` into a 300 dpi mask image and every *tiled* CSS gradient (`background-size` + `repeat`) into a raster
+pattern. `theme/modes.css` ("static exports: vector, not masks") swaps the costly ones in print: the card drop shadow
+(`--shadow-card`), the faint headline halo (`--glow-ink`) and the S11c/d dotted trail. Builders: draw dotted or
+hatched patterns as one gradient over the whole box (or as unblurred `box-shadow` copies), never as a tiled gradient;
+keep big blurred shadows off anything large. Teal/amber glyph glows stay (they are the look).
 - Hotspots and live hints: `data-print="hide"` (all `.hot` are hidden in print anyway).
 - Live outcomes become a dashed outline that says what the room decides: `data-print-only`
   (S04b: "D or VOTE? — decided live by the room"; S20: "stand-up — decided live"; S14a: "decided by you").
 - Timers: `data-print="2:00" data-print-progress="0"` (no fake fill). Binds: `data-print="…"`.
 - Hidden slides get "Variant · chosen live" / "Backup · hidden slide" automatically (`data-print-tag` to
-  override). Bridge slides carry a `<p class="print-tag" data-print-only>` (see S04z).
+  override). Bridge slides are in no static export; S04z's `<p class="print-tag" data-print-only>` shows only in
+  review prints (`?print&export=all`).
 - Check both palettes: `shoot` writes `-print.png` (dark, default) and `-paper.png` (`?print&paper`).
 
 ## 14. Lit-room, paper, reduced motion
@@ -453,5 +479,35 @@ The layer is `.dax` (full stage, `pointer-events: none`): `.dax-rail`, `.dax-end
 
 No speaker notes. Never invent a quote, value, position, page number or a member's culture. No raster
 derived from the scans, no photos of people, no logos, no kanji. No network at present time. Builds only
-by clicker/keyboard; the mouse touches only small labelled hotspots. <= 6 builds. Look at your own
+by clicker/keyboard; the mouse touches only small labelled hotspots (the template sets `"clickAdvance": false`, so a
+click that misses a hotspot does nothing). A morph key says "this is the same object": never pair objects that are
+different people or things in the source (S10b → S11a). <= 6 builds. Look at your own
 screenshots (every state, lit, beamer, print, paper, morph frames) before you report done. Do not commit.
+
+## 17. Team size (Part II): one number
+
+`manifest.json` → `"presenters": 2` (2 or 3; `assemble --presenters N` overrides it for one build).
+- `data-member="3"` on any element = it belongs to member 3 (S15 dot, label, ring; the strip dot and P3 label on
+  S16 / S17 / S18; the third name on S01, wrapped with its separator). With two presenters assemble leaves these
+  elements out of the assembled deck, so no `mem-3` / `ring-3` key exists anywhere and every seam stays paired.
+- `<section … data-member="3">` = member 3's own slide (S17b). With two presenters it stays in place (the physical
+  numbers and chips do not shift) and becomes `data-hidden="unused"`: skipped by Next, no folio, in no export.
+- The root gets `class="team-N" data-presenters="N"`: CSS that re-spaces for the team size uses `:root.team-2 …`
+  (S15 label rows, S18 bracket over the two members; end of `06-g6-part2.css`).
+- A new member-specific element: add `data-member="3"`; never only hide it with CSS.
+- Tests: `tests/big-d.cjs` reads the team size from the deck; `npm test` runs it on the default build and on
+  `slides/.tmp-team3.html` (`npm run check:team3` runs check-deck on that build).
+- Placeholder positions: S15–S18 carry `data-positions="tbd"` while `--mN` / `--rN` are placeholders; the member
+  markers (dots, rings, mini rails, the S18 bracket) are then drawn as dashed outlines (end of `06-g6-part2.css`).
+  Delete the attribute once the real positions are in (`tests/big-d.cjs` fails if it stays after every `.ph` is filled).
+  Do not use `data-pos`: the engine writes the physical position there.
+
+## 18. Team switches (manifest `"options"`)
+
+`manifest.json` → `"options": { "nemawashi": false }` (each `true` or `false`; `assemble --option name=on|off`
+overrides one for a build; an unknown name is refused).
+- `data-option="name"` on an element = it exists only while that switch is on; assemble removes it otherwise (never
+  only hide it with CSS). Every `data-option` must name a switch in the manifest.
+- The root gets `data-options="…"` (the switches that are on), for tests and CSS.
+- `nemawashi`: the S11d mouse chip *our nemawashi* (`data-step="2"`, it arrives with the nemawashi block, no extra
+  click) and its card. On only if the team really held its December talks (script §2.3).

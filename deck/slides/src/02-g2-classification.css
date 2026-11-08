@@ -211,8 +211,9 @@
 #s07 .s07-tag--usual { --x: 1556px; --y: 512px; --w: 292px; color: var(--grey); }
 #s07 .s07-usual { font: italic 500 34px/1.1 var(--serif); color: var(--grey); }
 #s07 .s07-tag--ex { --x: 600px; --y: 860px; --w: 1248px; color: var(--ink-2); }
-#s07 .s07-tag--vn { --x: 72px; --y: 860px; --w: 480px; }
+#s07 .s07-tag--vn { --x: 72px; --y: 860px; --w: 516px; }
 #s07 .s07-src { display: block; color: var(--ink-2); }
+#s07 .s07-tag--vn .s07-src { display: inline; }
 
 /* ===================================================================== S08a · Fig. 5.3 */
 #s08a {
@@ -312,31 +313,31 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 50px;
-  height: 4px;
-  border-radius: 2px;
+  top: 49px;
+  height: 6px;
+  border-radius: 3px;
   background: linear-gradient(90deg, transparent, var(--grey) 14%, color-mix(in srgb, var(--grey) 40%, var(--amber)) 86%, transparent);
 }
 #s08b .s08b-pt { position: absolute; left: calc(var(--f) * 100%); top: 52px; width: 0; height: 0; }
 #s08b .s08b-pt::before {
   content: "";
   position: absolute;
-  left: -9px;
-  top: -9px;
-  width: 18px;
-  height: 18px;
+  left: -14px;
+  top: -14px;
+  width: 28px;
+  height: 28px;
   box-sizing: border-box;
-  border: 3px solid var(--bg);
+  border: 4px solid var(--bg);
   border-radius: 50%;
   background: var(--ink);
 }
 #s08b .s08b-pt span { position: absolute; left: 0; translate: -50% 0; font: 600 var(--fs-min)/1 var(--sans); white-space: nowrap; color: var(--ink); }
-#s08b .s08b-pt--up span { top: -50px; }
-#s08b .s08b-pt--lo span { top: 18px; }
+#s08b .s08b-pt--up span { top: -56px; }
+#s08b .s08b-pt--lo span { top: 24px; }
 
 /* ===================================================================== H3 · backup: zones by region */
 #h3 .h3-body { row-gap: 26px; }
-#h3 .h3-head { display: grid; gap: 6px; }
+#h3 .h3-head { display: grid; gap: 14px; }
 #h3 .h3-zones {
   display: grid;
   grid-template-columns: .82fr .98fr 1fr 1.46fr 1.34fr;
