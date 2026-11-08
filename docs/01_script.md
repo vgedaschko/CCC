@@ -4,7 +4,10 @@
 
 This script is the storyboard for the slides and for the speaking texts written later. Its structure and timing come from the "clarity" concept: a linear default path with low-risk branching and a focus on the exam. It also takes ideas from the other two concepts. From "experience": both decisions happen live before any theory, the rules card is secretly Meyer's own protocol, nemawashi is revealed, and the D/d gesture is used. From "story": strict fact checks, DECISION as stone versus decision as pencil, the two rails, countries as bell curves, the censor bar and the Tokyo table.
 
-> **Format update (07.11.2026):** the deck is built in code (HTML/CSS/JS, runs offline in Chrome/Edge) instead of PowerPoint, with a static PDF and a .pptx export generated from it. The PowerPoint build rules in §2.7–2.8 are superseded by the deck engine in `deck/` (see `deck/README.md`); the slide content, timing and interaction design stay as written. Planning default: two presenters.
+> **Format update (07.11.2026, script synced with the built deck 08.11.2026):** the deck is built in code (HTML/CSS/JS in `deck/`, runs offline in Chrome or Edge) instead of PowerPoint. A static PDF and a .pptx (one picture per slide, empty notes) are generated from it for submission (§2.10).
+> - §1.5 and §2.7–2.10 now describe the coded deck: `deck/README.md` ("Present the real deck") and `deck/slides/src/DECK_SPEC.md`.
+> - §3 "Visual & motion" still uses the old PowerPoint object names (`!!ClockTD`, `!!mem1` …) and effect names as plain descriptions. The built deck (`deck/slides/big-d.html`) is the truth for what appears and when; every "Clicks: N" in §3 matches it.
+> - Slide content, timing and interaction design stay as written. Planning default: **two presenters** (`"presenters": 2` in `deck/slides/src/manifest.json`).
 
 **Conventions**
 - `[MEMBER 1: …]`, `[MEMBER 2: …]` and `[MEMBER 3: …]` are slots that one specific person fills in later with their own culture and story.
@@ -27,7 +30,7 @@ This script is the storyboard for the slides and for the speaking texts written 
 We do not explain this first. The room lives through it:
 - **Minute 1:** a "CEO" decides for everyone in about three seconds, then casually revises the decision.
 - **Minute 4:** the whole room has to agree before anything happens. Then we pretend to reopen their decision.
-- The two clock bars from those moments then Morph into Meyer's two timelines: *"What you just felt has a name."*
+- The two clock bars from those moments then morph (glide and stretch) into Meyer's two timelines: *"What you just felt has a name."*
 
 Everything after that explains a feeling the audience already had: the US–German merger paradox, the Fig. 5.3 map, Per's inbox, Tokyo's ringi, and Meyer's toolkit.
 
@@ -37,7 +40,7 @@ Why it should stick:
 - It comes with an exam mnemonic **(ours)**: consensual = *slow in, fast out*; top-down = *fast in, slow out (flexible)*.
 - It ends on a question classmates can reuse in any team: *"So — was that a big D or a little d?"*
 
-**Timing.** There are 20 storyboard slides (S01–S20). Some are built as short chains of PowerPoint slides (Morph steps and one auto-bridge), so the file has 41 slides: 34 visible with three presenters and 33 with two (§2.7). Part I is 24:15 of planned content plus a 0:45 buffer.
+**Timing.** There are 20 storyboard slides (S01–S20). Some are built as short chains of deck slides (morph steps, and the auto bridge S04z). With the hidden variants, the Q&A hub, four backups and the end copy S20e, the deck has **41 physical positions**: **33 visible with two presenters** (position 32, S17b, is then an unused slot) and **34 with three** (§2.7). Part I is 24:15 of planned content plus a 0:45 buffer.
 
 | # | Block (slide) | Min | Clock | 2 presenters | 3 presenters |
 |---|---|---|---|---|---|
@@ -58,7 +61,7 @@ Why it should stick:
 | — | Buffer (no planned content) | 0:45 | 24:15–25:00 | — | — |
 | **Part I** | | **25:00** | | | |
 | S15 | Now us: the room maps itself | 0:45 · 3p 0:30 | 25:00–25:45 · 3p 25:00–25:30 | B | C |
-| S16 / S17 / S17b | Own cultures P1 · P2 · P3 (one per member present) | 2 × 2:30 · 3p 3 × 2:00 | 25:45–30:45 · 3p 25:30–31:30 | each member presents their own | each member presents their own |
+| S16 / S17 / S17b | Own cultures P1 · P2 · P3 (one per team member; S17b/P3 only with three presenters) | 2 × 2:30 · 3p 3 × 2:00 | 25:45–30:45 · 3p 25:30–31:30 | each member presents their own | each member presents their own |
 | S18 | How did WE decide? (team mirror) | 0:45 · 3p 0:30 | 30:45–31:30 · 3p 31:30–32:00 | B | C |
 | S19 | Management implications: three moves | 2:30 · 3p 2:00 | 31:30–34:00 · 3p 32:00–34:00 | A (①②) → B (③) | A ① → B ② → C ③ |
 | S20 | Close: "So — was that a big D or a little d?" | 1:00 | 34:00–35:00 | B → A | B → A |
@@ -101,7 +104,7 @@ The minutes per person are nominal block minutes. Net talk time is listed in §1
   - Assign roles once you know who is presenting.
   - Rotate them in the drills (§1.5) so anyone can take any block.
 - **The own-culture slides belong to people, not roles.**
-  - P1, P2 and P3 belong to Member 1, 2 and 3, in a fixed order.
+  - P1, P2 and P3 belong to Member 1, 2 and 3, in a fixed order. P3 (S17b) exists only in a three-presenter build.
   - Each member presents their own slide, whatever role they hold.
 
 **Slides are the cue cards (no notes are allowed)**
@@ -115,7 +118,7 @@ The minutes per person are nominal block minutes. Net talk time is listed in §1
 - **Click counts:** every slide in §3 lists its clicks. Anyone covering a block learns them in the drills.
 
 **Live roles**
-- **A** sits at the laptop during both decisions. A uses the clicker for builds and the mouse only for small labelled hotspots, and runs the Presenter View timer (§2.9).
+- **A** sits at the laptop during both decisions. A uses the clicker for builds and the mouse only for small labelled chips, and runs the presenter window (key **P**: talk clock and checkpoints, §2.9).
 - **B** plays the "CEO" in Decision #1 (a few lines) and facilitates Decision #2 (the hardest live moment).
 
 **Complexity is balanced, not just minutes**
@@ -134,7 +137,7 @@ The minutes per person are nominal block minutes. Net talk time is listed in §1
 
 How net talk is calculated: take the nominal time, subtract room time (standing rounds, concerns, votes, gestures, call-outs: about 3:40 in Part I and 0:15 in Part II), and add lines spoken inside someone else's block.
 
-### 1.3 Fallback for 2 presenters (35:00; the default if anyone is absent)
+### 1.3 Split for 2 presenters (35:00; the planning default)
 
 | Slot | Part I (nominal) | Part II (nominal) | Nominal total | Net talk (≈) |
 |---|---|---|---|---|
@@ -173,26 +176,33 @@ These lines work whoever is speaking. The next slide's headline answers the line
 
 ### 1.5 Drop-out protocol and rehearsal
 
-**Before 05.01.2027**
-- Fix the order Member 1/2/3 now. Each member fills in their own P slide.
-- S15 and S18 show all three members' dots, because the absent person is still part of the team.
+**Team size: one number (decide before the final build, at the latest before the email on 05.01.2027)**
+- `"presenters": 2` in `deck/slides/src/manifest.json` (2 or 3) decides everything. After a change, rebuild with `npm run deck:all` (§2.8). A one-off three-presenter copy for a rehearsal: `node tools/assemble.cjs --presenters 3 --out slides/.tmp-team3.html`.
+- **Two presenters (default):** there is no member 3 anywhere. S01 shows two name slots, S15 and S18 two dots, the P-slide strips P1 and P2. Position 32 (S17b) stays as an unused number: Next skips it, typing 32 says *no such slide*, it has no folio, and no export carries it.
+- **Three presenters:** S17b is in the flow (S17 → S17b → S18) with the third name, dot and ring; the folios (the small number top right) renumber.
+- The jump numbers 3 · 26 · 36 and every number printed on a chip stay the same for both sizes.
+- Fix the order Member 1/2(/3) now. Each member fills in their own P slide (§4.2 sheet; where the slots and positions live: `deck/README.md`, "Part II: fill in the placeholders").
 
-**On the day, if anyone is absent**
-- Hide that person's P slide (slide 30, 31 or 32).
-- Switch to the 2-presenter role table and give A and B to the two people present.
-- Change nothing else. Any combination of two P slides Morphs correctly, because every P slide holds all three member dots (tested in §2.8).
-- On S15, say one line: "[MEMBER n] couldn't be here — their dot stays; they were part of every decision."
+**On the day, if one of the two presenters is absent** (a recommendation; the team confirms it, see the team questions)
+- Leave the file as it is. The deck cannot be built for one presenter, so both names, both dots (S15, S18) and both P slides stay in.
+- The member who is present takes Part I and the shared slides (S15, S18–S20): all A and B lines, including the CEO lines, facilitating Decision #2 and clicking the chips (they also work in the presenter window's current-slide pane, §2.7).
+- The absent member's P slide: choose one way in advance and rehearse it.
+  - **Third person:** present it from what is on their slide ("[MEMBER n] places …"), learned beforehand from their fill-in sheet (§4.2). Add nothing that is not on the sheet.
+  - **Jump over it:** Member 1 absent: at the end of S15 type `31` + Enter (lands on S17). Member 2 absent: at the end of S16 type `33` + Enter (lands on S18). Part II then ends about 2:30 early, and Q&A gets the time.
+- §1.4's S15 hand-over goes to the first member present. A P slide presented in the third person needs no hand-over question: the speaker simply goes on.
+- **Three-presenter build, one absent:** the same two ways (jumps: P1 from S15 to `31`, P2 from S16 to `32`, P3 from S17 to `33`), then use the 2-presenter role table (§1.3) for the two present. Only if Member 3 is the absent one can the deck be rebuilt the evening before with `"presenters": 2`, which removes exactly member 3's name, dot and slide.
 
 **Rehearsal: three full runs with a stopwatch, plus block drills**
+- Before every run, set up as on the day (§2.10): presenter window (P), deck on the second screen, F, then **Shift+R** and **Home**, so the S04b timer, the stamps and the talk clock start clean.
 - **Run 1:** normal owners.
-- **Run 2:** rotated owners. Take the Munich-first branch (slide 3) and Scenario M (slide 26), with one P slide hidden.
-- **Run 3:** rotated owners again. Friends play a shy room, then a chaotic room. Let Decision #2 fail on purpose so you practise the vote path.
+- **Run 2:** rotated owners. Take the Munich-first branch (chip → 3) and Scenario M (chip → 26), and practise one absent-member variant (a P slide in the third person, or the jump over it).
+- **Run 3:** rotated owners again. Friends play a shy room, then a chaotic room. Let Decision #2 fail on purpose so you practise the vote path. End with a trip to the Q&A hub (→ 36) and back.
 - **Block drills (short, separate from the full runs):**
   - Part I is split into four packages: S01–S05 (live) · S06–S09 · S10–S13 · S14. Every person presents every package at least once.
-  - Every person runs the S02/S04 clicker-plus-hotspot sequence once on a projector or TV with the pointer visible.
+  - Every person runs the S02/S04 clicker-plus-chip sequence once on a projector or TV with the pointer visible, and types one jump number in the presenter window.
   - Every person facilitates Decision #2 once with friends as the audience.
-- **Memorise:** the four checkpoints, the jump numbers 3 · 26 · 36, and each slide's click count.
-- If at all possible, do one tech run in the actual room on the beamer.
+- **Memorise:** the four checkpoints (S05 7:30 · S09a 14:45 · S12a 19:30 · S15 25:00), the jump numbers 3 · 26 · 36, and each slide's click count (§3; a straight clicker run from S01 to S20e is 104 presses).
+- If at all possible, do one tech run in the actual room on the beamer (§2.10 checklist).
 
 ---
 
@@ -209,7 +219,7 @@ These lines work whoever is speaking. The next slide's headline answers the line
 | Debrief poll "Which flip felt worse?" | S05 · ~9:10 | Hands | Hands | 10 s |
 | D/d gesture introduced | S05 · ~9:40 | Big D = both arms up; little d = one index finger | Gesture | 5 s |
 | "Who would have hit delete?" | S09a · ~15:15 | Hands | Hands | 5 s |
-| Nemawashi reveal (optional) | S11d · ~19:10 | Hands | "Hands up if we talked to you in December" | 10 s |
+| Nemawashi reveal (only if you really held the talks; option on) | S11d · ~19:10 | Hands | "Hands up if we talked to you in December" | 10 s |
 | Quick-fire (2 cards) | S12b–c · ~21:00 | D/d gesture | Gesture | 10 s each |
 | Apply your scenario | S14a · ~22:50 | Call-out | Name moves | 30 s |
 | True/false | S14c · ~24:00 | Thumbs | Thumbs up/down | 2 × 8 s |
@@ -300,104 +310,108 @@ These lines work whoever is speaking. The next slide's headline answers the line
 - *Never:* she is not part of the consensual vote, the stamp, or the final stand-up.
 - In Q&A she is the expert in the room. The backup hub answers questions on course theory.
 
-### 2.7 Branching map (actual slide positions)
+### 2.7 Branching map (the built deck)
 
-| Pos. | Slide | Hidden? | Transition in | Links / triggers |
-|---|---|---|---|---|
-| 1 | S01 Title | | — | |
-| 2 | S02 Decision #1 (New York first, default) | | Morph | Chip "MUNICH → 3" (bottom edge), hyperlink to **3** |
-| 3 | S02M Munich-first variant | **hidden** | **Fade 0.3 s** | Next → 4 |
-| 4 | S03 | | Morph | |
-| 5 | S04a Rules card | | Morph | |
-| 6 | S04b Decision #2 | | Morph | **Triggers:** chip TrigD_T → StampD_T · TrigD_M → StampD_M · TrigV_T → StampV_T · TrigV_M → StampV_M (each also shows the "decided" cover) |
-| 7 | S04z bridge | | Fade 0.3 s, Advance *After 00:00* | auto → 8 |
-| 8 | S05 | | Morph (signature) | |
-| 9–10 | S06, S07 | | Morph | |
-| 11 | S08a Fig. 5.3 | | Morph | |
-| 12 | S08b Country Mapping Asia panel | | **Fade** (change of source) | |
-| 13–14 | S09a, S09b | | Fade, then Morph | |
-| 15–16 | S10a, S10b | | Fade, then Morph | |
-| 17–20 | S11a, S11b, S11c, S11d | | Morph chain | |
-| 21–23 | S12a, S12b, S12c | | Fade, Morph, Morph | S12b chip "→ 24" (skips quick-fire 2) |
-| 24 | S13 | | Morph | Chip "M → 26" (bottom right) |
-| 25 | S14a Apply, Scenario T (default) | | Fade | |
-| 26 | S14M Apply, Scenario M | **hidden** | Fade | Next → 27 |
-| 27 | S14b Exam card | | Fade | Chip "II → 29" (skips true/false) |
-| 28 | S14c True/false | | Morph | |
-| 29 | S15 | | Fade | |
-| 30–32 | S16 P1 · S17 P2 · S17b P3 | hide the absent member's slide | Morph | |
-| 33–35 | S18, S19, S20 | | Morph, Fade, Fade | S20 corner: tiny "→ 36" |
-| 36 | H1 Q&A hub | **hidden** | Fade | Tiles → 37–40; "← end" → 35 |
-| 37–40 | H2–H5 backups | **hidden** | Fade | "← back" = Action → *Last Slide Viewed* |
-| 41 | S20e: visible copy of S20's end state | | none | Catches a stray clicker press during Q&A |
+The order comes from `deck/slides/src/manifest.json` (41 physical positions). How to present it: `deck/README.md`, "Present the real deck".
+- **Positions** are physical slide numbers: what you type and what the chips print. The small folio top right counts visible slides only, so it differs (S15 shows 26).
+- **Transition in:** *morph* = shared objects glide to their new place; *fade* = 0.3 s crossfade; *none* = instant cut. Going back uses the transition of the slide being left, and a slide entered backwards shows its final state at once.
+- **Hidden kinds:** *variant* (reached only by its chip or number; Next then rejoins the main path) · *backup* (Q&A only; a visit never ticks a checkpoint off) · *unused* (S17b with two presenters: not reachable at all).
 
-- **Memorise only three numbers: 3, 26, 36.** In Slide Show, typing the number + Enter jumps straight there.
-- **Builds are advanced ONLY with the clicker or keyboard, on every slide.** The mouse touches only small, labelled hotspots: the S02 chip, the four S04 trigger chips, the S12b, S13 and S14b skip chips, the S20 stamp chip and, only if the team held its December talks (§2.3, manifest option), the S11d chip *our nemawashi* (it arrives with the nemawashi block, click 2). In the coded deck a click anywhere else does nothing (`clickAdvance: false`).
-- Hyperlinks set via *Place in This Document* follow their slide when slides move. The typed numbers and the printed "→ n" labels do not, so re-derive and reprint them once the order is final.
+| Pos. | Id · slide | Shown? | In | Clicks | Chips · triggers · notes |
+|---|---|---|---|---|---|
+| 1 | s01 Title | | fade | 0 | |
+| 2 | s02 Decision #1, New York first (default) | | morph | 4 | Chip `MUNICH → 3` (bottom right, there from entry, works at any build) |
+| 3 | s02m Munich-first variant | **hidden** (variant) | fade | 3 | Next → 4 (S03) |
+| 4 | s03 One word, two rulebooks | | morph | 4 | |
+| 5 | s04a Rules card | | morph | 0 | |
+| 6 | s04b Decision #2 | | morph | 3 | Four trigger chips: `D` · `vote` under Scenario T (`dT`, `vT`) and under Scenario M (`dM`, `vM`). Click 1 starts the 2:00 clock |
+| 7 | s04z Bridge | auto | fade | 0 | Moves on to S05 by itself; nobody speaks over it |
+| 8 | s05 Definition | | morph (signature) | 5 | |
+| 9 | s06 Collision + roots | | morph | 4 | |
+| 10 | s07 Leading ≠ Deciding | | morph | 4 | |
+| 11 | s08a Fig. 5.3 | | morph | 2 | |
+| 12 | s08b Country Mapping Asia panel | | **fade** (change of source) | 1 | |
+| 13 | s09a Per's inbox | | fade | 4 | |
+| 14 | s09b Per vs Lencioni | | morph | 3 | |
+| 15 | s10a Tokyo | | fade | 1 | |
+| 16 | s10b Tokyo, seats turn teal | | morph | 2 | |
+| 17 | s11a Seminar | | morph | 1 | |
+| 18 | s11b Ringi, mid-management | | morph | 1 | |
+| 19 | s11c Ringi, senior level | | morph | 0 | |
+| 20 | s11d Ringi at the top + nemawashi | | morph | 3 | Chip *our nemawashi* (arrives with click 2) only with the manifest option on (only if you really held the talks; option on). Default: no chip, no card |
+| 21 | s12a Toolkit | | fade | 2 | |
+| 22 | s12b Quick-fire 1 | | morph | 2 | Chip `→ 24` (skips quick-fire 2) |
+| 23 | s12c Quick-fire 2 | | morph | 1 | |
+| 24 | s13 Mixed team | | morph | 4 | Chip `M → 26` (bottom right). Live hint, not printed: "your scenario: M" or "your scenario: T · next" |
+| 25 | s14a Apply, Scenario T (default) | | fade | 1 | |
+| 26 | s14m Apply, Scenario M | **hidden** (variant) | fade | 1 | Next → 27 (S14b) |
+| 27 | s14b Exam card | | fade | 0 | Chip `II → 29` (skips true/false) |
+| 28 | s14c True/false | | morph | 4 | |
+| 29 | s15 The room maps itself | | fade | 2 | |
+| 30 | s16 P1 | | morph | 3 | |
+| 31 | s17 P2 | | morph | 3 | |
+| 32 | s17b P3 | 2 presenters: **unused slot** · 3 presenters: shown | morph | 3 | With two: Next skips it, typing 32 says *no such slide*, no folio, in no export |
+| 33 | s18 Team mirror | | morph | 3 | |
+| 34 | s19 Three moves | | fade | 3 | |
+| 35 | s20 Close | | fade | 3 | Chip `D` (arrives with click 1, beside the stand-up line; stamps the proposal) · corner chip `→ 36` |
+| 36 | h1 Q&A hub | **hidden** (backup) | fade | 0 | Four tiles → 37–40 · chip `← end · 35` (S20 in its final state) |
+| 37 | h2 Is consensus better? | **hidden** (backup) | fade | 0 | Chip `← back` (to the last slide viewed) |
+| 38 | h3 Country Mapping by region | **hidden** (backup) | fade | 0 | `← back` |
+| 39 | h4 Course bridge | **hidden** (backup) | fade | 0 | `← back` |
+| 40 | h5 More rails | **hidden** (backup) | fade | 0 | `← back` |
+| 41 | s20e End copy of S20 | | none | 0 | Next from S20 lands here, so a stray press shows nothing new. Keeps the D stamp if it was fired on S20. Corner chip `→ 36` |
 
-### 2.8 PowerPoint build rules
+**Chips and triggers**
+- **Builds advance ONLY with the clicker or the keyboard, on every slide.** The mouse touches only the labelled chips in the table. A click anywhere else does nothing (`"clickAdvance": false`; it only lifts a black screen).
+- Chips work in the deck window and in the presenter window's current-slide pane (it is live and clickable), so A can click them on the laptop screen.
+- **The S04b chips are triggers, not jumps.** Each one stamps D or VOTE on its card, covers the clock with "decided" and the elapsed time, stops the 2:00 clock, and stores scenario, method and time. S05, the S13 hint, S14a/S14m and the S20 bar chart read them. The four chips are one group: a mis-click is corrected by clicking the right chip. Never press ← while the clock runs at build 1 (that resets the clock).
+- **The S20 `D` chip** is clicked only if nearly everyone stands. S20e mirrors the stamp.
 
-**Version and naming**
-- **Morph** needs PowerPoint 2019, 2021 or Microsoft 365, so present from your own laptop.
-- Name persistent objects in the Selection Pane with a `!!` prefix so Morph pairs them reliably:
-  - Title and axes: `!!Title`, `!!TileNY`, `!!TileMU`, `!!D`, `!!d`, `!!AxisDec`, `!!AxisLead`
-  - Clocks and timelines: `!!ClockTD`, `!!ClockCons1–4`, `!!TL_Top`, `!!TL_Cons`
-  - Cards: `!!Card_LN`, `!!Card_MW`, `!!RuleCard`, `!!Mail`, `!!CardT`, `!!CardM`
-  - Country dots: `!!dot_SE`, `!!dot_JP`, `!!dot_NL`, `!!dot_DE`, `!!dot_UK`, `!!dot_US`, `!!dot_FR`, `!!dot_BR`, `!!dot_IT`, `!!dot_IN`, `!!dot_RU`, `!!dot_CN`, `!!dot_NG`, `!!dot_KR`, `!!dot_VN`
-  - Tokyo and ringi: `!!Table`, `!!Seat1–10`, `!!Seat_JS`, `!!Ringisho`, `!!Hanko1…n`
-  - Toolkit: `!!ColBigD`, `!!ColSmallD` (or one name per chip), `!!QF`
-  - Part II: `!!mem1/2/3`, `!!ring1/2/3`, `!!Bracket`
-- Do not group objects that must Morph individually (no map group).
-- Stamps and trigger chips get names **without** `!!` so they never pair with the `!!D`/`!!d` glyphs: StampD_T, StampD_M, StampV_T, StampV_M, StampD_S20; TrigD_T, TrigD_M, TrigV_T, TrigV_M, TrigD_S20.
+**How to jump**
+- Type the physical number, then **Enter**. Best in the presenter window: the overlay stays off the beamer, and Esc there is harmless. In the deck window the beamer shows the digits, and Esc also leaves fullscreen, so cancel there with Backspace or wait 4 s.
+- **Memorise only three numbers: 3 (S02M), 26 (S14M), 36 (H1).** The others are printed on the chips (24, 29, 35, 37–40); 41 is S20e.
+- **Prev after a jump** (chip or number) returns to where you came from, at the build you left. Otherwise Prev goes to the previous visible slide in its final state. Home / End = first / last visible slide (End = S20e).
 
-**Placed = final (the most important rule)**
-- On every slide that Morphs out, the placed state in editing view must equal the final on-screen state. Morph starts from the placed state, not from where the animations left objects.
-- Only entrance effects that end at the placed spot are allowed: Fade, Wipe, Zoom, Bounce, Fly In.
-- Not allowed on those slides: exits; motion paths away from the placed spot; Grow/Shrink, Fill Color or Spin emphasis on objects that stay on screen.
-- Mid-slide changes (grey → teal seats, the ringisho climb, the map zoom, the rules card shrinking) are built as **consecutive Morph slides** instead.
-- **The one exception is S04b** (triggers, exiting arrow, part-run clock). It is followed by the bridge **S04z**:
-  - S04z holds only `!!ClockTD`, `!!ClockCons1–4` (full bar), `!!CardT` and `!!CardM`: no stamps, no rules card, no arrow.
-  - It uses a Fade 0.3 s transition (ordinary transitions start from what is on screen) and *Advance Slide: After 00:00*.
-  - S05 Morphs from the bridge.
-  - Tick *Slide Show → Use Timings*, or the bridge will not advance. Never use *Rehearse Timings*, and check that only S04z has an "After" time.
+**What replaced the PowerPoint mechanics**
+- *Hyperlinks via Place in This Document* → each chip names its target slide by id (e.g. `data-goto="s14m"`), so the link follows the slide. The number printed on a chip is plain text: if the order in `manifest.json` ever changes, update the chip labels; `npm run test:deck` fails while a chip's number does not match its target's position.
+- *Action → Last Slide Viewed* → the `← back` chip on H2–H5 (`data-goto="@back"`).
+- *Advance After 00:00 + Use Timings* on the bridge → S04z carries `data-auto="150"`: it moves on to S05 by itself 0.15 s after its fade. There is nothing to tick. Prev skips it, the presenter window's next-preview looks past it, and a press during the bridge only lands on S05 a moment early.
+- *Hide Slide* → hidden slides are set in the source (variants, backups) or by the team size (S17b). Nothing is hidden by hand, before or on the day.
 
-**Morph pairing and jumps**
-- **Morph pairs with the slide shown immediately before**, including after a hyperlink jump or a skipped hidden slide.
-- Callbacks to earlier, non-adjacent slides are visual rhymes: the same shape, style and position. This applies to the rules card in S13, the email card in S09a and the scenario card in S14a.
-- A jump that can happen mid-build (S02 → S02M) uses a **Fade** target.
-- **Test every transition that crosses a hidden slide or a hyperlink:**
-  - S02 and S04: 2→3, 2→4, 3→4, and 6→7→8 (bridge)
-  - S12–S14: 22→24 (chip), 24→25, 24→26 (chip), 25→27, 26→27, 27→29 (chip)
-  - P slides: 30→31→32→33, 30→32, 31→33, 30→31→33
-  - End: 35→41, 36→35
-- **S02M's starting state** already shows the CEO badge and `!!ClockTD`, matching S02 after click 1.
+### 2.8 Deck build rules (code)
 
-**Timers and stamps**
-- A single animation can last at most 59 seconds. The 2:00 clock is therefore **four 30.00-second Wipe-from-left segments** chained *After Previous*, with tick marks at 0:30, 1:00, 1:30 and 2:00.
-- Each stamp's trigger sequence also shows an opaque **"decided" panel** over the clock track (With Previous), so a bar that is still running is hidden after an early decision.
-- **Changing d into D:** never Morph by characters. Use separate glyph objects (`!!d`, `!!D`) with entrance effects only.
-- **Triggers:** Animation Pane → Timing → Triggers → *Start effect on click of* [chip name].
-  - Trigger chips are at least 1.5 cm and well apart from each other.
-  - Scenario cards and tiles carry no links or triggers.
+The full rules are in `deck/README.md` (engine, keys, exports, "Present the real deck") and `deck/slides/src/DECK_SPEC.md` (the builders' handbook). What still matters to presenters and editors:
 
-**Theme, fonts and images**
-- **Theme colours:** define the palette as a custom theme colour set: Text 1/Background 1, Accent 1 teal, Accent 2 amber, Accent 3 vermilion, Accent 4 grey. Use only these slots.
-  - The light "daylight" variant is a second colour set with a darker amber.
-  - Test both on the beamer.
-- **Fonts:** Segoe UI family (Light / Semibold). Aptos is not available in Office 2019. Embed fonts via File → Options → Save → *Embed fonts* (all characters).
-- **Images:**
-  - No photos of real people (use monograms) and no company logos (no Astellas logo).
-  - Use self-drawn line-art skylines and Office icons (Insert → Icons).
-  - No kanji, unless a Japanese speaker checks it.
+**Where things are**
+- `deck/slides/big-d.html` is assembled; never edit it by hand. Each slide lives in one group file in `deck/slides/src/` (find it with `grep -l 'id="s05"' deck/slides/src/*.html`), with its CSS next to it. Order, team size and team options: `deck/slides/src/manifest.json`.
+- Part II slots: `06-g6-part2.html` (S15–S19) and the S01 names in `00-foundation.html`; member positions in `06-g6-part2.css` (README, "Part II: fill in the placeholders").
 
-**Notes and timer**
-- **Speaker notes:** leave every notes pane empty. Before emailing, run File → Info → Check for Issues → Inspect Document → *Presentation Notes* → Remove All.
-- **Time source:** A runs Presenter View with an empty notes pane and uses its elapsed-time timer. Confirm this in the mid-December email.
-- If Presenter View is not wanted, use duplicate display. The non-speaking presenter then watches the wall clock or a wristwatch and gives an agreed hand signal.
+**Change text, then rebuild** (run in `deck/`)
+1. Edit the group file. Keep every [SCREEN] quote character for character as in §3 (curly quotes, dashes, ellipses). Never invent a member's name, culture, story or position.
+2. `npm run deck:all` assembles `slides/big-d.html` and writes every export to `dist/` (§2.10).
+3. `npm run check` (layout, clipped or overlapping text, fonts, ≤ 6 builds, morph pairs, print) and `npm test` (engine suite, a full clicker run through the deck, branches, triggers, hub, team size, exports; also on a three-presenter build). Both must pass before anything is emailed.
+4. Look at the changed slide in the browser (every build) and in the PDF.
+
+**Rules that stay**
+- **Fonts:** Archivo (sans) and Newsreader (serif), shipped with the deck and inlined into `dist/big-d.html` (SIL Open Font License; the two `OFL-*.txt` files travel with it). No system fonts, nothing from the network. Characters the fonts lack (arrows, ≈, ≠, ↺, ✓, ✗, ☐, circled numbers) are drawn as icons; `npm run check` names any character that falls back to another font. (§3.0 still names Segoe UI; the deck uses these two.)
+- **Minimum type size: 28 px** on the 1920 × 1080 canvas, labels, chips and footers included.
+- **Builds:** at most 6 clicks per slide, entrance-only, so a slide's final state is its markup state. Print and the static exports show exactly that.
+- **Colours by meaning** (theme tokens, never hard-coded): teal = consensual / Big D, amber = top-down / little d, vermilion only for the hanko on S11b–d, grey = the usual pattern and ghost dots.
+- **Modes:** dark is the default. **L** switches the lit-room mode for a bright classroom (no light pools, grain or glows; heavier strokes; remembered for the tab and mirrored to the presenter window). *Paper* is the light palette for print (`dist/big-d-paper.pdf`). Story (letterbox) vs daylight is set per slide; it is not a mode.
+- **No speaker notes anywhere:** the presenter window has no notes field, and the .pptx notes are empty.
+- **Images:** no photos of real people (monograms instead), no company logos, no kanji, no raster taken from the scans.
+- **Team size and options** change only in `manifest.json` (`"presenters"`, `"options": { "nemawashi": … }`), never by hiding things with CSS. Rebuild afterwards.
 
 ### 2.9 Checkpoints and elastic cuts
 
-**Checkpoints** (memorised; read from the Presenter View timer):
+**Time source: the presenter window** (key **P** in the deck window). It replaces PowerPoint's Presenter View and has no notes field.
+- It shows the talk clock (Start / Pause / Resume / Reset), the four checkpoints, the current slide (live; chips work there) with its build number, and a preview of the next build or slide.
+- **Talk clock:** it starts by itself on the first advance from S01 and counts S01's 0:30 in (`"clockLead": 30`), so the checkpoints read true if S01 was up for about half a minute. If S01 stands much longer (the room is still settling), click *Start* in the presenter window as A begins to speak; then no lead is added.
+- **Reset needs two clicks** (within 3 s; the button sits at the far right of the bar). Shift+R also resets the clock and asks for a second press once the clock has passed 1:00. Never reset during the talk.
+- The clock lives in the deck window: closing and reopening the presenter window (P) keeps it, and a reload with Ctrl+R (not F5) brings it back.
+- No second screen (duplicate display only)? The non-speaking presenter watches a wristwatch or the wall clock and gives an agreed hand signal.
+
+**Checkpoints** (memorised; the presenter window marks each *due in m:ss*, *✓ reached · m:ss ahead* or *behind*):
 
 | # | Slide on screen by |
 |---|---|
@@ -406,7 +420,8 @@ These lines work whoever is speaking. The next slide's headline answers the line
 | ③ | S12a · 19:30 |
 | ④ | S15 · 25:00 (absolute latest 25:30) |
 
-If you are more than 0:20 late at a checkpoint, apply the next cuts in deck order. Every cut either drops speech or skips a whole slide; no build is half-played.
+- Amber = late by up to 0:20; red = later. The next checkpoint is highlighted. A detour to a Q&A backup does not tick one off.
+- If a checkpoint turns red (more than 0:20 late), apply the next cuts in deck order. Every cut either drops speech or skips a whole slide; no build is half-played.
 
 | When | Slide | Cut | Type | Saves |
 |---|---|---|---|---|
@@ -416,47 +431,64 @@ If you are more than 0:20 late at a checkpoint, apply the next cuts in deck orde
 | | S08a | No "find your country" pause; clusters only | speech | 0:15 |
 | | S08b | One sentence | speech | 0:10 |
 | | S09a/b | No poll; Per's view of Americans in one line | speech | 0:20 |
-| Late at ② | S11d | Skip the nemawashi reveal | speech | 0:10 |
+| Late at ② | S11d | Skip the nemawashi reveal (only if you really held the talks; option on) | speech | 0:10 |
 | | S12b | Skip quick-fire 2: click the chip "→ 24" | whole-slide skip | 0:25 |
 | Late at ③ | S14a | Call-out 15 s instead of 30 s | speech | 0:15 |
 | | S14b | Skip true/false: click the chip "II → 29" | whole-slide skip | 0:20 |
 | *Bank* | S04 | Instant unanimity, or "Round 2 — now" in a silent room | — | up to +1:00 |
 
-Together the cuts save about 2:40, on top of the 0:45 buffer.
+Together the cuts save about 2:40 (2:30 without the optional nemawashi reveal), on top of the 0:45 buffer.
 
-### 2.10 Submission, static export, logistics
+### 2.10 Submission, static exports, logistics
 
 **Deadline:** email to Prof. Hegner (address on Lecture I, slide 6) by the **evening of 05.01.2027**. Aim for 04.01. Lateness is penalised.
 
-**Send two files:**
-1. The animated `.pptx`, with fonts embedded and notes removed.
-   - Run File → Compress Pictures and check the attachment size.
-   - If it is over the mail limit, send a cloud link alongside it.
-2. A PDF via File → Export → PDF → Options, with **Include hidden slides** ticked.
+**The exports** (in `deck/dist/`, all written by `npm run deck:all`; counts for two presenters, with three S17b adds one PDF page and one .pptx slide):
 
-**Make the static version readable.** The PDF, and the .pptx opened in editing view, show every object at its placed position. The placed = final rule keeps most slides clean. For the PDF only, make an **export copy** that flattens the rest:
-- **S02 and S02M:** keep the end state (both cards, "?") and delete the tiles that sit under the cards.
-- **S04b:** delete the four stamps, the "decided" panels and the flip arrow. Replace them with one dashed outline: *"D or VOTE? — decided live by the room."* Keep Müller's line.
-- **S20:** delete the D stamp and show a dashed outline *"stand-up — decided live"*.
-- **Hidden variants:** tag them *"Variant · chosen live"*.
-- **Before sending:** page through the whole PDF.
+| File | What it is | Size |
+|---|---|---|
+| `big-d.html` + `OFL-archivo.txt`, `OFL-newsreader.txt` | The live deck as **one offline file** (engine, theme and fonts inlined; no network). We present from this. Keep the two licence files next to it. | ≈ 1.7 MB |
+| `big-d.pdf` | Dark, as on screen. **38 pages:** 31 main pages in clicker order (S01 … S20, each in its final build), then a 7-page appendix (S02M, S14M, H1–H5) tagged *Variant · chosen live* or *Backup · hidden slide*. Left out: the bridge S04z, the unused S17b and the end copy S20e. Live outcomes print as dashed outlines ("D or VOTE? — decided live by the room", "stand-up — decided live", "decided by you"). | ≈ 7 MB |
+| `big-d-paper.pdf` | The same 38 pages in the light paper palette, for printing. | ≈ 5 MB |
+| `big-d.pptx` | **39 slides** in physical order, each a full-slide picture of the final build, with a title per slide. The 7 hidden slides (S02M, S14M, H1–H5) stay hidden; S20e stays at the end; S04z and S17b are left out. Notes are empty. No live text, builds, morphs, chips or timer. | ≈ 11 MB |
 
-**Mid-December email:**
-- Is a browser-based presentation acceptable, with the PDF and a .pptx export attached? (The rules say "Only a PowerPoint presentation without notes".)
+**What to email (recommendation):** the `.pptx` plus the PDF (`big-d.pdf`).
+- The .pptx answers "Only a PowerPoint presentation without notes"; the PDF shows the same slides, with the hidden ones in its appendix.
+- Check the attachment size (about 18 MB together). If it is over the mail limit, send a cloud link alongside.
+- Before sending: page through the whole PDF, and run the .pptx once as a slide show (hidden slides skipped, notes empty).
+- The old PowerPoint steps (Compress Pictures, Inspect Document → remove notes, a flattened export copy) are no longer needed: the exporters flatten the live outcomes and leave the notes empty.
+
+**Mid-December email** (also a little nemawashi):
+- Is it fine to present from our browser file (offline, no notes, a clock-only presenter window on the laptop), given the rule "Only a PowerPoint presentation without notes"? We email the .pptx and a PDF of the same slides by 05.01. If not, we present from the .pptx.
 - Is audience movement (standing up) fine?
 - Would she like to play "the boss" in Decision #1?
-- Is a Presenter View timer with an empty notes pane acceptable as a time source?
-- This email also asks for her approval, nemawashi-style.
+- Is the presenter window (talk clock, no notes) acceptable as our time source?
+
+**If we must present from the .pptx (fallback):** every slide shows its final state at once (no builds), and the chips and the S04b clock do not work, so outcomes are said aloud. Slide numbers differ from the deck, because S04z and the unused S17b are not in the file (so the numbers printed on the chips are wrong there): S02M stays **3**, S14M is **25**, H1 is **34** (type the number + Enter in the slide show). The PDF works as the last resort: main flow on pages 1–31, appendix on 32–38 (S02M 32, S14M 33, H1 34).
 
 **On the day, bring:**
-- Your own laptop, charger, HDMI and USB-C adapters, a clicker and a mouse.
-- A USB stick with the `.pptx` and the PDF.
+- Your own laptop with Chrome or Edge, charger, HDMI and USB-C adapters, a clicker (it sends PageDown/PageUp) and a mouse.
+- A USB stick with `big-d.html` plus the two `OFL-*.txt` files, the PDF and the .pptx.
 
-**Laptop and tech checklist:**
-- Do Not Disturb / Focus on, messengers closed, updates paused, charger plugged in.
-- Decide between duplicate display and extended display (Presenter View).
-- Check the beamer's aspect ratio (16:9 vs 16:10 or 4:3) in the tech run.
-- Test the dark theme and the light colour set on the beamer.
+**Set-up checklist** (before the talk and before every rehearsal; README, "Open it"):
+1. Laptop: Do Not Disturb / Focus on, messengers closed, updates paused, charger plugged in.
+2. Beamer as an extended screen: **Windows+P → Extend** (not Duplicate).
+3. Open `big-d.html` in **Chrome or Edge** on the laptop screen (double-click is fine).
+4. Press **P** (allow pop-ups if a toast asks). The presenter window opens; leave it on the laptop.
+5. Drag the deck window to the beamer, click its title bar (not the slide), press **F** (fullscreen).
+6. **Shift+R**, then **Home**: resets the S04b timer, the stamps, the stored outcomes and the talk clock, and goes to S01.
+7. Click the presenter window's top bar. From then on the clicker drives both windows.
+8. Bright room? Press **L** (lit-room mode).
+9. Fallback ready: the PDF and the .pptx on the USB stick.
+
+**If something goes wrong** (README, "If something goes wrong"):
+- A 16:10 or 4:3 beamer only letterboxes (black bars, nothing cut): nothing to do.
+- Morphs stutter on a weak laptop: reopen as `big-d.html?novt` (crossfades, same builds and chips).
+- No animation at all: the operating system asks for reduced motion. Switch animation effects back on, then Ctrl+R.
+- Keys dead: click the presenter window's top bar. Presenter window closed: press P again in the deck window.
+- Reload only with **Ctrl+R**: slide, stamps, timers and clock come back. F5 is fullscreen and does not reload.
+
+**Tech run in the actual room** (if at all possible): the beamer's aspect ratio, dark vs lit-room mode (L) on the beamer, the pointer visible for the chips, and the heaviest morphs S12a → S12b → S12c.
 
 ---
 
@@ -491,7 +523,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - BIG D or little d?
   - Who decides — and how?
   - Erin Meyer · The Culture Map · Ch. 5 "Big D or Little d: Who Decides, and How?" (the Deciding scale)
-  - [MEMBER 1] · [MEMBER 2] · [MEMBER 3]
+  - [MEMBER 1] · [MEMBER 2] (· [MEMBER 3] only in a three-presenter build)
   - Cross-Cultural Communication · Prof. Sabrina Hegner · HSB · 06.01.2027
   - Definition · Countries · Recommendations · Our cultures · Management implications
 - **Visual & motion:** Clicks: 0.
@@ -596,7 +628,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - S03 → S04a: Morph; the rules card appears large in the centre. B reads it.
   - Clicker → S04b (Morph): the rules card shrinks into the left third. On slide entry the email drops in like a notification (Fly In from the top right, 0.4 s), then the scenario cards fade in (After Previous).
   - Click 1: `!!ClockCons1–4` start (4 × 30 s Wipe, After Previous).
-  - Trigger chips (mouse; cards are not clickable): StampD_T or StampD_M is a teal D slam (Zoom 0.3 s, 6° tilt). StampV_T or StampV_M is the amber VOTE chip. Each sequence also shows the "decided" cover over the clock (With Previous).
+  - Trigger chips (mouse; there from entry; cards are not clickable): **D** under a card (`dT` / `dM`) slams a teal D stamp onto it; **vote** (`vT` / `vM`) the amber VOTE stamp. Each also covers the clock with "decided" and the elapsed time, and stops the clock (§2.7).
   - Click 2: the flip arrow fades in. Click 3: Müller's line fades in.
   - Clicker → S04z: Fade 0.3 s, auto-advance. S04z → S05: Morph.
 - **Talking points:**
@@ -1021,15 +1053,15 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - Headline: Your culture: Big D or little d? Show me.
   - Gesture key
   - Axis with the book's 13 countries as ghost-grey dots, placed at their Country Mapping 2022 positions
-  - Dots: [MEMBER 1: culture] · [MEMBER 2: culture] · [MEMBER 3: culture]
+  - Dots: [MEMBER 1: culture] · [MEMBER 2: culture] (· [MEMBER 3: culture] only in a three-presenter build)
   - Legend: dot = Country Mapping 2022 (generalization) · ring = me · Positions: Erin Meyer, Country Mapping 2022 · relative
 - **Visual & motion:** Clicks: 2.
   - Fade in. `!!AxisDec` returns at full width, with the ghost countries at 25% opacity.
   - Everything on this axis comes from one source. The book's order differs in detail, e.g. Brazil vs the US (see S08b).
-  - Click 1: the white member dots `!!mem1/2/3` bounce in onto their positions.
-  - Click 2: the hollow rings `!!ring1/2/3` bounce in at each member's self-assessed position.
+  - Click 1: the white member dots `!!mem1/2` (`/3` with three presenters) bounce in onto their positions.
+  - Click 2: the hollow rings `!!ring1/2` (`/3` with three presenters) bounce in at each member's self-assessed position.
   - A culture that is not on the map gets a dashed outline labelled *self-assessed*. A bicultural member gets two linked dots.
-  - All three members' dots appear even if one member is absent.
+  - Two dots with two presenters, three with three. A member who is absent on the day keeps their dot: the deck is built for the team size, not for who is present (§1.5).
 - **Talking points:**
   - "Think of your own culture. Big D or little d? Show me." (5 s) "This room alone is a scale."
   - Part II plan: our cultures, how our own team decided, and what managers should do.
@@ -1052,7 +1084,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - Verdict: [D / d]
 - **Visual & motion:** Clicks: 3.
   - Morph from the previous visible slide: `!!mem1` grows into a card.
-  - Every P slide contains all three `!!mem` dots; the other two sit small on an axis strip. This makes any two visible P slides Morph correctly.
+  - Every P slide carries the dot of every team member (P1 and P2 with two presenters; P1–P3 with three); the others sit small on an axis strip. Any two visible P slides morph, also after a jump.
   - Click 1: rails and badge. Click 2: cue icons and episode. Click 3: the verdict glyph (Zoom).
 - **Talking points:** the four cues in §4.4: position and paradox check → episode → nuance (ring vs dot) → team need and verdict.
 - **Source:** Country Mapping 2022 (region page for [MEMBER 1: culture]); Lecture III, slide 34 (Bennett, 2001).
@@ -1068,7 +1100,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 - **Time:** 3p 2:00 (29:30–31:30)
 - **Speaker:** Member 3
 - **On screen / visual / talking points:** the same template with Member 3's slots.
-- **Rule:** whichever member is absent, hide only their own P slide (30, 31 or 32).
+- **Rule:** S17b exists only in a three-presenter build. With two presenters, position 32 is an unused slot (Next skips it, no folio, no export). An absent member's P slide is not hidden by hand: it is presented in the third person or jumped over (§1.5).
 - **Source:** as S16.
 
 ### S18 — How did WE decide this presentation?
@@ -1077,7 +1109,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 - **On screen:**
   - Breadcrumb: II · OUR CULTURES · TEAM
   - Headline: How did WE decide this presentation?
-  - All three member dots · a bracket across the widest pair: gap: [small / medium / large]
+  - The member dots (two with two presenters, three with three) · a bracket across the widest pair: gap: [small / medium / large]
   - Our concept decision: [TEAM: who proposed · how we agreed · revisited?] → [D / d]
   - [WIDEST PAIR X↔Y]: more consensual-side member × more top-down-side member → risk: [TEAM: …] · fix: [TEAM: …]
 - **Visual & motion:** Clicks: 3.
@@ -1119,7 +1151,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - Tiny corner: → 36
 - **Visual & motion:** Clicks: 3, plus the stamp chip.
   - Fade in. The proposal appears in the S04 email-card style.
-  - A small trigger chip (TrigD_S20) sits beside it. A clicks it only if nearly everyone stands, and a teal D stamps on (StampD_S20).
+  - A small **D** chip (trigger `d20`) arrives with click 1, beside the stand-up line. A clicks it only if nearly everyone stands, and a teal D stamps onto the proposal card.
   - Click 1: the stand-up line. Click 2: `!!D` and `!!d` return side by side, a bookend to S01, with a "?" between them. Both stay; neither fades. Click 3: "Q&A runs on little d."
   - The final screen stays up for Q&A. The visible copy S20e (slide 41), after the hidden hub, catches a stray clicker press.
 - **Talking points:**
@@ -1141,7 +1173,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
 | 38 | **H3 Country Mapping by region** | <ul><li>The zone table from §4.3 (relative zones only, no scores).</li><li>Region notes: Europe is a gradient (Nordics and Netherlands far left → Russia far right). Americas: Canada → US → Mexico. The Gulf, India and most mapped African countries are strongly top-down.</li><li>Line: "The 2022 online tool differs in detail from the 2014 book (e.g. Brazil vs US)."</li></ul> |
 | 39 | **H4 Course bridge** | <ul><li>Hofstede: no dimension sorts Deciding (UAI, individualism and consensus orientation lists vs the Deciding positions; §5 Q8). Closest: Consensus-oriented (Sweden, Netherlands, Denmark) vs "Decisive", yet Japan is "Decisive".</li><li>GLOBE Institutional Collectivism ("Decisions are made by group consensus" vs "Decisions are made by individuals in power"): the poles fit, the clusters split (high: Nordic, Confucian Asia incl. China; low: Germanic Europe, Latin Europe). The GLOBE "decisive" quote (Anglo vs Germany/France), course script p. 26.</li><li>Hall: Japan is high-context in the script; nemawashi as informal context is *our link*.</li><li>Osland & Bird's cultural paradoxes; a thumbnail of Lecture I, slide 10 with Japan circled on Leading and Deciding; Meyer's "seemingly paradoxical pattern" (p. 154).</li><li>Bennett's DMIS (Defense → Adaptation); Lencioni as Defense and "small d or big D?" as Adaptation are *ours*.</li></ul> |
 | 40 | **H5 More rails** | Leading × Deciding for more countries, all from the Country Mapping 2022, e.g. Israel (egalitarian, middle on Deciding), UK (middle on both), France (hierarchical, top-down side). |
-| 41 | **S20e** (visible) | Identical copy of S20's end state (keeps the D stamp if it was fired on S20). |
+| 41 | **S20e** (visible) | Identical copy of S20's end state (keeps the D stamp if it was fired on S20), with the same corner chip → 36. |
 
 ---
 
@@ -1153,7 +1185,7 @@ Together the cuts save about 2:40, on top of the 0:45 buffer.
   - The slots stay visible in drafts until they are filled.
   - Never infer a culture from someone's name.
 - **People vs roles:**
-  - P1, P2 and P3 belong to Member 1, 2 and 3, in a fixed order.
+  - P1, P2 and P3 belong to Member 1, 2 and 3, in a fixed order. With two presenters (the default) only P1 (S16) and P2 (S17) exist; P3 (S17b) comes with a three-presenter build (§1.5).
   - Roles A, B and C apply only to Part I and to S15 and S18–S20.
 - **Positions:**
   - On every Part II slide, positions come from the **Country Mapping 2022** only. This is one source, and it is labelled.
@@ -1209,11 +1241,12 @@ Every member answers the same four questions, which form the slide's cue structu
 4. **"So in a team I need…":** [MEMBER n: one sentence], then the D or d verdict. *(about 0:30; 0:15 with 3 presenters)*
 
 ### 4.5 Timing variants
-- **2 presenters:** S15 0:45 · P slide 2:30 · P slide 2:30 · S18 0:45 · S19 2:30 · S20 1:00 = **10:00**.
-- **3 presenters:** S15 0:30 · P1, P2, P3 2:00 each · S18 0:30 · S19 2:00 · S20 1:00 = **10:00**.
+- **2 presenters (default build):** S15 0:45 · S16 (P1) 2:30 · S17 (P2) 2:30 · S18 0:45 · S19 2:30 · S20 1:00 = **10:00**. S17b (32) is an unused slot.
+- **3 presenters (three-presenter build):** S15 0:30 · S16, S17, S17b (P1, P2, P3) 2:00 each · S18 0:30 · S19 2:00 · S20 1:00 = **10:00**.
+- One presenter absent on the day: see §1.5 (P slide in the third person keeps 10:00; jumping over it ends Part II about 2:30 early, 2:00 with three).
 
 ### 4.6 Team mirror (S18)
-- **The gap:** how far apart are the two outermost member dots? Who would get frustrated with whom, and why? Use the Müller/Nicoli pattern: revisions read as being tricked; fixed decisions read as clinging to them.
+- **The gap:** how far apart are the two outermost member dots? With two presenters S18 shows two dots and the bracket spans them; with three it spans the outermost pair. Who would get frustrated with whom, and why? Use the Müller/Nicoli pattern: revisions read as being tricked; fixed decisions read as clinging to them.
 - **Our own decision:** [TEAM STORY: how we chose this concept and split the topics. Who proposed it, how we agreed (one person, a vote, everyone), and whether it was revisited.]
   - Give an honest verdict: big D or little d?
   - Fill this in truthfully. Admitting "we did it top-down" is fine.
