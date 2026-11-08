@@ -137,12 +137,12 @@ The presenter window (key P) shows each checkpoint as *due in m:ss*, *✓ reache
 | ④ | S15 · 25:00 | No cuts in Part II. If you arrive late, the ✂ lines in S15 and S19 are the only flex. | — |
 | Bank | S04 | Instant unanimity, or "Round two, now" in a silent room | up to +1:00 |
 
-The cuts at ①, ② and ③ save about 2:23 together (2:13 without the optional nemawashi reveal). Script §2.9 says about 2:40 (2:30), because three of its values differ from these texts:
+The cuts at ①, ② and ③ save about 2:23 together (2:13 without the optional nemawashi reveal), as in script §2.9.
 
-**Where these texts depart from the script's timing** (deliberate; raised with the script owner):
+**Where these texts changed the script's earlier timing** (raised with the script owner; script §2.1, §2.4, §2.9 and §3 now agree):
 - **S14a call-out: 20 s, not 30 s** (script §2.1, §2.9, §3 S14a). The 0:40 block cannot hold 30 s of call-out plus the scenario, the result, the question, the tick-off and the hand-over (40 words, 0:20). So the §2.9 cut "15 s instead of 30 s" becomes "15 s instead of 20 s" and saves 0:05, not 0:15.
 - **S14c thumbs: about 5 s each, not 2 × 8 s** (script §2.1, §3 S14c). Two 8-s votes would leave 0:04 of the 0:20 block for the two prompts, the two stamps and the hand-over.
-- **S07 late cut: the on-screen quote stays.** Script §2.9 shows the grey dots without speech; but an on-screen quote is never cut, so the cut keeps "First, the usual pattern. Hierarchical cultures, “from Morocco to Korea”, decide top-down." It saves about 0:08, not 0:10.
+- **S07 late cut: the on-screen quote stays.** Script §2.9 showed the grey dots without speech; but an on-screen quote is never cut, so the cut keeps "First, the usual pattern. Hierarchical cultures, “from Morocco to Korea”, decide top-down." It saves about 0:08, not 0:10.
 - **S04b change-of-mind test: about 0:27, not ≤ 0:20** (script §2.4). Its own lines need that long. It is already inside S04b's talk and room time: on the default path the stamp comes by about 6:40, so S05 is on screen by about 7:15 and the 0:15 slack stays free.
 
 All ✂ sentences together hold about 263 words, roughly 2:12 of speech, including the ones in this table. Section 7 lists them per slide. Together with the slide skips and the 0:45 buffer, Part I can absorb a slow Decision #2 without touching Part II.
@@ -382,7 +382,7 @@ Role B facilitates; A clicks, fires the chips and speaks the Müller line (3p: t
 
 **Click 3** — *(Müller's line rises under the cards: MM · M. Müller · German director)*
 **A:** Martina Müller, a German director: **“They casually change the decision every week…”** *[beat]* Relax. Your decision stands. Rule five: no reopening.
-*[The change-of-mind test, from "Great!" to here, takes about 0:27 (script §2.4 says ≤ 0:20). On the default path the stamp comes by about 6:40, so S05 is on screen by about 7:15, and the 0:15 slack stays free.]*
+*[The change-of-mind test, from "Great!" to here, takes about 0:27 (script §2.4 plans ≈ 0:30). On the default path the stamp comes by about 6:40, so S05 is on screen by about 7:15, and the 0:15 slack stays free.]*
 
 **Branch** — *(each line replaces the matching default line; the change-of-mind test after the outcome is the same on every path)*
 - *Switch to M (at least half the room raises a hand for M):* **B:** Round two: Scenario M. Stand up if you agree. *(every [T] after it becomes M; A clicks the chip under the M card, D or vote; say the outcome aloud: Scenario M it is.)*
@@ -487,7 +487,7 @@ Germany slants the other way: hierarchical, yet consensual. So both are **“exc
 **Click 4** — *(teal lines slant far left from Japan and Vietnam; a ring highlights Japan's line; the Japan quote and "Vietnam CM · the same zig-zag, level with Germany")*
 Here is the twist. *[trace Japan's line with your hand]* Japan's line crosses almost the whole map. *[read the quote with a short pause after "hierarchical"]* Japan, although **“…strongly hierarchical is one of the most consensual societies in the world”**. In course terms: a cultural paradox. ✂ The Country Mapping 2022 shows the same zig-zag for Vietnam. So the rule is: **never read Deciding off Leading.** A title does not tell you who decides.
 
-**Branch** — *Late at checkpoint ①:* at click 1 say only "First, the usual pattern. Hierarchical cultures, “from Morocco to Korea”, decide top-down." This departs from script §2.9, which shows the grey dots without speaking: an on-screen quote is never cut, so the cut saves about 0:08, not 0:10.
+**Branch** — *Late at checkpoint ①:* at click 1 say only "First, the usual pattern. Hierarchical cultures, “from Morocco to Korea”, decide top-down." An on-screen quote is never cut, so the cut saves about 0:08 (script §2.9).
 **Hand-over:** **"So where does everybody sit?"** *(2p: A → B · 3p: A → B)*
 **If you blank:** Two scales: how much hierarchy, and who decides. They do not always match. *[click]*
 
@@ -727,7 +727,7 @@ Role A (3p: C) · block 0:40 = talk 0:20 + room 0:20 · 1 click · 40 words
 - *Tie (the facilitator decided; no stamp, dashed outline):* instead of "You stamped a capital D." say: It was a tie, so one person decided. That's top-down too.
 - *Stamp missing (dashed outline):* say the result aloud: You decided this by [consensus / vote].
 - *Silent room after 5 s:* Think of Sheldon. What would he do earlier?
-- *Late at checkpoint ③ (script §2.9):* call-out 15 s. This saves 0:05 here, not 0:15: the script's 30-s call-out does not fit the 0:40 block, so the call-out is 20 s (section 2.3).
+- *Late at checkpoint ③ (script §2.9):* call-out 15 s. This saves 0:05: the call-out is 20 s, because 30 s would not fit the 0:40 block (section 2.3).
 - *The room chose M, but this T card is up:* type 26 + Enter in the presenter window; S14m follows, and Next goes on to S14b.
 
 **Hand-over:** **"Now let's make it exam-proof."** *(2p: A continues · 3p: C continues into S14b)*
@@ -774,7 +774,7 @@ Thumbs? *[let the room read and vote, about 5 s]* *[click]*
 **Click 4** — *(a "✓ TRUE" stamp; reason line "ringi: group agreement, level by level")*
 True. Hierarchical, yet consensual.
 
-**Branch** — *Ahead of time only:* read each reason line aloud as well (about +0:08; with full reasons the slide takes about 0:35, script §3). · *Timing note:* the thumb votes are about 5 s each, not the script's 2 × 8 s (§2.1, §3 S14c): two 8-s votes would leave 4 s for the prompts, the stamps and the hand-over (section 2.3).
+**Branch** — *Ahead of time only:* read each reason line aloud as well (about +0:08; with full reasons the slide takes about 0:35, script §3). · *Timing note:* the thumb votes are about 5 s each (script §2.1, §3 S14c): two 8-s votes would leave 4 s for the prompts, the stamps and the hand-over (section 2.3).
 **Hand-over:** **"That was Meyer's world. Now: ours."** *(2p: A → B · 3p: C continues)*
 **If you blank:** Read the stamp and point at its reason line. *[click]*
 

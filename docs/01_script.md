@@ -120,6 +120,11 @@ The minutes per person are nominal block minutes. Net talk time is listed in §1
 **Live roles**
 - **A** sits at the laptop during both decisions. A uses the clicker for builds and the mouse only for small labelled chips, and runs the presenter window (key **P**: talk clock and checkpoints, §2.9).
 - **B** plays the "CEO" in Decision #1 (a few lines) and facilitates Decision #2 (the hardest live moment).
+- **Clicker rule:** one clicker, and the speaker holds it. At a speaker change, the outgoing speaker says the hand-over line, clicks to the next slide and passes the clicker. Three exceptions, where A keeps the clicker and the mouse at the laptop and the speaker cues A with a look:
+  - **S04a–S04b** (B facilitates): A clicks every build and fires the stamp chips. B passes the clicker to A at the end of S03.
+  - **The S12b chip "→ 24"** (B speaks): only A touches the mouse.
+  - **S19–S20, to the end** (also with three presenters): A clicks every card of S19, the S20 builds and the S20 D chip. The S18 speaker passes the clicker to A at the end of S18.
+- A also uses the mouse for the chips on A's own slides (MUNICH → 3, M → 26, II → 29) and for "→ 36" in the Q&A.
 
 **Complexity is balanced, not just minutes**
 - A carries the conceptual core: the definition and timelines, the Leading/Deciding paradox, the mixed-team protocol, and (with two presenters) Tokyo, ringi and the exam card.
@@ -168,11 +173,13 @@ These lines work whoever is speaking. The next slide's headline answers the line
 | S13 → S14 | "Your turn. Remember the scenario you chose?" |
 | S14a → S14b | "Now let's make it exam-proof." (same speaker) |
 | S14 → S15 | "That was Meyer's world. Now: ours." |
-| S15 → first P slide | "[MEMBER 1], you first — where does your dot land?" (use the first member present) |
+| S15 → first P slide | "[MEMBER 1], you first — where does your dot land?" (use the first member present; if that is the speaker, the self-variant below) |
 | P slide → next P slide | "[MEMBER n], where does your dot land?" |
 | last P slide → S18 | "Different dots, one team. So how did WE decide?" |
 | S18 → S19 | "What should managers do about gaps like ours?" |
 | S19 → S20 | "Which brings us to one last decision." |
+
+- **S15 self-variant (planned; the team may change it):** if the S15 speaker is Member 1, or is the first member present when Member 1 is absent, the S15 line becomes "Let me go first. Where does my dot land?" With two presenters this happens when Member 1 holds role B.
 
 ### 1.5 Drop-out protocol and rehearsal
 
@@ -190,6 +197,11 @@ These lines work whoever is speaking. The next slide's headline answers the line
   - **Third person:** present it from what is on their slide ("[MEMBER n] places …"), learned beforehand from their fill-in sheet (§4.2). Add nothing that is not on the sheet.
   - **Jump over it:** Member 1 absent: at the end of S15 type `31` + Enter (lands on S17). Member 2 absent: at the end of S16 type `33` + Enter (lands on S18). Part II then ends about 2:30 early, and Q&A gets the time.
 - §1.4's S15 hand-over goes to the first member present. A P slide presented in the third person needs no hand-over question: the speaker simply goes on.
+- **Solo and absent lines** (these are the planned solo/absent lines, as in the speaking texts; the team may change them):
+  - S01: "I'm [MEMBER n: name], presenting for both of us today." The rest as written.
+  - S02: no interruption. The speaker steps to the side for every CEO line (including "Change of plan…") and steps back for the host lines.
+  - S15: the self-variant hand-over for the first member present (§1.4); in the Member 1 jump variant, say it, then type `31` + Enter instead of the click.
+  - S16, third-person endings: Member 2 absent: end S16 without "[MEMBER 2], where does your dot land?", click, and present S17 in the third person. Member 1 absent (S16 presented in the third person): end S16 with "And where does my dot land?"
 - **Three-presenter build, one absent:** the same two ways (jumps: P1 from S15 to `31`, P2 from S16 to `32`, P3 from S17 to `33`), then use the 2-presenter role table (§1.3) for the two present. Only if Member 3 is the absent one can the deck be rebuilt the evening before with `"presenters": 2`, which removes exactly member 3's name, dot and slide.
 
 **Rehearsal: three full runs with a stopwatch, plus block drills**
@@ -214,17 +226,17 @@ These lines work whoever is speaking. The next slide's headline answers the line
 |---|---|---|---|---|
 | Decision #1 | S02 · 0:30 | Top-down: one person decides | Watches; one show of hands ("would have picked Munich") | Decision ≤ 10 s; block 2:00 |
 | Micro-poll "Team Larry or Team Matthias?" | S02 · ~2:15 | Show of hands | Hands | 10 s |
-| Decision #2 | S04 · 4:00 (clock 4:40–6:40) | Consensual: unanimity | Stand up (or both hands up) = agree; seated = concern | Deliberation 2:00; block 3:30, hard |
-| Change-of-mind test | S04 · ~6:55 | Little-d sting on the room's decision | Reacts (or not, which is covered) | 20 s |
+| Decision #2 | S04 · 4:00 (clock ≈ 4:55–6:55) | Consensual: unanimity | Stand up (or both hands up) = agree; seated = concern | Deliberation 2:00; block 3:30, hard |
+| Change-of-mind test | S04 · ~6:40 | Little-d sting on the room's decision | Reacts (or not, which is covered) | ≈ 0:30 |
 | Debrief poll "Which flip felt worse?" | S05 · ~9:10 | Hands | Hands | 10 s |
 | D/d gesture introduced | S05 · ~9:40 | Big D = both arms up; little d = one index finger | Gesture | 5 s |
 | "Who would have hit delete?" | S09a · ~15:15 | Hands | Hands | 5 s |
 | Nemawashi reveal (only if you really held the talks; option on) | S11d · ~19:10 | Hands | "Hands up if we talked to you in December" | 10 s |
 | Quick-fire (2 cards) | S12b–c · ~21:00 | D/d gesture | Gesture | 10 s each |
-| Apply your scenario | S14a · ~22:50 | Call-out | Name moves | 30 s |
-| True/false | S14c · ~24:00 | Thumbs | Thumbs up/down | 2 × 8 s |
+| Apply your scenario | S14a · ~22:50 | Call-out | Name moves | 20 s |
+| True/false | S14c · ~24:00 | Thumbs | Thumbs up/down | ≈ 5 s per vote |
 | Room maps itself | S15 · ~25:05 | D/d gesture | Gesture | 5 s |
-| Final stand-up + callback | S20 · ~34:10 | Stand + gesture | Stand; gesture D or d | 30 s |
+| Final stand-up + callback | S20 · ~34:10 | Stand + gesture | Stand (or raise both hands); gesture D or d | 30 s |
 
 - No props are used anywhere. Standing up and gestures are not aids.
 - Nothing depends on WLAN. There is no phone poll in the deck: the rule says "no other aids", and hands work better for consensus because people see each other agree.
@@ -253,9 +265,12 @@ These lines work whoever is speaking. The next slide's headline answers the line
 - *Nobody raises a hand for Munich:* "Nobody? Then top-down worked perfectly — or nobody dared."
 - *The chip misfires:* type `3` + Enter, or simply say "New York" and continue on the default path.
 
-**Involving the professor respectfully (optional).** Do this only if she agreed in the mid-December email (§2.10). That email is itself a little nemawashi.
+**Involving the professor respectfully (optional).** Do this only if she agreed in the mid-December email (§2.10), including the switch question. That email is itself a little nemawashi.
 - A says: "Prof. Hegner, you're the boss today — New York or Munich?"
 - If she hesitates for more than 5 seconds, B says: "Then — top-down — I decide."
+- If she says Munich, A clicks the chip "MUNICH → 3", as on the CEO path.
+- **If she chose, there is no CEO on this path:** B never speaks "as the CEO" and never overrules her with "Change of plan". A: "Hands up if you'd have picked [the other city]." B, to the room (not to her): "Noted. Your input was not solicited. Welcome to top-down."
+- **The flip goes to her, the boss.** After the first story, B asks her: "Professor Hegner, new data from [the other city]. Do we switch?" She says yes, as agreed; A sighs "We'd only just started…" and clicks (REVISED). If she says no, A: "The boss keeps it. In Meyer's merger, they switched." Then A clicks.
 - The default is always a presenter as CEO. She is the decision-maker, never the joke, and she is **never** asked to vote, stamp or approve anything in Decision #2.
 
 ### 2.3 Decision #2: consensual (S04)
@@ -273,13 +288,13 @@ These lines work whoever is speaking. The next slide's headline answers the line
 |---|---|---|---|
 | 4:00 | B | **S04a.** The rules card fills the screen. "Before we decide, we agree HOW we decide." B reads the five lines, then asks: "Can we all live with these rules?" | Nods |
 | 4:25 | B | Clicker → **S04b.** The proposal drops in as an email card (labelled *our email · Per-style*): "Hey class — I thought we could practise **Scenario T** at the end of Part I. What do you think?" Scenario M is on the table as the alternative. Both are marked *fictional exercises*. | Reads |
-| 4:40 | B / A | Round 1: "Stand up — or raise both hands — if you agree with T. Stay seated if you have a concern. Seated is a voice, not a veto." A clicks and the teal clock starts (it ends at 6:40). | Stand or sit |
-| 4:40–4:50 | B | **Seated but silent after one invitation (≤ 10 s):** "No concern voiced? Round 2 — now." If the room is still not unanimous, vote immediately: rule ④ sets no waiting time. Bank the saved time. | — |
-| 4:50–5:50 | B | **If concerns are voiced:** hear at most **2**, 20–30 s each, and **repeat each one aloud**. Amend the proposal, or switch to M. Charlotte-style question **(ours)**: "Who could support M if others don't agree?" | Speak |
-| 5:50–6:20 | B | Round 2: stand or sit again on the amended proposal or on M. | Stand or sit |
-| ≤ 6:55 | B / A | **Unanimous:** "Decision made — capital D. No more discussion." A clicks the small **D** chip under the winning card: a teal **D** stamp slams down, and a "decided" panel covers the clock. **Not unanimous when the clock ends (6:40):** "Time. Rule ④: majority vote, everyone commits." Show of hands, then A clicks the **vote** chip under the winner: the amber stamp **VOTE · a top-down technique (Meyer, p. 159)** appears. B: "Look at the stamp — Meyer lists the vote among her top-down techniques." Note dissent aloud. | Hands |
-| 6:55–7:15 | B / A | Change-of-mind test (§2.4) | Reacts |
-| 7:15–7:30 | — | Slack. Clicker → auto-bridge → S05, on screen by 7:30 (checkpoint 1). | |
+| ≈ 4:55 | B / A | Round 1: "Stand up — or raise both hands — if you agree with T. Stay seated if you have a concern." A clicks and the teal clock starts (it ends at ≈ 6:55). B scans the room, then: "Thank you. Please sit down." | Stand or sit |
+| 4:55–5:05 | B | **Seated but silent after one invitation (≤ 10 s):** "No concern voiced? Round 2 — now." If the room is still not unanimous, vote immediately: rule ④ sets no waiting time. Bank the saved time. | — |
+| 5:05–6:05 | B | **If concerns are voiced:** hear at most **2**, at most **20 s** each (at 20 s: "Thank you — in one sentence?"), and **repeat each one aloud**. Amend the proposal, or switch to M. Charlotte-style question **(ours)**: "Who could support M if others don't agree?" **Round-two rule:** at least half the room for M → round two on M; otherwise round two on T plus their change. | Speak |
+| 6:05–6:35 | B | Round 2: stand or sit again on T plus the change, or on M. **No round two when the clock shows 0:20 or less:** let it run out and take the vote path. | Stand or sit |
+| ≈ 6:40 (vote path ≈ 6:55) | B / A | **Unanimous:** "Decision made — capital D. No more discussion." A clicks the small **D** chip under the winning card: a teal **D** stamp slams down, and a "decided" panel covers the clock. B: "Please sit down." **Not unanimous when the clock ends (≈ 6:55):** "Time. Please sit down. Rule ④: majority vote, everyone commits." Show of hands, then A clicks the **vote** chip under the winner: the amber stamp **VOTE · a top-down technique (Meyer, p. 159)** appears. B: "Look at the stamp — Meyer lists the vote among her top-down techniques." Note dissent aloud. | Hands |
+| ≈ 6:40–7:10 | B / A | Change-of-mind test (§2.4, ≈ 0:30), then B: "Two decisions, two clocks. Look at them." | Reacts |
+| ≈ 7:15 | — | Clicker → auto-bridge → S05, on screen by ≈ 7:15 on the default path. 7:15–7:30 is slack; checkpoint ① stays 7:30. | |
 
 **Fallbacks**
 - *Instant unanimity (under 20 s):* "Fast for a consensus. Real agreement, social pressure — or root-binding? Hold that thought." This pays off in S11. Bank the saved time.
@@ -289,15 +304,18 @@ These lines work whoever is speaking. The next slide's headline answers the line
   - Never single out a random quiet student.
 - *Chaotic room:* the facilitator repeats concerns instead of letting people argue across the room. The clock decides with no extension, because the deadline was agreed.
 - *Tie at the deadline:* "Tie: our rules can't break it, so the facilitator decides — one person, top-down." A clicks no stamp; B states the result.
+- *Vote or tie path:* expect S05 about 0:30 late (red), because the vote lines and the change-of-mind test run past the ≈ 6:55 deadline. Do not wait for the presenter window: take the vote-path cuts in §2.9 at once.
 - *Someone can't or won't stand:* "both hands up" counts the same. Say this in round 1.
 - *A stamp trigger fails, or a stray click fires the flip arrow early:* say the result out loud. For an early arrow, A presses ← once to undo the last build. The outcome lives in the room, and S14 is named aloud.
 - *The professor:* she is not asked to take part. If she joins spontaneously, she counts as one voice.
 
-### 2.4 Change-of-mind test (end of S04, ≤ 20 s; the same on both paths)
-1. **B:** "Great — decision made!" (beat) "Actually… new data just came in. Let's do the other scenario." A clicks, and an amber arrow labelled *new data?* fades in between the cards.
+### 2.4 Change-of-mind test (end of S04, ≈ 0:30; the same on both paths)
+1. **B:** "Great!" (beat) "Actually… new data just came in. Let's do the other scenario." A clicks, and an amber arrow labelled *new data?* fades in between the cards. Only "Great!": on the unanimous path B has just said "Decision made — capital D".
 2. Pause for 2 seconds. **B:** "How does that feel?" Take **one** reaction. If nobody reacts within 2 seconds, **B:** "Nobody minds? Martina Müller would have."
 3. A clicks, and Müller's line fades in. **A:** "That's Martina Müller, a German director in the merger: [SCREEN] *'They casually change the decision every week…'* Relax — your decision stands. Rule ⑤: no reopening."
 4. The payoff comes in S05: "Which flip felt worse — the CEO's or ours? Same move, different rules." This works with or without protests.
+
+Steps 1–3 take about 0:27, so plan ≈ 0:30. On the default path the stamp comes by ≈ 6:40, so S05 is on screen by ≈ 7:15 and the 0:15 slack before checkpoint ① (7:30) stays free (§2.3).
 
 ### 2.5 D/d gesture and micro-polls
 - **The gesture:** Big D = both arms up, wide. Little d = one index finger.
@@ -307,6 +325,7 @@ These lines work whoever is speaking. The next slide's headline answers the line
 
 ### 2.6 How the professor is involved
 - *Optional:* she can be "the boss" in Decision #1, only if she agreed beforehand. A presenter takes over after 5 seconds.
+- If she decides, the flip goes to her as a question ("Do we switch?"), never as B's "Change of plan" (§2.2).
 - *Never:* she is not part of the consensual vote, the stamp, or the final stand-up.
 - In Q&A she is the expert in the room. The backup hub answers questions on course theory.
 
@@ -425,19 +444,22 @@ The full rules are in `deck/README.md` (engine, keys, exports, "Present the real
 
 | When | Slide | Cut | Type | Saves |
 |---|---|---|---|---|
-| Late at ① | S05 | Skip the debrief poll; say only "Same move. Different rules." | speech | 0:15 |
+| Late at ① | S05 | Skip the debrief poll; keep "Same move. Different rules." and the path line | speech | ≈ 0:12 |
 | | S06 | Both roots in one line ("pioneers vs boards") | speech | 0:20 |
-| | S07 | Show the grey usual-pattern dots without speaking about them | speech | 0:10 |
-| | S08a | No "find your country" pause; clusters only | speech | 0:15 |
+| | S07 | The usual pattern in one sentence: "First, the usual pattern. Hierarchical cultures, 'from Morocco to Korea', decide top-down." The on-screen quote stays | speech | 0:08 |
+| | S08a | No "find your country" pause and none of its ✂ sentences; clusters only | speech | 0:21 |
 | | S08b | One sentence | speech | 0:10 |
-| | S09a/b | No poll; Per's view of Americans in one line | speech | 0:20 |
+| | S09a/b | No delete poll; drop Per's upside line (his two on-screen quotes stay) | speech | ≈ 0:12 |
 | Late at ② | S11d | Skip the nemawashi reveal (only if you really held the talks; option on) | speech | 0:10 |
 | | S12b | Skip quick-fire 2: click the chip "→ 24" | whole-slide skip | 0:25 |
-| Late at ③ | S14a | Call-out 15 s instead of 30 s | speech | 0:15 |
+| Late at ③ | S14a | Call-out 15 s instead of 20 s | speech | 0:05 |
 | | S14b | Skip true/false: click the chip "II → 29" | whole-slide skip | 0:20 |
+| *Vote or tie path* (S05 ≈ 0:30 late; act at once, without waiting for red) | S05 | Skip the debrief poll and the two vote-path ✂ lines | speech | ≈ 0:24 |
+| | S06 | Both roots in one line | speech | 0:20 |
+| | S08a | No "find your country" pause and none of its ✂ sentences | speech | 0:21 |
 | *Bank* | S04 | Instant unanimity, or "Round 2 — now" in a silent room | — | up to +1:00 |
 
-Together the cuts save about 2:40 (2:30 without the optional nemawashi reveal), on top of the 0:45 buffer.
+Together the cuts at ①, ② and ③ save about 2:23 (2:13 without the optional nemawashi reveal), on top of the 0:45 buffer. The vote-path rows take the S05, S06 and S08a cuts early, as soon as Decision #2 ends in a vote or a tie: about 1:05 against the vote-path text, so S09a is back on time.
 
 ### 2.10 Submission, static exports, logistics
 
@@ -462,6 +484,8 @@ Together the cuts save about 2:40 (2:30 without the optional nemawashi reveal), 
 - Is it fine to present from our browser file (offline, no notes, a clock-only presenter window on the laptop), given the rule "Only a PowerPoint presentation without notes"? We email the .pptx and a PDF of the same slides by 05.01. If not, we present from the .pptx.
 - Is audience movement (standing up) fine?
 - Would she like to play "the boss" in Decision #1?
+  - If so: her choice will be "revised" on screen as part of the demo (the REVISED banner, then the other city's story).
+  - Will she answer yes when B asks "Professor Hegner, new data from [the other city]. Do we switch?" (§2.2)
 - Is the presenter window (talk clock, no notes) acceptable as our time source?
 
 **If we must present from the .pptx (fallback):** every slide shows its final state at once (no builds), and the chips and the S04b clock do not work, so outcomes are said aloud. Slide numbers differ from the deck, because S04z and the unused S17b are not in the file (so the numbers printed on the chips are wrong there): S02M stays **3**, S14M is **25**, H1 is **34** (type the number + Enter in the slide show). The PDF works as the last resort: main flow on pages 1–31, appendix on 32–38 (S02M 32, S14M 33, H1 34).
@@ -669,7 +693,7 @@ Together the cuts save about 2:40 (2:30 without the optional nemawashi reveal), 
   - **Top-down (Fig. 5.2), cue:** one person, likely the boss, decides quickly and early. But [SCREEN] "each decision is also flexible—a decision with a lowercase d". New information reopens it, plans keep being revised, so implementation can take a long time.
   - **Debrief:**
     - Both paths: "Hands up: which flip felt worse — the CEO's… or ours?" → "Same move. Different rules."
-    - Vote path: "Two minutes weren't enough for consensus — that's Fig. 5.1's price: time. The German side circulated its agendas twice; Meyer says ringi decisions take a long time."
+    - Vote path: "Two minutes weren't enough for consensus — that's Fig. 5.1's price: time. The German side circulated its agendas twice; and in Japan, Meyer says, decisions take a long time — more on that soon."
     - Unanimous path: "You reached a capital D — and rule ⑤ held."
   - **Mnemonic (ours):** slow in, fast out vs fast in, slow out (flexible).
   - **Gesture:** "The system you just tried — show me." (arms up) "The CEO's system — show me." (one finger)
@@ -993,13 +1017,13 @@ Together the cuts save about 2:40 (2:30 without the optional nemawashi reveal), 
   - Moves: Start nemawashi now · Quality of information · Expect it to stick
 - **Visual & motion:** Clicks: 1.
   - Fade in. The card sits at the centre with a dashed outline. There is no fixed stamp, because S04 had four possible outcomes.
-  - After the 30 s call-out, one click reveals the three move icons in a fixed order (Fly In from the S12 chip positions, staggered After Previous).
+  - After the 20 s call-out, one click reveals the three move icons in a fixed order (Fly In from the S12 chip positions, staggered After Previous).
   - **S14M (slide 26, hidden):** SCENARIO M · German–American supplier by Friday. Moves: Agree the method first · Label: small d or big D? · Deadline + flexibility after.
 - **Talking points:**
   - Name the room's result aloud.
     - Unanimous: "You stamped a capital D — and rule ⑤ held. That's Big-D buy-in."
     - Vote: "You decided by vote — Meyer files that under top-down. Would you defend it as hard?"
-  - "Which three moves do you use?" The room calls out for 30 s. Then reveal the moves and tick off aloud the ones the room named.
+  - "Which three moves do you use?" The room calls out for 20 s. Then reveal the moves and tick off aloud the ones the room named.
   - **T:** get in early and informally, invest in the quality and completeness of the information, don't push, expect the decision to stick.
   - **M:** agree the method at kick-off (vote or boss? 100%? Friday deadline? flexibility after?), and label decisions small d or big D.
   - → "Now let's make it exam-proof."
@@ -1028,7 +1052,7 @@ Together the cuts save about 2:40 (2:30 without the optional nemawashi reveal), 
 - **Source:** Lecture I, slide 7 (exam format "Explain the difference between… give an example for…"); Meyer pp. 145–160.
 
 ### S14c — True or false?
-- **Time:** 0:20 (23:55–24:15). That holds only with one short reason per statement (two 8-s thumb votes + 4 clicks); with full reasons it takes about 0:35 and eats 0:15 of the buffer. It is also the first cut when late (S14b chip "II → 29").
+- **Time:** 0:20 (23:55–24:15). That holds only with one short reason per statement (two thumb votes of about 5 s each + 4 clicks); with full reasons it takes about 0:35 and eats 0:15 of the buffer. It is also the first cut when late (S14b chip "II → 29").
 - **Speaker:** 2p A · 3p C
 - **On screen:**
   - Headline: True or false? Thumbs.
@@ -1067,7 +1091,7 @@ Together the cuts save about 2:40 (2:30 without the optional nemawashi reveal), 
   - Part II plan: our cultures, how our own team decided, and what managers should do.
   - Reading lens: the dot is a predominant tendency, the ring is me. Bennett: an individual may show the group tendency a lot, a little, or not at all.
   - If a member is absent: "[MEMBER n] couldn't be here — their dot stays; they were part of every decision."
-  - → "[MEMBER 1], you first — where does your dot land?" (use the first member present)
+  - → "[MEMBER 1], you first — where does your dot land?" (use the first member present; if that is the speaker, the self-variant in §1.4)
 - **Source:** Country Mapping 2022; Lecture III, slide 34 (Bennett, 2001).
 
 ### S16 — P1 · [MEMBER 1: name · culture(s)]
@@ -1155,8 +1179,8 @@ Together the cuts save about 2:40 (2:30 without the optional nemawashi reveal), 
   - Click 1: the stand-up line. Click 2: `!!D` and `!!d` return side by side, a bookend to S01, with a "?" between them. Both stay; neither fades. Click 3: "Q&A runs on little d."
   - The final screen stays up for Q&A. The visible copy S20e (slide 41), after the hidden hub, catches a stray clicker press.
 - **Talking points:**
-  - B: the proposal. "Stand up if you'll take this with you." If not everyone stands: "Not everyone — so it's a little d. Fair."
-  - A: "Three decisions today: the CEO's took seconds, yours took minutes, and the third is yours alone — how you'll decide in your next international team. So — was that a big D or a little d?" The room gestures. "Depends on whether you revisit it tomorrow."
+  - B: the proposal. "Stand up, or raise both hands, if you'll take this with you." If not everyone stands: "Not everyone — so no capital D. It stays open, like a little d. Fair."
+  - A: "Three decisions today: the CEO's took seconds, yours took minutes, and the third is yours alone — how you'll decide in your next international team. So — was that a big D or a little d? Show me." The room gestures. "Depends on whether you revisit it tomorrow."
   - "Q&A runs on little d — we'll revisit anything. Questions?"
 - **Source:** Meyer pp. 160–161.
 
