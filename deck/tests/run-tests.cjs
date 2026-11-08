@@ -382,7 +382,7 @@ test('Shift+R resets live outcomes, timers, triggers and the talk clock', async 
 
 const VT_SPY = () => {
   const orig = Document.prototype.startViewTransition;
-  window.__vt = { calls: 0, old: [], fresh: [] };
+  window.__vt = { calls: 0, old: [], fresh: [], same: [] };
   if (!orig) return;
   Document.prototype.startViewTransition = function (arg) {
     const cb = typeof arg === 'function' ? arg : arg && arg.update;
@@ -391,6 +391,7 @@ const VT_SPY = () => {
     const wrapped = () => {
       const r = cb ? cb() : undefined;
       window.__vt.fresh.push(Array.from(document.querySelectorAll('[data-morph]')).map((n) => n.style.viewTransitionName).filter(Boolean));
+      window.__vt.same.push(Array.from(document.querySelectorAll('[data-morph-same]')).map((n) => n.closest('.slide').id + ':' + n.getAttribute('data-morph')));
       return r;
     };
     return orig.call(this, wrapped);
@@ -950,6 +951,198 @@ test('regression: tools/build.cjs --strict accepts quoted SVG data URIs with url
       assert(!/WARNING/.test(l), 'design ' + d + ' builds cleanly: ' + l);
     }
   }
+});
+
+test('regression: lit-room mode: key L toggles a root class, persists across reload and Shift+R, listed in help, ?lit forces it', async () => {
+  await withDeck({}, async (page) => {
+    const lit = () => page.evaluate(() => document.documentElement.classList.contains('deck-lit'));
+    eq(await lit(), false, 'off by default');
+    await page.keyboard.press('l');
+    eq(await lit(), true, 'L turns it on');
+    eq(await page.evaluate(() => [Deck.isLit, Deck.state().lit]), [true, true], 'API reports it');
+    eq(await where(page), 's01/0', 'L does not navigate');
+    await page.reload();
+    await page.waitForFunction(() => window.Deck && window.Deck.isReady);
+    eq(await lit(), true, 'persisted across a reload');
+    await page.keyboard.press('Shift+R');
+    eq(await lit(), true, 'Shift+R keeps the room condition');
+    await page.keyboard.press('Shift+L');
+    eq(await lit(), false, 'Shift+L also toggles');
+    await page.evaluate(() => Deck.lit(true));
+    eq(await lit(), true, 'Deck.lit(true)');
+    await page.evaluate(() => Deck.lit(false));
+    eq(await lit(), false, 'Deck.lit(false)');
+    await page.keyboard.press('?');
+    const help = await page.evaluate(() => document.querySelector('.deck-help-card').innerText);
+    assert(/\bL\b/.test(help) && /lit-room/i.test(help), 'help overlay lists L: ' + help);
+    await page.keyboard.press('Escape');
+  });
+  await withDeck({ query: '?lit' }, async (page) => {
+    eq(await page.evaluate(() => document.documentElement.classList.contains('deck-lit')), true, '?lit forces it on');
+  });
+});
+
+test('regression: lit-room mode syncs to the presenter window and its panes; L and the button in the presenter drive the deck', async () => {
+  await withDeck({}, async (page, context) => {
+    const [pres] = await Promise.all([context.waitForEvent('page'), page.keyboard.press('p')]);
+    await pres.waitForLoadState('load');
+    await pres.waitForFunction(() => document.documentElement.classList.contains('dp-connected'), null, { timeout: 5000 });
+    await page.keyboard.press('l');
+    await pres.waitForFunction(() => document.querySelector('.dp-flags').textContent.includes('LIT'));
+    const curFrame = pres.frame({ url: /embed=current/ });
+    const nextFrame = pres.frame({ url: /embed=next/ });
+    await curFrame.waitForFunction(() => document.documentElement.classList.contains('deck-lit'));
+    await nextFrame.waitForFunction(() => document.documentElement.classList.contains('deck-lit'));
+    await pres.keyboard.press('l');
+    await page.waitForFunction(() => !document.documentElement.classList.contains('deck-lit'));
+    await curFrame.waitForFunction(() => !document.documentElement.classList.contains('deck-lit'));
+    await pres.click('.dp-btn[data-dp="lit"]');
+    await page.waitForFunction(() => document.documentElement.classList.contains('deck-lit'));
+    await pres.waitForFunction(() => document.querySelector('.dp-flags').textContent.includes('LIT'));
+    await pres.close();
+  });
+});
+
+test('regression: folio hook: visible slides numbered, hidden ones unnumbered and tagged, a bridge repeats its predecessor, data-folio-text filled and padded', async () => {
+  const expectFolios = ['s01:1', 's02:2', 's02m:', 's03:3', 's04:4', 's04z:4', 's05:5', 's06:6', 's06m:', 's07:7', 'h1:', 's07e:8'];
+  await withDeck({}, async (page) => {
+    const r = await page.evaluate(() => ({
+      folios: Array.from(document.querySelectorAll('#stage .slide')).map((s) => s.id + ':' + s.getAttribute('data-folio')),
+      hiddenKinds: Array.from(document.querySelectorAll('#stage .slide[data-folio-hidden]')).map((s) => s.id + ':' + s.getAttribute('data-folio-hidden')),
+      total: document.getElementById('stage').getAttribute('data-folio-total'),
+      api: Deck.slides.map((s) => s.folio),
+      s02: document.querySelector('#s02 [data-folio-text]').textContent,
+      s02m: document.querySelector('#s02m [data-folio-text]').textContent,
+    }));
+    eq(r.folios, expectFolios, 'data-folio per slide');
+    eq(r.hiddenKinds, ['s02m:variant', 's06m:variant', 'h1:backup'], 'hidden slides tagged');
+    eq(r.total, '8', 'visible total (the auto bridge s04z is not counted)');
+    eq(r.api, expectFolios.map((f) => f.split(':')[1]), 'Deck.slides[].folio');
+    eq(r.s02, '02', 'folio text, zero-padded to 2');
+    eq(r.s02m, '', 'a hidden slide shows no number');
+    await goTo(page, 's03');
+    eq(await page.evaluate(() => Deck.state().folio), '3', 'state().folio');
+  });
+  await withDeck({ query: '?print' }, async (page) => {
+    const r = await page.evaluate(() => ({
+      folio: document.getElementById('s07e').getAttribute('data-folio'),
+      tags: Array.from(document.querySelectorAll('.slide[data-folio-hidden] > .deck-variant-tag')).filter((t) => getComputedStyle(t).display !== 'none').length,
+    }));
+    eq(r, { folio: '8', tags: 3 }, 'print keeps folios and tags every hidden slide');
+  });
+});
+
+test('regression: data-morph-same marks incoming morph partners whose text is unchanged, only during the transition', async () => {
+  await withDeck({ init: VT_SPY }, async (page) => {
+    await page.keyboard.press('ArrowRight'); // s01 -> s02: crumb, title and tiles all change
+    await settle(page);
+    let vt = await page.evaluate(() => window.__vt);
+    eq(vt.same[0], [], 'nothing unchanged on s01 -> s02');
+    await page.evaluate(() => Deck.go('s02', Deck.slides.find((x) => x.id === 's02').steps));
+    await settle(page);
+    await page.keyboard.press('ArrowRight'); // s02 -> s03: the parked sliver keeps its words, the crumb changes
+    await settle(page);
+    vt = await page.evaluate(() => window.__vt);
+    const same = vt.same[vt.same.length - 1];
+    assert(same.includes('s03:clockTD'), 'unchanged sliver marked: ' + same);
+    assert(!same.includes('s03:crumb') && !same.includes('s03:title'), 'changed words not marked: ' + same);
+    eq(await page.evaluate(() => document.querySelectorAll('[data-morph-same]').length), 0, 'marks cleared after the transition');
+  });
+});
+
+test('regression: ?noauto holds an auto-advance bridge (screenshots), the default still advances', async () => {
+  await withDeck({ query: '?noauto', hash: '#s04z' }, async (page) => {
+    await page.waitForTimeout(900);
+    eq(await where(page), 's04z/0', 'bridge held with ?noauto');
+  });
+  await withDeck({ hash: '#s04z' }, async (page) => {
+    await page.waitForFunction(() => Deck.state().id !== 's04z', null, { timeout: 5000 });
+  });
+});
+
+test('regression: paper print variant: ?print&paper sets deck-paper (dark stays default); export-pdf --paper', async () => {
+  await withDeck({ query: '?print&paper' }, async (page) => {
+    eq(await page.evaluate(() => ['deck-print', 'deck-paper'].map((c) => document.documentElement.classList.contains(c))), [true, true], 'paper print classes');
+    eq(await page.evaluate(() => Deck.paper), true, 'Deck.paper');
+  });
+  await withDeck({ query: '?print' }, async (page) => {
+    eq(await page.evaluate(() => document.documentElement.classList.contains('deck-paper')), false, 'dark print is the default');
+  });
+  const outFile = path.join(OUT, 'demo-paper.pdf');
+  fs.rmSync(outFile, { force: true });
+  const log = run(['tools/export-pdf.cjs', 'slides/demo.html', outFile, '--paper']);
+  assert(/paper variant/.test(log) && /12 pages for 12 slides/.test(log), 'export log: ' + log);
+  assert(fs.statSync(outFile).size > 10000, 'paper PDF written');
+});
+
+/* ------------------------------------------------------- deck source tools */
+
+test('tools/assemble.cjs: the Noir deck in manifest order (41 slides), private --out copies, --out kept inside slides/', async () => {
+  const out = path.join(DECK, 'slides', '.tmp-test-assemble.html');
+  fs.rmSync(out, { force: true });
+  const log = run(['tools/assemble.cjs', '--out', out]);
+  assert(/41 slides from 8 groups/.test(log), 'assemble log: ' + log);
+  const man = JSON.parse(fs.readFileSync(path.join(DECK, 'slides', 'src', 'manifest.json'), 'utf8'));
+  const html = fs.readFileSync(out, 'utf8');
+  const ids = Array.from(html.matchAll(/<section\b[^>]*\bid="([^"]+)"/g)).map((m) => m[1]);
+  eq(ids, man.order, 'sections in manifest order');
+  assert(!/<!--@axis/.test(html) && /class="dax dax--title/.test(html), 'axis directive expanded');
+  let refused = false;
+  try { run(['tools/assemble.cjs', '--out', path.join(OUT, 'outside.html')]); } catch (e) { refused = /must be a file directly in deck\/slides/.test(String(e.stderr)); }
+  assert(refused, '--out outside slides/ is refused');
+  await withDeck({ url: pathToFileURL(out).href }, async (page) => {
+    const r = await page.evaluate(() => ({ n: Deck.slides.length, s04z: Deck.slides.find((x) => x.id === 's04z'), folio: document.getElementById('s05').getAttribute('data-folio') }));
+    eq(r.n, 41, 'engine sees 41 slides');
+    eq([r.s04z.auto, r.s04z.transition], [150, 'fade'], 'S04z is an auto bridge with a fade');
+    eq(r.folio, '6', 'S05 folio (S02M hidden, S04z bridge not counted)');
+  });
+  fs.rmSync(out, { force: true });
+});
+
+test('tools/check-deck.cjs: flags planted defects (min size, font fallback, overlap, overflow, bounds, builds, goto) and passes a clean slide', async () => {
+  const fx = path.join(DECK, 'slides', '.tmp-test-check.html');
+  const steps = [1, 2, 3, 4, 5, 6, 7].map((n) => '<p class="label at" data-step="' + n + '" style="--x:' + (72 + n * 120) + 'px;--y:900px">' + n + '</p>').join('');
+  fs.writeFileSync(fx, '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>fixture</title>' +
+    '<link rel="stylesheet" href="../engine/deck.css"><link rel="stylesheet" href="src/theme/theme.css">' +
+    '<script src="../engine/deck.js" defer></script></head><body><div id="stage">' +
+    '<section class="slide daylight" id="ok"><div class="body"><h2 class="hl">A clean slide.</h2><p class="text">Nothing wrong here.</p></div></section>' +
+    '<section class="slide daylight" id="bad"><div class="body">' +
+    '<p class="text" style="font-size:20px">Too small</p>' +
+    '<p class="text">Arrow → typed</p></div>' +
+    '<p class="text at" style="--x:600px;--y:400px">Overlapping words here</p><p class="text at" style="--x:610px;--y:405px">Another line on top</p>' +
+    '<div class="card at" style="--x:1200px;--y:300px;--w:300px;height:60px;overflow:hidden"><p class="text">This card clips its text because it has a fixed height</p></div>' +
+    '<p class="text at" style="--x:-200px;--y:700px">Off the left edge</p>' + steps +
+    '<button class="hot at" style="--x:1500px;--y:800px" data-goto="nowhere">x</button></section>' +
+    '</div></body></html>');
+  let out = '';
+  let code = 0;
+  try { out = run(['tools/check-deck.cjs', '--deck', fx, '--no-pdf']); } catch (e) { out = String(e.stdout) + String(e.stderr); code = e.status; }
+  eq(code, 1, 'exit code 1 on errors');
+  const has = (re, what) => assert(re.test(out), 'reports ' + what + ':\n' + out);
+  has(/bad\s+ERROR min-size\s+text at 20\.0 px/, 'min size');
+  has(/bad\s+ERROR fonts .*"→" U\+2192/, 'the fallback glyph');
+  has(/bad\s+ERROR overlap/, 'overlap');
+  has(/bad\s+ERROR overflow\s+text is clipped/, 'clipped text');
+  has(/bad\s+ERROR bounds/, 'out of stage');
+  has(/bad\s+ERROR builds\s+7 click builds/, 'more than 6 builds');
+  has(/bad\s+ERROR goto\s+data-goto target "nowhere"/, 'bad goto');
+  assert(!/\bok\s+(ERROR|WARN)/.test(out), 'the clean slide passes:\n' + out);
+  fs.rmSync(fx, { force: true });
+});
+
+test('tools/shoot.cjs: build states, print/paper/lit/beamer, a fired trigger and mid-morph frames S04b -> S04z -> S05', async () => {
+  const deckFile = path.join(DECK, 'slides', '.tmp-test-shoot.html');
+  run(['tools/assemble.cjs', '--out', deckFile]);
+  const dir = path.join(OUT, 'shoot');
+  fs.rmSync(dir, { recursive: true, force: true });
+  run(['tools/shoot.cjs', '--deck', deckFile, '--slides', 's04b', '--fire', 's04b:vT', '--morph', 's04b:s05', '--at', '45', '--out', dir]);
+  const files = fs.readdirSync(dir).sort();
+  ['s04b-b0.png', 's04b-b1.png', 's04b-b2.png', 's04b-final.png', 's04b-print.png', 's04b-paper.png', 's04b-lit.png', 's04b-beamer.png', 's04b-fire-vT.png',
+    'morph-s04b-s04z-45.png', 'morph-s04z-s05-45.png', 'morph-s04b-s05-landed.png'].forEach((f) => assert(files.includes(f), 'missing ' + f + ' in ' + files.join(' ')));
+  const a = fs.readFileSync(path.join(dir, 'morph-s04z-s05-45.png'));
+  const b = fs.readFileSync(path.join(dir, 'morph-s04b-s05-landed.png'));
+  assert(!a.equals(b), 'a mid-morph frame differs from the landed state');
+  fs.rmSync(deckFile, { force: true });
 });
 
 test('zero console errors across every page, popup and frame above', async () => {

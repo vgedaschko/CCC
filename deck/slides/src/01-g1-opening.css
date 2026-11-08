@@ -1,0 +1,195 @@
+/*
+ * 01-g1-opening.css · owner: g1-opening · scope every rule to your slide ids: #s02, #s02m, #s03, #s04a
+ * Theme tokens and components: slides/src/theme/ (read-only for builders), handbook: slides/src/DECK_SPEC.md.
+ * Registry objects used here: rh-*, glyph-D/d (off stage), tile-ny/-mu (vt-grow, own geometry),
+ * clock-td + clock-td-lbl (parked, .g-clock-td*), card-ln/card-mw (S02 cards -> S03 chips), rule-card (.g-rules-large).
+ */
+
+/* ===================================================================== S02 / S02M · Decision #1 */
+/* light: a soft key light over the two cities, the amber (top-down) pool low left where Decision #1 parks */
+:is(#s02, #s02m) {
+  --ls-x: 960px; --ls-y: 380px; --ls-s: 1.55; --ls-o: .75;
+  --la-x: 250px; --la-y: 900px; --la-s: .75;
+  --lt-o: 0;
+}
+/* headline and CEO badge share one row: a longer headline pushes the badge, never into the tiles */
+:is(#s02, #s02m) .s02-body { display: flex; align-items: flex-start; column-gap: 40px; }
+:is(#s02, #s02m) .s02-hl { flex: 0 1 auto; min-width: 0; font-size: 88px; }
+
+/* tiles: thin-line panels with the self-drawn skylines (seam: S01 axis slivers unfold into them) */
+:is(#s02, #s02m) .s02-tile {
+  --y: 236px; --w: 864px; --h: 500px; --z: 1;
+  overflow: hidden;
+  border: var(--sw-hair) solid var(--line-2);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--glass-2), var(--glass) 55%, transparent);
+}
+:is(#s02, #s02m) .s02-tile--ny { --x: 72px; }
+:is(#s02, #s02m) .s02-tile--mu { --x: 984px; }
+:is(#s02, #s02m) .s02-sky {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  fill: none; stroke-linecap: round; stroke-linejoin: round;
+}
+:is(#s02, #s02m) .s02-sky-sil { stroke: var(--ink-2); stroke-width: var(--sw-1); }
+:is(#s02, #s02m) .s02-sky-det { stroke: var(--ink-3); stroke-width: var(--sw-hair); opacity: .5; stroke-dasharray: none; }  /* fades in after the line */
+:is(#s02, #s02m) .s02-sky-gnd { stroke: var(--line-2); stroke-width: var(--sw-hair); }
+
+/* columns over the tiles: city on top, the card anchored at the bottom (it overhangs the tile by 54 px) */
+:is(#s02, #s02m) .s02-cols {
+  --x: 72px; --y: 236px; --w: 1776px; --h: 554px; --z: 3;
+  display: grid; grid-template-columns: 1fr 1fr; column-gap: 48px;
+}
+:is(#s02, #s02m) .s02-col { display: flex; flex-direction: column; gap: 24px; min-width: 0; padding: 30px 40px 0; }
+:is(#s02, #s02m) .s02-name {
+  font: 820 60px/1 var(--sans); font-stretch: 125%;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink);
+}
+:is(#s02, #s02m) .s02-sub { margin-top: 10px; font: italic 460 36px/1.15 var(--serif); color: var(--ink-2); }
+:is(#s02, #s02m) .s02-card {
+  margin-top: auto;
+  display: flex; flex-direction: column; gap: 14px;
+  padding: 26px 34px 30px;
+  background: var(--bg-raise);
+}
+:is(#s02, #s02m) .s02-card .q { font-size: 40px; line-height: 1.16; }
+:is(#s02, #s02m) .s02-who {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 18px; align-items: center;
+  margin-bottom: 4px;
+  font: 560 var(--fs-min)/1.2 var(--sans); color: var(--ink-3);
+}
+:is(#s02, #s02m) .s02-who b { display: block; font: 720 32px/1.15 var(--sans); font-stretch: 108%; letter-spacing: .02em; color: var(--ink); }
+:is(#s02, #s02m) .s02-who .role { display: block; }
+
+/* card -> chip (seam S02/S02M -> S03, registry card-ln / card-mw): theme seam helper "chip" (motion.css) */
+:is(#s02, #s02m) .s02-card,
+#s03 .mono-chip[data-morph] { view-transition-class: chip; }
+
+/* click 1: the CEO badge hangs between the two cities (neutral: the CEO has not spoken yet) */
+:is(#s02, #s02m) .s02-ceo {
+  position: relative; flex: none; margin-top: -12px; z-index: 6;
+  display: flex; align-items: center; justify-content: center; gap: 16px;
+  padding: 30px 24px 18px;
+  border: var(--sw-2) solid var(--amber); border-radius: 18px;
+  background: var(--bg-raise); color: var(--amber);
+  box-shadow: var(--glow-amber);
+}
+:is(#s02, #s02m) .s02-ceo::before {           /* lanyard */
+  content: ""; position: absolute; left: 50%; bottom: 100%;
+  width: 0; height: 36px; border-left: var(--sw-1) solid var(--line-2);
+}
+:is(#s02, #s02m) .s02-ceo::after {            /* badge slot */
+  content: ""; position: absolute; left: 50%; top: 10px; translate: -50% 0;
+  width: 48px; height: 10px; border-radius: 5px; border: var(--sw-1) solid var(--amber);
+}
+:is(#s02, #s02m) .s02-ceo .ic { width: 52px; height: 52px; stroke-width: 2.2; }
+:is(#s02, #s02m) .s02-ceo p { display: flex; flex-direction: column; align-items: flex-start; }
+:is(#s02, #s02m) .s02-ceo b { font: 860 54px/.95 var(--sans); font-stretch: 125%; letter-spacing: .04em; }
+:is(#s02, #s02m) .s02-ceo span { font: italic 480 32px/1.05 var(--serif); color: var(--ink-2); }
+
+/* click 3: REVISED sticker on the winning city, the revision loop around the sliver */
+:is(#s02, #s02m) .s02-revised {
+  --y: 318px; --z: 5;
+  display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+  padding: 12px 22px 14px;
+  border-radius: 10px;
+  background: var(--amber); color: var(--bg);
+  box-shadow: var(--shadow-card);
+  rotate: -2deg;
+}
+:is(#s02, #s02m) .s02-revised b { font: 860 42px/1 var(--sans); font-stretch: 125%; letter-spacing: .12em; }
+:is(#s02, #s02m) .s02-revised span { font: italic 540 30px/1.05 var(--serif); }
+:is(#s02, #s02m) .s02-revised { left: auto; max-width: 400px; }     /* right-anchored: longer text grows inwards */
+:is(#s02, #s02m) .s02-revised--mu { right: 94px; }
+:is(#s02, #s02m) .s02-revised--ny { right: 985px; }
+:is(#s02, #s02m) .s02-loop { --x: 42px; --y: 772px; --w: 104px; --h: 104px; --z: 4; stroke-width: 4.5; }
+
+/* click 4: the arrows (already facing left), the "?" between the cards, the poll */
+:is(#s02, #s02m) .s02-march {
+  --x: 1064px; --y: 808px; --w: 744px;
+  display: flex; justify-content: space-between; color: var(--amber);
+}
+:is(#s02, #s02m) .s02-march .ic { width: 46px; height: 46px; stroke-width: 2.4; }
+:is(#s02, #s02m) .s02-qmark {
+  --x: 882px; --y: 528px; --w: 156px; --h: 156px; --z: 5;
+  display: grid; place-items: center;
+  border: var(--sw-2) solid var(--ink-2); border-radius: 50%;
+  background: var(--bg-raise);
+  font: 500 120px/1 var(--serif); color: var(--ink);
+  box-shadow: var(--glow-ink);
+}
+:is(#s02, #s02m) .s02-poll {
+  --x: 560px; --y: 874px; --w: 800px;
+  text-align: center;
+  font: italic 470 60px/1.06 var(--serif); color: var(--ink);
+  text-wrap: balance;
+}
+#s02 .s02-goto { --y: 904px; left: auto; right: 72px; }
+
+/* ===================================================================== S03 · one word, two rulebooks */
+#s03 {
+  --lt-x: 460px; --lt-y: 560px; --lt-s: .95;
+  --la-x: 1460px; --la-y: 560px; --la-s: .9;
+}
+/* rows: headline · slack · kicker · word · slack · own view · slack · other side's view.
+   The grid ends at y 812 (the parked clock sits below on the left); the slack rows absorb text growth. */
+#s03 .s03-body {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-rows: auto minmax(12px, 1fr) auto auto minmax(12px, 1fr) auto minmax(12px, 1fr) auto;
+  align-content: stretch;
+  column-gap: 112px; row-gap: 0;
+  padding-bottom: 172px;
+}
+#s03 .s03-body::before {            /* the line between the two rulebooks */
+  content: ""; position: absolute; left: 50%; top: 150px; bottom: 150px;
+  border-left: var(--sw-hair) solid var(--line);
+}
+#s03 .s03-hl { --c: 1 / -1; --r: 1; font-size: 88px; }
+#s03 .s03-kick { --r: 3; }
+#s03 .s03-kick--D { --c: 1; color: var(--teal); }
+#s03 .s03-kick--d { --c: 2; color: var(--amber); }
+#s03 .s03-word { --r: 4; align-self: last baseline; }
+#s03 .s03-stone { --c: 1; }
+#s03 .s03-pencil-wrap { --c: 2; position: relative; justify-self: start; margin-top: 16px; }
+#s03 .s03-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); column-gap: 28px; align-items: start; }
+#s03 .s03-row--D1 { --c: 1; --r: 6; }
+#s03 .s03-row--D2 { --c: 1; --r: 8; }
+#s03 .s03-row--d1 { --c: 2; --r: 6; }
+#s03 .s03-row--d2 { --c: 2; --r: 8; }
+#s03 .s03-said { display: flex; flex-direction: column; gap: 6px; min-width: 0; padding-top: 4px; }
+#s03 .s03-said .q { font-size: 48px; line-height: 1.16; }
+#s03 .s03-said .who { display: block; }
+#s03 .mono-chip { color: var(--ink-2); }
+
+/* DECISION: engraved stone (heavy Archivo, teal, pitted fill) */
+#s03 .s03-stone {
+  margin-block: -.1em;
+  font: 860 124px/1.2 var(--sans); font-stretch: 125%; letter-spacing: .015em;
+  color: var(--teal);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' seed='7' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1.5 0 0 0 -.62'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") 0 0 / 260px 260px,
+    linear-gradient(172deg, var(--teal) 18%, var(--teal-2) 70%, var(--teal-deep) 118%);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 0 var(--teal-deep)) drop-shadow(0 0 34px var(--teal-a));
+}
+/* decision: pencil (light amber italic, grainy, written on), with a pencilled underline */
+#s03 .s03-pencil {
+  font: italic 380 150px/1.08 var(--serif); letter-spacing: .005em;
+  color: var(--amber);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.4 0 0 0 1.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.3' numOctaves='2' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -1.4 0 0 0 1.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  -webkit-mask-size: 200px 200px; mask-size: 200px 200px;
+}
+#s03 .s03-pencil-line {
+  position: absolute; left: 2%; right: 4%; bottom: -8px; width: 94%; height: 22px;
+  overflow: visible; fill: none; stroke: var(--amber); stroke-width: 3; stroke-linecap: round; opacity: .85;
+}
+html:is(.deck-lit, .deck-paper) #s03 .s03-stone { filter: drop-shadow(0 4px 0 var(--teal-deep)); }   /* no glow */
+#s03 .sf-end .ic { width: .9em; height: .9em; }
+
+/* ===================================================================== S04a · the rules card */
+#s04a {
+  --ls-x: 955px; --ls-y: 500px; --ls-s: 1.25; --ls-o: .8;
+  --lt-x: 960px; --lt-y: 620px; --lt-s: 1.15;
+  --la-x: 220px; --la-y: 900px; --la-s: .6;
+}

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Big D or little d? · Who decides, and how?</title>
+<meta name="description" content="Erin Meyer, The Culture Map, ch. 5: Big D or Little d. Cross-Cultural Communication, Hochschule Bremen, 06.01.2027.">
+<!-- @@ASSEMBLED -->
+<link rel="stylesheet" href="../engine/deck.css">
+<link rel="stylesheet" href="src/theme/theme.css">
+<!-- @@GROUP-STYLES -->
+<script type="application/json" id="deck-config">
+{
+  "title": "Big D or little d?",
+  "lateTolerance": 20,
+  "checkpoints": [
+    { "slide": "s05", "by": "7:30", "label": "Definition" },
+    { "slide": "s09a", "by": "14:45", "label": "Per's inbox" },
+    { "slide": "s12a", "by": "19:30", "label": "Toolkit" },
+    { "slide": "s15", "by": "25:00", "label": "Part II" }
+  ]
+}
+</script>
+<script src="../engine/deck.js" defer></script>
+</head>
+<body>
+
+<!-- Icon sprite. The shipped fonts have no arrows, approx/neq signs, loops, ticks or boxes:
+     always draw them with <svg class="ic" aria-hidden="true"><use href="#ic-…"/></svg>. -->
+<svg class="deck-sprite" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="ic-arrow-r" viewBox="0 0 24 24"><path d="M3 12h17M14 6l6 6-6 6"/></symbol>
+    <symbol id="ic-arrow-l" viewBox="0 0 24 24"><path d="M21 12H4M10 6l-6 6 6 6"/></symbol>
+    <symbol id="ic-arrow-lr" viewBox="0 0 24 24"><path d="M2 12h20M7 7l-5 5 5 5M17 7l5 5-5 5"/></symbol>
+    <symbol id="ic-arrow-u" viewBox="0 0 24 24"><path d="M12 21V4M6 10l6-6 6 6"/></symbol>
+    <symbol id="ic-arrow-d" viewBox="0 0 24 24"><path d="M12 3v17M6 14l6 6 6-6"/></symbol>
+    <symbol id="ic-approx" viewBox="0 0 24 24"><path d="M3.5 9.5c2.6-2.8 5.6-2.8 8.5 0s5.9 2.8 8.5 0M3.5 15.5c2.6-2.8 5.6-2.8 8.5 0s5.9 2.8 8.5 0"/></symbol>
+    <symbol id="ic-neq" viewBox="0 0 24 24"><path d="M4 9h16M4 15h16M16.5 4 7.5 20"/></symbol>
+    <symbol id="ic-loop" viewBox="0 0 24 24"><path d="M6.2 15.8A7.5 7.5 0 1 0 5 9"/><path d="M4.3 3.8 5 9l5.2-.9"/></symbol>
+    <symbol id="ic-check" viewBox="0 0 24 24"><path d="M4 12.5l5 5L20 6"/></symbol>
+    <symbol id="ic-cross" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="ic-box" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/></symbol>
+    <symbol id="ic-box-check" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="3"/><path d="M7.5 12.5l3 3 6-7"/></symbol>
+    <symbol id="ic-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2"/><path d="m3.5 7 8.5 6.5L20.5 7"/></symbol>
+    <symbol id="ic-trash" viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></symbol>
+    <symbol id="ic-roots" viewBox="0 0 24 24"><path d="M12 3v8M12 6c-2.5-.2-4-1.6-4.3-3.6 2.3 0 3.9 1.3 4.3 3.6zM12 11c0 3-1 5.5-3 9M12 11c.5 3 1.7 5.3 3.5 8M12 13c-2 .8-3.6 2.4-4.4 4.4M12 14c2 .6 3.4 1.8 4.4 3.6"/><path d="M5 11h14"/></symbol>
+    <symbol id="ic-badge" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="2"/><path d="M9.5 7V4.5h5V7M8 12h8M8 16h5"/></symbol>
+    <symbol id="ic-stamp" viewBox="0 0 24 24"><path d="M9 3.5h6l-1 7h-4zM5 14.5c0-2 1.5-4 4-4h6c2.5 0 4 2 4 4v2H5zM4 20h16"/></symbol>
+    <symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></symbol>
+    <symbol id="ic-person" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.2"/><path d="M5.5 20c.6-4 3.1-6.5 6.5-6.5s5.9 2.5 6.5 6.5"/></symbol>
+    <symbol id="ic-arms" viewBox="0 0 46 52"><circle cx="23" cy="10" r="5.5"/><path d="M23 16v18M23 34l-7 14M23 34l7 14M23 21 9 5M23 21 37 5"/></symbol>
+    <symbol id="ic-finger" viewBox="0 0 46 52"><rect x="12" y="24" width="20" height="20" rx="6"/><path d="M19 24V7.5a3 3 0 0 1 6 0V24"/></symbol>
+    <!-- the revision loop on a top-down implementation line (draw-on: pathLength 100) -->
+    <symbol id="loop-96" viewBox="0 0 96 96"><path pathLength="100" d="M48 92A30 30 0 1 0 21 50"/><path pathLength="100" d="M12 41.5 21 50.5 30.5 42"/></symbol>
+  </defs>
+</svg>
+
+<div id="stage">
+<!-- @@SLIDES -->
+</div>
+</body>
+</html>

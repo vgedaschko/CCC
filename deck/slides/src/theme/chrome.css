@@ -1,0 +1,145 @@
+/*
+ * chrome.css: running head, source footer, story / daylight mode, light pools, vignette, grain.
+ *
+ * Mode classes on <section class="slide …">:
+ *   .story     case slides: black letterbox bars (64 px each) carry the running head and the footer
+ *   .daylight  theory slides: full frame, hairline footer (default when neither class is set)
+ *   .bare      title-type slides with no running head / footer (S01, S20, S20e)
+ *
+ * Light pools: three soft radial pools painted in the slide background. Place them per slide in
+ * the group CSS with custom properties (no runtime):
+ *   #s05 { --lt-x: 1000px; --lt-y: 860px; --lt-s: 1;     teal pool   (consensual side)
+ *          --la-x: 1200px; --la-y: 430px; --la-s: 1;     amber pool  (top-down side)
+ *          --ls-o: 0; }                                  spot pool   (neutral key light, off by default)
+ *   --l?-o (0..1) dims a pool, --l?-s scales it (1 = 1300 x 1000 px).
+ */
+
+/* ---------------------------------------------------------------- light pools + vignette */
+.deck-stage .slide {
+  --lt-x: 420px;  --lt-y: 560px;  --lt-s: 1;   --lt-o: 1;
+  --la-x: 1500px; --la-y: 480px;  --la-s: .9;  --la-o: 1;
+  --ls-x: 960px;  --ls-y: 540px;  --ls-s: 1;   --ls-o: 0;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(75% 70% at 50% 48%, rgb(0 0 0 / 0) 60%, var(--vignette) 100%),
+    radial-gradient(calc(650px * var(--ls-s)) calc(500px * var(--ls-s)) at var(--ls-x) var(--ls-y),
+      rgb(var(--pool-spot) / calc(var(--pool-spot-a) * var(--ls-o))), rgb(var(--pool-spot) / 0)),
+    radial-gradient(calc(650px * var(--lt-s)) calc(500px * var(--lt-s)) at var(--lt-x) var(--lt-y),
+      rgb(var(--pool-teal) / calc(var(--pool-teal-a) * var(--lt-o))), rgb(var(--pool-teal) / 0)),
+    radial-gradient(calc(650px * var(--la-s)) calc(500px * var(--la-s)) at var(--la-x) var(--la-y),
+      rgb(var(--pool-amber) / calc(var(--pool-amber-a) * var(--la-o))), rgb(var(--pool-amber) / 0));
+}
+
+/* ---------------------------------------------------------------- story mode: letterbox bars */
+.deck-stage .slide.story::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--bar), var(--bar)) 0 0 / 100% var(--band) no-repeat,
+    linear-gradient(var(--bar), var(--bar)) 0 100% / 100% var(--band) no-repeat,
+    linear-gradient(rgba(243, 238, 228, .08), rgba(243, 238, 228, .08)) 0 var(--band) / 100% 1px no-repeat,
+    linear-gradient(rgba(243, 238, 228, .08), rgba(243, 238, 228, .08)) 0 calc(100% - var(--band) - 1px) / 100% 1px no-repeat;
+}
+
+/* ---------------------------------------------------------------- running head */
+/*
+ * <header class="rh">
+ *   <p class="rh-crumb" data-morph="rh-crumb">I · <b>Definition</b></p>
+ *   <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+ *   <p class="rh-folio" data-morph="rh-folio" data-folio-text="2"></p>     (engine fills the number)
+ * </header>
+ */
+.slide > .rh {
+  grid-column: full-start / full-end;
+  grid-row: head-start / head-end;
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: center;
+  column-gap: 40px;
+  padding-inline: var(--m);
+}
+.rh-crumb {
+  justify-self: start;
+  max-width: 100%;
+  font: 640 var(--fs-min)/1 var(--sans);
+  font-stretch: 118%;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.rh-crumb b {
+  font-weight: 760;
+  color: var(--ink);
+}
+.rh-title {
+  justify-self: end;
+  font: italic 460 var(--fs-min)/1 var(--serif);
+  letter-spacing: .01em;
+  color: var(--ink-3);
+}
+.rh-folio {
+  justify-self: end;
+  min-width: 2ch;
+  padding-left: 28px;
+  border-left: var(--sw-hair) solid var(--line-2);
+  font: 640 var(--fs-min)/1 var(--sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .06em;
+  text-align: right;
+  color: var(--ink-2);
+}
+.rh-folio:empty { display: none; }
+
+/* ---------------------------------------------------------------- source footer */
+/* <footer class="sf"><p>Meyer (2014), pp. 156–158</p></footer>  one line, hairline above */
+.slide > .sf {
+  grid-column: full-start / full-end;
+  grid-row: foot-start / foot-end;
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  padding-inline: var(--m);
+  font: 500 var(--fs-min)/1.2 var(--sans);
+  color: var(--ink-3);
+}
+.slide > .sf::before {
+  content: "";
+  position: absolute;
+  left: var(--m);
+  right: var(--m);
+  top: 0;
+  height: 0;
+  border-top: var(--sw-hair) solid var(--line);
+}
+.slide.story > .sf::before { display: none; }
+.sf > :first-child { min-width: 0; }
+.sf .sf-end { margin-left: auto; color: var(--ink-2); }
+.sf i, .sf em { font-family: var(--serif); font-style: italic; font-weight: 470; }
+
+/* ---------------------------------------------------------------- grain (stage-level, live only) */
+html:not(.deck-print):not(.deck-lit) .deck-stage::after {
+  content: "";
+  position: absolute;
+  inset: -80px;
+  z-index: 60;
+  pointer-events: none;
+  opacity: .05;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: noir-grain 1s steps(5) infinite;
+}
+@keyframes noir-grain {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-31px, 17px); }
+  40% { transform: translate(23px, -29px); }
+  60% { transform: translate(-13px, -41px); }
+  80% { transform: translate(37px, 11px); }
+  100% { transform: translate(0, 0); }
+}

@@ -1,0 +1,143 @@
+/*
+ * 00-foundation.css · owner: foundation · #s01, #s04b, #s04z, #s05 (the reference slides)
+ * Registry geometry (clock band, rules card, cards, glyphs, timelines) lives in theme/geometry.css.
+ */
+
+/* ===================================================================== S01 · title */
+#s01 {
+  --lt-x: 400px; --lt-y: 520px; --lt-s: 1.05;
+  --la-x: 980px; --la-y: 640px; --la-s: .75;
+}
+#s01 .s01-words { position: absolute; left: 70px; top: 180px; width: 1080px; height: 700px; z-index: 2; }
+#s01 .s01-words > span { position: absolute; }
+#s01 .s01-big { left: 36px; top: 22px; font: 720 62px/1 var(--sans); font-stretch: 125%; letter-spacing: .36em; color: var(--ink); }
+#s01 .s01-or { left: 556px; top: 84px; font: italic 440 96px/1 var(--serif); color: var(--ink-3); white-space: nowrap; }
+#s01 .s01-little { position: static; color: var(--ink); }
+#s01 .s01-q { left: 862px; top: 204px; font: 400 430px/1 var(--serif); color: var(--ink-2); }
+#s01 .glyph { z-index: 3; }
+#s01 .s01-side { --x: 1180px; --y: 250px; --w: 668px; --gap: 0px; }
+#s01 .s01-sub { font: italic 450 80px/1.04 var(--serif); color: var(--ink); text-wrap: balance; }
+#s01 .s01-credits { --gap: 10px; margin-top: 40px; padding-top: 30px; border-top: var(--sw-hair) solid var(--line); }
+#s01 .s01-book { font: 650 34px/1.2 var(--sans); font-stretch: 108%; color: var(--ink); }
+#s01 .s01-book i { font: italic 500 36px/1 var(--serif); }
+#s01 .s01-ch { font: italic 450 32px/1.22 var(--serif); color: var(--ink-2); text-wrap: pretty; }
+#s01 .s01-team { margin-top: 18px; font: 600 var(--fs-min)/1.5 var(--sans); color: var(--ink-2); }
+#s01 .s01-course { font: 500 var(--fs-min)/1.35 var(--sans); color: var(--ink-2); text-wrap: pretty; }
+#s01 .s01-route {
+  --x: 120px; --y: 868px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px;
+  font: 560 30px/1.2 var(--sans); color: var(--ink-2);
+}
+#s01 .s01-route i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--ink-3); }
+
+/* ===================================================================== S04b · Decision #2 */
+#s04b, #s04z {
+  --lt-x: 260px; --lt-y: 900px; --lt-s: .9;
+  --la-x: 1500px; --la-y: 380px; --la-s: .8;
+  --ls-x: 1260px; --ls-y: 520px; --ls-s: 1.1; --ls-o: 1;
+}
+#s04b .s04b-live { --x: 72px; --y: 564px; --w: 528px; font-size: var(--fs-min); }
+
+/* right column: a flow grid inside x 648-1848, y 96-808 (the clock band starts at 822); the last row is slack */
+#s04b .s04b-right {
+  --x: 648px; --y: 96px; --w: 1200px; --h: 712px;
+  display: grid;
+  grid-template-rows: auto minmax(34px, auto) auto auto auto minmax(0, 1fr);
+  row-gap: 0;
+}
+#s04b .s04b-flipzone { position: relative; z-index: 7; }
+#s04b .s04b-cards { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--gut); align-items: stretch; }
+#s04b .stamp--D { padding: 14px 30px; }
+
+/* chips row under the cards: one column per card; the print outline takes the chips' place */
+#s04b .s04b-chips {
+  display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--gut); align-items: center;
+  margin-top: 16px;
+}
+#s04b .s04b-chips .row { --gap: 40px; grid-row: 1; }
+#s04b .s04b-chips .row + .row { grid-column: 2; }
+#s04b .s04b-fict { grid-row: 1; grid-column: 2; justify-self: end; font: italic 450 32px/1 var(--serif); color: var(--ink-3); }
+#s04b .s04b-print-outcome {
+  grid-row: 1; grid-column: 1 / -1; margin-right: 290px;
+  display: grid; place-items: center; height: 72px;
+  border: var(--sw-1) dashed var(--ink-2); border-radius: 14px;
+  font: italic 480 36px/1 var(--serif); color: var(--ink);
+}
+
+/* the flip arrow (click 2): a two-headed arc from card T to card M, label pill at the apex */
+#s04b .s04b-flip { position: absolute; left: 292px; right: 292px; bottom: -4px; height: 70px; }
+#s04b .s04b-flip svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; fill: none; stroke: var(--amber); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+#s04b .s04b-pill {
+  position: absolute; left: 50%; top: -6px; translate: -50% 0;
+  padding: 4px 22px 8px; border: var(--sw-1) solid var(--amber); border-radius: 999px;
+  background: var(--bg-raise); box-shadow: var(--glow-pill);
+  font: italic 500 36px/1 var(--serif); color: var(--amber); white-space: nowrap;
+}
+
+/* Müller (click 3) */
+#s04b .s04b-muller { margin-top: 20px; gap: 10px; }
+#s04b .s04b-muller .q { font-size: 44px; }
+
+/* clock band */
+#s04b .s04b-num { position: absolute; left: 66px; top: 648px; z-index: 3; font-size: 132px; }
+#s04b:has(.s04b-timer.is-revealed) .s04b-ghost { visibility: hidden; }
+#s04b .s04b-fill { overflow: hidden; border-radius: 6px; pointer-events: none; }
+#s04b .s04b-fill-bar {
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, var(--teal-2), var(--teal));
+  box-shadow: var(--glow-bar-teal);
+  transform-origin: 0 50%;
+  transform: scaleX(var(--deck-progress, 0));
+}
+#s04b .s04b-fill > i { position: absolute; top: 0; bottom: 0; left: var(--at); width: 3px; margin-left: -1.5px; background: rgba(11, 12, 14, .9); }
+#s04b .s04b-done {
+  position: absolute; left: 400px; top: 690px; z-index: 3;
+  display: none; align-items: center; gap: 12px;
+  font: italic 500 40px/1 var(--serif); color: var(--amber);
+}
+#s04b [data-timer-state="done"] .s04b-done { display: flex; }
+#s04b [data-timer-state="done"] .s04b-fill-bar { background: linear-gradient(90deg, var(--teal-2), var(--amber)); }
+/* a decision (any stamp) freezes the clock under the cover; the numeral leaves with it */
+#s04b:has(.s04b-cover.is-triggered) .s04b-timer .s04b-num,
+#s04b:has(.s04b-cover.is-triggered) .s04b-done { visibility: hidden; }
+#s04b .s04b-cover { justify-content: flex-start; padding-left: 64px; gap: 56px; }
+#s04b .s04b-cover .cover-word { font-size: 96px; }
+#s04b .s04b-cover .cover-meta .big { font-size: 64px; }
+
+/* print (static export): no stamp, no cover, no fake fill: the dashed outcome outline instead */
+html.deck-print #s04b .s04b-done { display: none; }
+
+/* ===================================================================== S04z · bridge */
+#s04z .print-tag {
+  position: absolute; right: 28px; top: 84px; z-index: 50;
+  padding: 10px 22px; border: 2px dashed var(--ink-2); border-radius: 999px;
+  font: 600 var(--fs-min)/1.2 var(--sans); color: var(--ink-2);
+}
+
+/* ===================================================================== S05 · definition (signature morph) */
+#s05 {
+  --lt-x: 1000px; --lt-y: 880px; --lt-s: 1;
+  --la-x: 1180px; --la-y: 430px; --la-s: 1;
+}
+#s05 .s05-head { row-gap: 2px; }
+#s05 .s05-head .hl { font-size: 88px; }
+#s05 .s05-rowlab { font: 780 42px/1 var(--sans); font-stretch: 125%; letter-spacing: .12em; }
+#s05 .s05-row { --gap: 12px; --w: 512px; }
+#s05 .s05-row--td { --x: 72px; --y: 300px; }
+#s05 .s05-row--cons { --x: 72px; --y: 650px; }
+#s05 .s05-def { margin-top: 4px; color: var(--ink); }
+#s05 .s05-chip { margin-top: 14px; }
+#s05 .s05-seg { --w: 240px; }
+#s05 .s05-seg--td { --x: 600px; --y: 514px; }
+#s05 .s05-seg--cons { --x: 600px; --y: 880px; }
+#s05 .glyph { z-index: 4; }
+#s05 .s05-loop { --y: 392px; --w: 96px; --h: 96px; z-index: 3; }
+#s05 .s05-loop--1 { --x: 1004px; }
+#s05 .s05-loop--2 { --x: 1284px; }
+#s05 .s05-loop--3 { --x: 1564px; }
+#s05 .s05-flipnote { --x: 1100px; --y: 400px; font: italic 500 32px/1 var(--serif); color: var(--amber); }
+#s05 .s05-impl-lbl--td { --x: 872px; --y: 514px; --w: 920px; }
+#s05 .s05-impl-lbl--cons { --x: 1536px; --y: 880px; --w: 312px; }
+#s05 .s05-ann--td { --x: 900px; --y: 300px; --w: 948px; }
+#s05 .s05-ann--cons { --x: 600px; --y: 716px; --w: 720px; text-align: right; }
+#s05 .s05-gest .gest { width: 40px; height: 46px; }

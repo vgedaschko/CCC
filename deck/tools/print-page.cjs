@@ -1,5 +1,5 @@
 /*
- * print-page.cjs: shared helper for the exporters. Opens a deck in print mode (?print) in headless
+ * print-page.cjs: shared helper for the exporters. Opens a deck in print mode (?print, or ?print&paper) in headless
  * Chromium via file:// and waits until deck.js reports ready (fonts loaded, final states rendered).
  */
 'use strict';
@@ -19,7 +19,7 @@ function loadPlaywright() {
 
 /**
  * @param {string} deckFile path to the deck HTML (source or built)
- * @param {{zoom1?: boolean}} [opts]
+ * @param {{zoom1?: boolean, paper?: boolean}} [opts]  paper: the light paper print variant (?print&paper)
  * @returns {Promise<{browser, page, info: {title: string, count: number, slides: Array}}>}
  */
 async function openPrint(deckFile, opts) {
@@ -33,7 +33,7 @@ async function openPrint(deckFile, opts) {
   const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()); });
-  const url = pathToFileURL(abs).href + '?print' + (o.zoom1 ? '&zoom=1' : '');
+  const url = pathToFileURL(abs).href + '?print' + (o.zoom1 ? '&zoom=1' : '') + (o.paper ? '&paper' : '');
   await page.goto(url, { waitUntil: 'load' });
   await page.waitForFunction(() => window.Deck && window.Deck.isReady, null, { timeout: 30000 });
   const info = await page.evaluate(() => {

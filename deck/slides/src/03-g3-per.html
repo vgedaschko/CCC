@@ -1,0 +1,210 @@
+<!--
+  03-g3-per.html · owner: g3-per · slides: s09a, s09b, h2
+  Only <section class="slide"> elements. Order in the deck comes from manifest.json.
+  Contract and components: slides/src/DECK_SPEC.md.
+  Quotes: Meyer (2014) pp. 145, 149, 151–153, 157 (checked on the scan); Lecture II, slide 18.
+  Internal morph keys (g3 only): per-mail (the card frame, vt-shape) + per-mail-txt (its words, vt-text):
+  S09a Per's personal email -> S09b the teal Per panel.
+-->
+
+<!-- ===================================================================== S09a · Per's inbox -->
+<section class="slide story" id="s09a" data-transition="fade" data-title="Per’s inbox: consensus from the inside">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Case · Sweden · <b>Per’s inbox</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <!-- left column: who is Per; click 1: Meyer's thought + the poll -->
+  <div class="s09a-left at stack">
+    <div class="s09a-per stack" data-enter="fade" data-delay="150">
+      <p class="kicker">Meyer’s new boss</p>
+      <div class="s09a-id">
+        <span class="mono-chip s09a-chip teal" aria-hidden="true">PE</span>
+        <div class="stack s09a-idtext">
+          <p class="s09a-name">Per Engman</p>
+          <p class="s09a-role">a consensus-building Swedish manager</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="s09a-think" data-step="1" data-build="rise">
+      <p class="s09a-bubble q">“I don’t really have an opinion…”</p>
+      <p class="who"><span class="mono mono--amber">EM</span><span>Erin Meyer <span class="role">· thinking</span></span></p>
+    </div>
+
+    <div class="s09a-poll" data-step="1" data-build="fade" data-delay="900">
+      <svg class="ic s09a-hand" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.5 11V5.8a1.7 1.7 0 0 0-3.4 0"/><path d="M14.1 10.2V4.2a1.7 1.7 0 0 0-3.4 0v1.6"/><path d="M10.7 10.4V5.8a1.7 1.7 0 0 0-3.4 0v8.4"/><path d="M17.5 8.2a1.7 1.7 0 0 1 3.4 0v5.9a7.9 7.9 0 0 1-7.9 7.9h-1.6c-2.6 0-4.3-.8-5.7-2.2l-3.4-3.5a1.8 1.8 0 0 1 2.6-2.5l2.4 2.3"/></svg>
+      <p class="s09a-pollt"><span class="s09a-pollk">Poll</span><span class="s09a-pollq">Who would have hit delete?</span></p>
+    </div>
+  </div>
+
+  <!-- right column: the inbox (the S04b mail card's place and style: registry "mail") -->
+  <div class="s09a-right at">
+    <article class="card mail s09a-mail" data-enter="notify" data-delay="200">
+      <p class="card-tag"><svg class="ic" aria-hidden="true"><use href="#ic-mail"/></svg>original <span class="s09a-tag-soft">· Per to his team</span></p>
+      <div class="mail-body s09a-mailtext">
+        <p>Hey team</p>
+        <p>I thought we should meet for an annual <span class="nb">face-to-face</span> meeting on December 6th. We could focus the meeting on how to be more <span class="nb">client-centric</span>. What do you think?</p>
+        <p>Per</p>
+      </div>
+      <!-- click 1: DELETE (Meyer's top-down reflex) -->
+      <div class="stamp s09a-del" data-step="1" data-build="stamp" data-delay="420">
+        <svg class="ic" aria-hidden="true"><use href="#ic-trash"/></svg><b>DELETE</b>
+      </div>
+    </article>
+
+    <!-- click 2: the replies stack in, one by one -->
+    <div class="s09a-replies">
+      <article class="card mail s09a-re" data-step="2" data-build="notify">
+        <p class="card-tag"><span class="s09a-av" aria-hidden="true">L</span>Re: <span class="s09a-tag-who">Lasse</span></p>
+        <p class="s09a-retext">“…Wouldn’t it be better to focus the meeting on how to more successfully market our services?”</p>
+      </article>
+      <article class="card mail s09a-re" data-step="2" data-build="notify" data-delay="300">
+        <p class="card-tag"><span class="s09a-av" aria-hidden="true">C</span>Re: <span class="s09a-tag-who">Charlotte</span></p>
+        <p class="s09a-retext">“…If others don’t agree then I would support Lasse’s idea…”</p>
+      </article>
+    </div>
+    <div class="s09a-count">
+      <p class="s09a-pile" data-step="2" data-build="fade" data-delay="560" aria-label="more replies">
+        <svg class="ic" data-step="2" data-build="zoom" data-delay="650" aria-hidden="true"><use href="#ic-mail"/></svg>
+        <svg class="ic" data-step="2" data-build="zoom" data-delay="800" aria-hidden="true"><use href="#ic-mail"/></svg>
+        <svg class="ic" data-step="2" data-build="zoom" data-delay="950" aria-hidden="true"><use href="#ic-mail"/></svg>
+        <svg class="ic" data-step="2" data-build="zoom" data-delay="1100" aria-hidden="true"><use href="#ic-mail"/></svg>
+        <svg class="ic" data-step="2" data-build="zoom" data-delay="1250" aria-hidden="true"><use href="#ic-mail"/></svg>
+        <span class="s09a-plus" data-step="2" data-build="fade" data-delay="1400">+…</span>
+      </p>
+      <p class="s09a-slow" data-step="2" data-build="fade" data-delay="1500">“Slowly—ever so slowly…”</p>
+    </div>
+  </div>
+
+  <!-- click 3: the room dims, Per writes to her personally (morphs into the S09b Per panel) -->
+  <div class="s09a-scrim at" data-step="3" data-build="fade" aria-hidden="true"></div>
+  <div class="s09a-focus at stack">
+    <article class="card mail s09a-dm vt-shape" data-morph="per-mail" data-step="3" data-build="zoom" data-delay="220">
+      <div class="s09a-dmin vt-text" data-morph="per-mail-txt">
+        <p class="card-tag"><svg class="ic" aria-hidden="true"><use href="#ic-mail"/></svg>Per <svg class="ic s09a-to" aria-hidden="true"><use href="#ic-arrow-r"/></svg> Erin <span class="s09a-tag-soft">· personal</span></p>
+        <div class="mail-body s09a-dmtext">
+          <p>Hi Erin</p>
+          <p>Haven’t heard from you, what do you think?</p>
+          <p>Per</p>
+        </div>
+      </div>
+    </article>
+    <!-- click 4: the reply she wanted to send: typed, then struck out -->
+    <article class="card s09a-draft" data-step="4" data-build="fade" data-duration="260">
+      <p class="card-tag"><span class="mono mono--amber s09a-em" aria-hidden="true">EM</span>Meyer’s draft <span class="s09a-tag-soft">· never sent</span></p>
+      <p class="s09a-drafttext" data-step="4" data-build="g3-draft" data-delay="200"><span>I have absolutely no opinion. You are the boss—please make a decision so we can get back to work.</span></p>
+    </article>
+  </div>
+
+  <footer class="sf"><p>Meyer (2014), pp. 151–153</p></footer>
+</section>
+
+<!-- ===================================================================== S09b · Consensus: a four-letter word? -->
+<section class="slide story" id="s09b" data-transition="morph" data-title="Consensus: a four-letter word?">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Case · <b>Sweden</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s09b-body">
+    <!-- click 2: the censor bar over the word (a four-letter word gets bleeped) -->
+    <h2 class="hl s09b-hl" data-enter="fade" data-delay="760"><span class="s09b-cw">Consensus<span class="s09b-censor" data-step="2" data-build="wipe" aria-hidden="true">#@!%</span></span>: a four-letter word?</h2>
+
+    <!-- Per (teal): the S09a personal email, arrived by morph -->
+    <article class="card card--teal card--solid s09b-panel s09b-per vt-shape" data-morph="per-mail">
+      <div class="s09b-perin vt-text" data-morph="per-mail-txt">
+        <p class="card-tag s09b-tag"><span class="mono mono--teal" aria-hidden="true">PE</span><span>Per Engman <span class="s09b-on">on Americans</span></span></p>
+        <div class="stack s09b-qs">
+          <p class="q">“too busy to work as good team members”</p>
+          <p class="q">“…always trying to impose a decision for decision’s sake…”</p>
+        </div>
+      </div>
+    </article>
+
+    <!-- click 1: Lencioni (amber) -->
+    <article class="card card--amber s09b-panel s09b-len" data-step="1" data-build="fade">
+      <p class="card-tag s09b-tag"><span class="mono mono--amber" aria-hidden="true">PL</span><span>Patrick Lencioni <span class="s09b-on">American business author</span></span></p>
+      <p class="q q-l s09b-lq">“‘consensus’ is a <span class="nb">four-letter</span> word!”</p>
+    </article>
+
+    <!-- click 3: the bar between them + the lecture's reminder -->
+    <div class="s09b-ethno" data-step="3" data-build="fade">
+      <i class="s09b-arm s09b-arm--l" aria-hidden="true"></i>
+      <p class="s09b-word"><svg class="ic" aria-hidden="true"><use href="#ic-arrow-l"/></svg>ethnocentrism<svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg></p>
+      <i class="s09b-arm s09b-arm--r" aria-hidden="true"></i>
+    </div>
+    <p class="s09b-lecture" data-step="3" data-build="fade" data-delay="250">“…your way is not the only way or even the best way!” <span class="s09b-lsrc">Lecture II, slide 18</span></p>
+  </div>
+
+  <footer class="sf"><p>Meyer (2014), pp. 145, 153 · Lecture II, slide 18 · course script, p. 8 (ethnocentrism)</p></footer>
+</section>
+
+<!-- ===================================================================== H2 · backup: Is consensus better? -->
+<section class="slide daylight" id="h2" data-transition="fade" data-hidden="backup" data-title="Backup: Is consensus better?">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">Q&amp;A · <b>Backup</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body h2-body">
+    <div class="h2-head stack">
+      <h2 class="hl-2">Is consensus better?</h2>
+      <p class="h2-short">Short answer: neither.</p>
+    </div>
+    <blockquote class="quote h2-rules">
+      <p class="q">“Either of these systems can work, as long as everyone understands and follows the rules of the game.”</p>
+      <p class="who"><span class="mono">EM</span><span>Erin Meyer <span class="role">· p. 149</span></span></p>
+    </blockquote>
+
+    <!-- three lenses: Per (consensual), Lencioni and Meyer (top-down) -->
+    <div class="h2-lenses stack">
+      <p class="kicker">Depends on the lens</p>
+      <article class="card card--teal h2-lens">
+        <p class="card-tag"><span class="h2-dot teal" aria-hidden="true"></span>Per on Americans</p>
+        <p class="q q-xs">“too busy to work as good team members”</p>
+      </article>
+      <article class="card card--amber h2-lens">
+        <p class="card-tag"><span class="h2-dot amber" aria-hidden="true"></span>P. Lencioni</p>
+        <p class="q q-xs">“‘consensus’ is a <span class="nb">four-letter</span> word!”</p>
+      </article>
+      <article class="card card--amber h2-lens">
+        <p class="card-tag"><span class="h2-dot amber" aria-hidden="true"></span>Meyer, from her top-down side</p>
+        <p class="q q-xs">“I would have gladly traded group agreement for the initial speed that goes with one person making a decision.”</p>
+      </article>
+    </div>
+
+    <!-- the ringi ledger + Astellas -->
+    <div class="h2-right stack">
+      <article class="card card--solid h2-ledger">
+        <header class="h2-lh">
+          <h3 class="h2-lt">The <i>ringi</i> ledger</h3>
+          <p class="h2-ls">consensus, Japanese style · p. 157</p>
+        </header>
+        <div class="h2-cols">
+          <ul class="h2-col h2-col--plus">
+            <li class="h2-colh">benefits</li>
+            <li><span class="h2-sign" aria-label="plus">+</span><span>quicker implementation</span></li>
+            <li><span class="h2-sign" aria-label="plus">+</span><span>stronger, more trusting relationships</span></li>
+          </ul>
+          <ul class="h2-col h2-col--minus">
+            <li class="h2-colh">critics say</li>
+            <li><span class="h2-sign" aria-label="minus">−</span><span>time-consuming</span></li>
+            <li><span class="h2-sign" aria-label="minus">−</span><span>lets managers “shirk accountability”</span></li>
+            <li><span class="h2-sign" aria-label="minus">−</span><span>“the race has likely been lost”</span></li>
+          </ul>
+        </div>
+      </article>
+      <blockquote class="quote h2-astellas">
+        <p class="q q-xs">“Some Japanese companies have moved away from this system… but in Astellas we use a software product which manages the process.”</p>
+        <p class="who"><span class="mono" aria-hidden="true"><svg class="ic" aria-hidden="true"><use href="#ic-person"/></svg></span><span>one of Mori’s colleagues <span class="role">· Astellas</span></span></p>
+      </blockquote>
+    </div>
+  </div>
+
+  <button class="hot hot--goto at" style="--x:1640px;--y:900px" data-goto="@back" data-print="hide" aria-label="Back to the last slide viewed"><svg class="ic" aria-hidden="true"><use href="#ic-arrow-l"/></svg> back</button>
+  <footer class="sf"><p>Meyer (2014), pp. 145, 149, 153, 157</p></footer>
+</section>

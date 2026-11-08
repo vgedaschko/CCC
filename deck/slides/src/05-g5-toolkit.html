@@ -1,0 +1,425 @@
+<!--
+  05-g5-toolkit.html · owner: g5-toolkit · slides: s12a, s12b, s12c, s13, s14a, s14m, s14b, s14c
+  Only <section class="slide"> elements. Order in the deck comes from manifest.json.
+  Contract and components: slides/src/DECK_SPEC.md.
+
+  Morph keys inside this group (all g5-internal; S11d -> S12a and S14c -> S15 are fades):
+    qf-hl                      the headline, S12a -> S12b -> S12c (vt-swap)
+    col-bigD / col-smalld      the two column panels (vt-shape: they shrink to the side edges)
+    colh-bigD / colh-smalld    the column heads (glyph + label)
+    mv-D1..5 / mv-d1..5        the ten move chips (each glides to its side-edge place)
+    qf                         the quick-fire card, S12b -> S12c (card 1 becomes card 2)
+    glyph-d                    S12c answer d -> S13 (the American manager's d); S13 glyph-D enters alone
+    rule-card                  S13 rhyme of S04a/S04b (parked geometry; no partner on S12c: fades in)
+    exam-q                     S14b question -> S14c headline (vt-text)
+  Goto chip labels are physical positions (S13 = 24, S14m = 26, S15 = 29), checked against the manifest.
+-->
+
+<!-- ===================================================================== S12a · Two rulebooks, ten moves -->
+<section class="slide daylight" id="s12a" data-transition="fade" data-title="Two rulebooks, ten moves">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Recommendations</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s12a-body">
+    <p class="kicker">How to work with each system <span class="soft">· Meyer’s advice, five moves each</span></p>
+    <h2 class="hl qf-hl vt-swap" data-morph="qf-hl">Two rulebooks, ten moves.</h2>
+    <div class="s12a-cols">
+      <!-- click 1: the teal column flies in from the left, its chips staggered -->
+      <div class="s12a-col">
+        <div class="col col--D vt-shape" data-morph="col-bigD" data-step="1" data-build="left" data-duration="700"></div>
+        <div class="col-in">
+          <div class="colh colh--D vt-rewrap" data-morph="colh-bigD" data-step="1" data-build="left" data-delay="80">
+            <span class="glyph glyph--D colh-g" aria-hidden="true">D</span>
+            <p class="colh-t"><span class="colh-k">Working with</span> <b>BIG D</b> <i>(consensual)</i></p>
+          </div>
+          <ol class="mvs mvs--D">
+            <li class="mv-row" data-step="1" data-build="left" data-delay="200"><p class="mv mv--D vt-rewrap" data-morph="mv-D1"><span class="num num--teal">1</span><span class="mv-t">Expect it to take longer</span></p></li>
+            <li class="mv-row" data-step="1" data-build="left" data-delay="400"><p class="mv mv--D vt-rewrap" data-morph="mv-D2"><span class="num num--teal">2</span><span class="mv-t">Show patience &amp; commitment</span></p></li>
+            <li class="mv-row" data-step="1" data-build="left" data-delay="600"><p class="mv mv--D vt-rewrap" data-morph="mv-D3"><span class="num num--teal">3</span><span class="mv-t">Check in regularly</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-mail"/></svg></p><span class="mv-cb">like Per</span></li>
+            <li class="mv-row" data-step="1" data-build="left" data-delay="800"><p class="mv mv--D vt-rewrap" data-morph="mv-D4"><span class="num num--teal">4</span><span class="mv-t">Cultivate informal contacts</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-roots"/></svg></p><span class="mv-cb">Sheldon’s lesson</span></li>
+            <li class="mv-row" data-step="1" data-build="left" data-delay="1000"><p class="mv mv--D vt-rewrap" data-morph="mv-D5"><span class="num num--teal">5</span><span class="mv-t">Don’t push — quality first</span></p></li>
+          </ol>
+        </div>
+      </div>
+      <!-- click 2: the amber column flies in from the right -->
+      <div class="s12a-col">
+        <div class="col col--d vt-shape" data-morph="col-smalld" data-step="2" data-build="right" data-duration="700"></div>
+        <div class="col-in">
+          <div class="colh colh--d vt-rewrap" data-morph="colh-smalld" data-step="2" data-build="right" data-delay="80">
+            <span class="glyph glyph--d colh-g" aria-hidden="true">d</span>
+            <p class="colh-t"><span class="colh-k">Working with</span> <b>little d</b> <i>(top-down)</i></p>
+          </div>
+          <ol class="mvs mvs--d">
+            <li class="mv-row" data-step="2" data-build="right" data-delay="200"><p class="mv mv--d vt-rewrap" data-morph="mv-d1"><span class="num num--amber">1</span><span class="mv-t">The boss decides — before, during or after</span></p></li>
+            <li class="mv-row" data-step="2" data-build="right" data-delay="400"><p class="mv mv--d vt-rewrap" data-morph="mv-d2"><span class="num num--amber">2</span><span class="mv-t">Follow, even if overruled</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-badge"/></svg></p><span class="mv-cb">Decision #1</span></li>
+            <li class="mv-row" data-step="2" data-build="right" data-delay="600"><p class="mv mv--d vt-rewrap" data-morph="mv-d3"><span class="num num--amber">3</span><span class="mv-t">In charge? Listen, then decide fast</span></p></li>
+            <li class="mv-row" data-step="2" data-build="right" data-delay="800"><p class="mv mv--d vt-rewrap" data-morph="mv-d4"><span class="num num--amber">4</span><span class="mv-t">Divided, no leader? Vote</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-stamp"/></svg></p><span class="mv-cb">our rule 4</span></li>
+            <li class="mv-row" data-step="2" data-build="right" data-delay="1000"><p class="mv mv--d vt-rewrap" data-morph="mv-d5"><span class="num num--amber">5</span><span class="mv-t">Stay flexible</span></p></li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="sf"><p>Meyer (2014), pp. 158–160 · chips paraphrased</p></footer>
+</section>
+
+<!-- ===================================================================== S12b · Quick-fire 1 -->
+<section class="slide daylight" id="s12b" data-transition="morph" data-title="Quick-fire 1: Big D or little d?">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Recommendations</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <!-- the two columns, now wings at the side edges (S13's frame) -->
+  <div class="col col--D col--edge at vt-shape vt-leave" data-morph="col-bigD"></div>
+  <div class="wing wing--D at">
+    <div class="colh colh--D colh--edge vt-rewrap" data-morph="colh-bigD">
+      <span class="glyph glyph--D colh-g" aria-hidden="true">D</span>
+      <p class="colh-t"><b>BIG D</b> <i>consensual</i></p>
+    </div>
+    <ol class="mvs mvs--D mvs--edge">
+      <li class="mv-row"><p class="mv mv--D vt-rewrap" data-morph="mv-D1"><span class="num num--teal">1</span><span class="mv-t">Expect it to take longer</span></p></li>
+      <li class="mv-row"><p class="mv mv--D vt-rewrap" data-morph="mv-D2"><span class="num num--teal">2</span><span class="mv-t">Show patience &amp; commitment</span></p></li>
+      <li class="mv-row"><p class="mv mv--D vt-rewrap" data-morph="mv-D3"><span class="num num--teal">3</span><span class="mv-t">Check in regularly</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-mail"/></svg></p></li>
+      <li class="mv-row"><p class="mv mv--D vt-rewrap" data-morph="mv-D4"><span class="num num--teal">4</span><span class="mv-t">Cultivate informal contacts</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-roots"/></svg><i class="mv-ring" data-step="2" data-build="fade" data-delay="380" aria-hidden="true"></i></p></li>
+      <li class="mv-row"><p class="mv mv--D vt-rewrap" data-morph="mv-D5"><span class="num num--teal">5</span><span class="mv-t">Don’t push — quality first</span></p></li>
+    </ol>
+  </div>
+  <div class="col col--d col--edge at vt-shape vt-leave" data-morph="col-smalld"></div>
+  <div class="wing wing--d at">
+    <div class="colh colh--d colh--edge vt-rewrap" data-morph="colh-smalld">
+      <span class="glyph glyph--d colh-g" aria-hidden="true">d</span>
+      <p class="colh-t"><b>little d</b> <i>top-down</i></p>
+    </div>
+    <ol class="mvs mvs--d mvs--edge">
+      <li class="mv-row"><p class="mv mv--d vt-rewrap" data-morph="mv-d1"><span class="num num--amber">1</span><span class="mv-t">The boss decides — before, during or after</span></p></li>
+      <li class="mv-row"><p class="mv mv--d vt-rewrap" data-morph="mv-d2"><span class="num num--amber">2</span><span class="mv-t">Follow, even if overruled</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-badge"/></svg></p></li>
+      <li class="mv-row"><p class="mv mv--d vt-rewrap" data-morph="mv-d3"><span class="num num--amber">3</span><span class="mv-t">In charge? Listen, then decide fast</span></p></li>
+      <li class="mv-row"><p class="mv mv--d vt-rewrap" data-morph="mv-d4"><span class="num num--amber">4</span><span class="mv-t">Divided, no leader? Vote</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-stamp"/></svg></p></li>
+      <li class="mv-row"><p class="mv mv--d vt-rewrap" data-morph="mv-d5"><span class="num num--amber">5</span><span class="mv-t">Stay flexible</span></p></li>
+    </ol>
+  </div>
+
+  <!-- centre stage: the question, the card, the answer -->
+  <div class="qf-mid at">
+    <p class="kicker" data-morph="qf-k" data-enter="fade" data-delay="760">Quick-fire <span class="soft">· gesture, don’t shout</span></p>
+    <h2 class="hl qf-hl vt-swap" data-morph="qf-hl">Big D or <span class="nb">little d?</span> Show me.</h2>
+    <article class="card qf vt-swap" data-morph="qf" data-step="1" data-build="zoom">
+      <p class="card-tag qf-tag">Quick-fire <b>1</b> <span>of 2</span></p>
+      <p class="qf-body">You fly to Tokyo after three weeks preparing your argument.</p>
+    </article>
+    <div class="qf-ans" data-step="2" data-build="none">
+      <span class="glyph glyph--D qf-g" data-step="2" data-build="dropD" aria-hidden="true">D</span>
+      <p class="qf-why" data-step="2" data-build="rise" data-delay="320"><b class="teal">Big D</b> · get in early, build informal contacts <span>(Sheldon)</span></p>
+    </div>
+  </div>
+
+  <button class="hot hot--goto at s12b-skip" style="--x:1640px;--y:904px" data-goto="s13" data-print="hide" aria-label="Skip quick-fire 2: jump to slide 24"><svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> 24</button>
+
+  <footer class="sf"><p>Meyer (2014), pp. 157–160</p>
+    <p class="gesture sf-end">Gesture key:
+      <svg class="ic gest teal" aria-hidden="true"><use href="#ic-arms"/></svg> Big D = both arms up ·
+      <svg class="ic gest amber" aria-hidden="true"><use href="#ic-finger"/></svg> little d = one finger</p>
+  </footer>
+</section>
+
+<!-- ===================================================================== S12c · Quick-fire 2 -->
+<section class="slide daylight" id="s12c" data-transition="morph" data-title="Quick-fire 2: Big D or little d?">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Recommendations</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <!-- the two columns, now wings at the side edges (S13's frame) -->
+  <div class="col col--D col--edge at vt-shape vt-leave" data-morph="col-bigD"></div>
+  <div class="wing wing--D at">
+    <div class="colh colh--D colh--edge" data-morph="colh-bigD">
+      <span class="glyph glyph--D colh-g" aria-hidden="true">D</span>
+      <p class="colh-t"><b>BIG D</b> <i>consensual</i></p>
+    </div>
+    <ol class="mvs mvs--D mvs--edge">
+      <li class="mv-row"><p class="mv mv--D" data-morph="mv-D1"><span class="num num--teal">1</span><span class="mv-t">Expect it to take longer</span></p></li>
+      <li class="mv-row"><p class="mv mv--D" data-morph="mv-D2"><span class="num num--teal">2</span><span class="mv-t">Show patience &amp; commitment</span></p></li>
+      <li class="mv-row"><p class="mv mv--D" data-morph="mv-D3"><span class="num num--teal">3</span><span class="mv-t">Check in regularly</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-mail"/></svg></p></li>
+      <li class="mv-row"><p class="mv mv--D" data-morph="mv-D4"><span class="num num--teal">4</span><span class="mv-t">Cultivate informal contacts</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-roots"/></svg></p></li>
+      <li class="mv-row"><p class="mv mv--D" data-morph="mv-D5"><span class="num num--teal">5</span><span class="mv-t">Don’t push — quality first</span></p></li>
+    </ol>
+  </div>
+  <div class="col col--d col--edge at vt-shape vt-leave" data-morph="col-smalld"></div>
+  <div class="wing wing--d at">
+    <div class="colh colh--d colh--edge" data-morph="colh-smalld">
+      <span class="glyph glyph--d colh-g" aria-hidden="true">d</span>
+      <p class="colh-t"><b>little d</b> <i>top-down</i></p>
+    </div>
+    <ol class="mvs mvs--d mvs--edge">
+      <li class="mv-row"><p class="mv mv--d" data-morph="mv-d1"><span class="num num--amber">1</span><span class="mv-t">The boss decides — before, during or after</span></p></li>
+      <li class="mv-row"><p class="mv mv--d" data-morph="mv-d2"><span class="num num--amber">2</span><span class="mv-t">Follow, even if overruled</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-badge"/></svg></p></li>
+      <li class="mv-row"><p class="mv mv--d" data-morph="mv-d3"><span class="num num--amber">3</span><span class="mv-t">In charge? Listen, then decide fast</span></p></li>
+      <li class="mv-row"><p class="mv mv--d" data-morph="mv-d4"><span class="num num--amber">4</span><span class="mv-t">Divided, no leader? Vote</span><svg class="ic mv-ic" aria-hidden="true"><use href="#ic-stamp"/></svg></p></li>
+      <li class="mv-row"><p class="mv mv--d" data-morph="mv-d5"><span class="num num--amber">5</span><span class="mv-t">Stay flexible</span><i class="mv-ring" data-step="1" data-build="fade" data-delay="380" aria-hidden="true"></i></p></li>
+    </ol>
+  </div>
+
+  <!-- centre stage: the question, the card, the answer -->
+  <div class="qf-mid at">
+    <p class="kicker" data-morph="qf-k">Quick-fire <span class="soft">· gesture, don’t shout</span></p>
+    <h2 class="hl qf-hl" data-morph="qf-hl">Big D or <span class="nb">little d?</span> Show me.</h2>
+    <article class="card qf vt-swap" data-morph="qf">
+      <p class="card-tag qf-tag">Quick-fire <b>2</b> <span>of 2</span></p>
+      <p class="qf-body">A teammate says <span class="nb">“Decision made!”</span> — then brings new data next week.</p>
+    </article>
+    <div class="qf-ans" data-step="1" data-build="none">
+      <span class="glyph glyph--d qf-g" data-morph="glyph-d" data-step="1" data-build="write" aria-hidden="true">d</span>
+      <p class="qf-why" data-step="1" data-build="rise" data-delay="320"><b class="amber">little d</b> · stay flexible — and ask: small <span class="d">d</span> or big <span class="D">D</span>?</p>
+    </div>
+  </div>
+
+  <footer class="sf"><p>Meyer (2014), pp. 157–160</p>
+    <p class="gesture sf-end">Gesture key:
+      <svg class="ic gest teal" aria-hidden="true"><use href="#ic-arms"/></svg> Big D = both arms up ·
+      <svg class="ic gest amber" aria-hidden="true"><use href="#ic-finger"/></svg> little d = one finger</p>
+  </footer>
+</section>
+
+<!-- ===================================================================== S13 · Mixed team? Decide how to decide -->
+<section class="slide daylight" id="s13" data-transition="morph" data-title="Mixed team? Decide how to decide">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Recommendations</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <!-- visual rhyme: the S04 rules card, same markup, same parked place as on S04b -->
+  <article class="card rules g-rules-parked s13-rules" data-morph="rule-card" data-enter="fade" data-delay="560">
+    <h3 class="rules-h">HOW WE DECIDE</h3>
+    <p class="rules-sub">(agreed before we decide)</p>
+    <ol class="rules-list">
+      <li><span class="num">1</span><span>All agree <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> stand up (or both hands up)</span></li>
+      <li><span class="num">2</span><span>Seated = a concern, not a veto</span></li>
+      <li><span class="num">3</span><span>Deadline: 2:00</span></li>
+      <li><span class="num">4</span><span>No unanimity? Majority vote. Everyone commits.</span></li>
+      <li><span class="num">5</span><span>Then: no reopening.</span></li>
+    </ol>
+  </article>
+  <p class="s13-recog at" data-enter="fade" data-delay="900"><b>Recognise it?</b><span>Our rules from Decision #2.</span></p>
+
+  <div class="s13-main at">
+    <h2 class="hl-2 s13-hl" data-enter="fade" data-delay="760">Mixed team? Decide how to decide.</h2>
+    <!-- click 1: Meyer's protocol; the ticks wipe in 0.3 s apart, each against the rule that already covered it -->
+    <article class="card s13-proto" data-step="1" data-build="rise">
+      <p class="s13-proto-h"><span class="kicker">Meyer’s protocol</span> <i>agree it early, in a mixed team</i> <span class="s13-ours">our rule</span></p>
+      <ul class="s13-list">
+        <li><span class="s13-cb"><svg class="ic" aria-hidden="true"><use href="#ic-box"/></svg><svg class="ic s13-ck" data-step="1" data-build="wipe" data-delay="300" aria-hidden="true"><use href="#ic-check"/></svg></span><span class="s13-it">Vote — or boss after discussion?</span><span class="s13-r" data-step="1" data-build="fade" data-delay="300"><span class="num">4</span></span></li>
+        <li><span class="s13-cb"><svg class="ic" aria-hidden="true"><use href="#ic-box"/></svg><svg class="ic s13-ck" data-step="1" data-build="wipe" data-delay="600" aria-hidden="true"><use href="#ic-check"/></svg></span><span class="s13-it">100% agreement needed?</span><span class="s13-r" data-step="1" data-build="fade" data-delay="600"><span class="num">1</span><span class="num">2</span></span></li>
+        <li><span class="s13-cb"><svg class="ic" aria-hidden="true"><use href="#ic-box"/></svg><svg class="ic s13-ck" data-step="1" data-build="wipe" data-delay="900" aria-hidden="true"><use href="#ic-check"/></svg></span><span class="s13-it">Deadline?</span><span class="s13-r" data-step="1" data-build="fade" data-delay="900"><span class="num">3</span></span></li>
+        <li><span class="s13-cb"><svg class="ic" aria-hidden="true"><use href="#ic-box"/></svg><svg class="ic s13-ck" data-step="1" data-build="wipe" data-delay="1200" aria-hidden="true"><use href="#ic-check"/></svg></span><span class="s13-it">Flexibility after the deadline?</span><span class="s13-r" data-step="1" data-build="fade" data-delay="1200"><span class="num">5</span></span></li>
+        <li><span class="s13-cb"><svg class="ic" aria-hidden="true"><use href="#ic-box"/></svg></span><span class="s13-it">Revisit before big decisions</span><span class="s13-r s13-r--now" data-step="1" data-build="fade" data-delay="1500">—</span></li>
+      </ul>
+    </article>
+  </div>
+
+  <!-- the merger epilogue: the American manager's d, the German manager's D -->
+  <div class="s13-say s13-say--d at">
+    <span class="glyph glyph--d s13-g" data-morph="glyph-d" aria-hidden="true">d</span>
+    <blockquote class="s13-bub s13-bub--d" data-step="2" data-build="rise">
+      <p class="q q-s">“Great! Decision made! … Decision with a small <span class="d">d</span>, that is!”</p>
+      <p class="who">an American manager <span class="role">· p. 160</span></p>
+    </blockquote>
+  </div>
+  <div class="s13-say s13-say--D at">
+    <span class="glyph glyph--D s13-g" data-morph="glyph-D" data-enter="dropD" data-delay="760" aria-hidden="true">D</span>
+    <blockquote class="s13-bub s13-bub--D" data-step="3" data-build="rise">
+      <p class="q q-s">“…does it have a small <span class="d">d</span> or a big <span class="D">D</span>?”</p>
+      <p class="who">a German manager <span class="role">· p. 160</span></p>
+    </blockquote>
+  </div>
+
+  <!-- click 4: the takeaway -->
+  <blockquote class="s13-take at" data-step="4" data-build="rise">
+    <p class="q">“awareness and open communication go a long way toward defusing conflict”</p>
+    <p class="who">Meyer <span class="role">· p. 161</span></p>
+  </blockquote>
+
+  <!-- live hint: which scenario the room chose in Decision #2 (the chip routing stays manual) -->
+  <p class="s13-hint s13-hint--M at" data-show-if="d2.scenario==M" data-print="hide">your scenario: <b>M</b></p>
+  <p class="s13-hint s13-hint--T at" data-show-if="d2.scenario==T" data-print="hide">your scenario: <b>T</b> · next</p>
+  <button class="hot hot--goto at s13-skip" style="--x:1640px;--y:904px" data-goto="s14m" data-print="hide" aria-label="Scenario M: jump to slide 26">M <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> 26</button>
+
+  <footer class="sf"><p>Meyer (2014), pp. 160–161 · rules card: ours, after p. 160</p></footer>
+</section>
+
+<!-- ===================================================================== S14a · Apply: Scenario T -->
+<section class="slide daylight" id="s14a" data-transition="fade" data-title="Apply: Scenario T">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Recommendations · <b>Apply</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s14-head">
+    <p class="kicker">Apply <span class="soft">· the scenario you chose in Decision #2</span></p>
+    <h2 class="hl">Your scenario. Your three moves.</h2>
+  </div>
+
+  <!-- the S04b card, centred; no fixed stamp (four possible outcomes): a dashed outline, or the room's live result -->
+  <div class="s14-case at">
+    <article class="card scn scn--T s14-card">
+      <h3 class="scn-title">SCENARIO T</h3>
+      <p class="scn-body">Your proposal needs approval at Tokyo HQ. In four weeks.</p>
+    </article>
+    <div class="s14-out">
+      <p class="s14-dash" data-show-if="!d2.method || d2.scenario!=T" data-print="show">decided<br>by you</p>
+      <div class="stamp stamp--D s14-stamp" data-show-if="d2.scenario==T &amp;&amp; d2.method==D" data-print="hide"><b>D</b><span>no more<br>discussion!</span></div>
+      <div class="stamp stamp--vote s14-stamp" data-show-if="d2.scenario==T &amp;&amp; d2.method==VOTE" data-print="hide"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+      <p class="s14-res" data-show-if="d2.scenario==T &amp;&amp; d2.elapsed" data-print="hide">decided by you · after <b data-bind="d2.elapsed" data-print="2:00">0:00</b></p>
+    </div>
+  </div>
+
+  <p class="s14-call at" data-print="hide"><span class="rec" aria-hidden="true"></span>Which three moves would you use? <b>Call them out.</b></p>
+
+  <!-- click 1: the three moves fly in from where the S12 chips stood (teal column: left) -->
+  <ol class="s14-moves at">
+    <li class="s14-mv s14-mv--D" data-step="1" data-build="left"><span class="num num--teal">1</span>
+      <svg class="ic s14-ic" aria-hidden="true"><use href="#ic-roots"/></svg>
+      <p class="s14-mv-t">Start <i>nemawashi</i> now</p>
+      <p class="s14-mv-s">get in early and informally</p></li>
+    <li class="s14-mv s14-mv--D" data-step="1" data-build="left" data-delay="200"><span class="num num--teal">2</span>
+      <svg class="ic s14-ic" aria-hidden="true"><use href="#ic-box-check"/></svg>
+      <p class="s14-mv-t">Quality of information</p>
+      <p class="s14-mv-s">complete, well reasoned; don’t push</p></li>
+    <li class="s14-mv s14-mv--D" data-step="1" data-build="left" data-delay="400"><span class="num num--teal">3</span>
+      <span class="s14-ic s14-ic--D" aria-hidden="true">D</span>
+      <p class="s14-mv-t">Expect it to stick</p>
+      <p class="s14-mv-s">once made, hard to change</p></li>
+  </ol>
+
+  <footer class="sf"><p>Meyer (2014), pp. 157–160 · moves paraphrased</p></footer>
+</section>
+
+<!-- ===================================================================== S14m · Apply: Scenario M (hidden variant) -->
+<section class="slide daylight" id="s14m" data-transition="fade" data-hidden data-next="s14b" data-title="Apply: Scenario M (variant)">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Recommendations · <b>Apply</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s14-head">
+    <p class="kicker">Apply <span class="soft">· the scenario you chose in Decision #2</span></p>
+    <h2 class="hl">Your scenario. Your three moves.</h2>
+  </div>
+
+  <div class="s14-case at">
+    <article class="card scn scn--M s14-card">
+      <h3 class="scn-title">SCENARIO M</h3>
+      <p class="scn-body">Your German–American team must pick a supplier. By Friday.</p>
+    </article>
+    <div class="s14-out">
+      <p class="s14-dash" data-show-if="!d2.method || d2.scenario!=M" data-print="show">decided<br>by you</p>
+      <div class="stamp stamp--D s14-stamp" data-show-if="d2.scenario==M &amp;&amp; d2.method==D" data-print="hide"><b>D</b><span>no more<br>discussion!</span></div>
+      <div class="stamp stamp--vote s14-stamp" data-show-if="d2.scenario==M &amp;&amp; d2.method==VOTE" data-print="hide"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+      <p class="s14-res" data-show-if="d2.scenario==M &amp;&amp; d2.elapsed" data-print="hide">decided by you · after <b data-bind="d2.elapsed" data-print="2:00">0:00</b></p>
+    </div>
+  </div>
+
+  <p class="s14-call at" data-print="hide"><span class="rec" aria-hidden="true"></span>Which three moves would you use? <b>Call them out.</b></p>
+
+  <ol class="s14-moves at">
+    <li class="s14-mv" data-step="1" data-build="left"><span class="num">1</span>
+      <svg class="ic s14-ic" aria-hidden="true"><use href="#ic-box-check"/></svg>
+      <p class="s14-mv-t">Agree the method first</p>
+      <p class="s14-mv-s">vote or boss? 100%? Friday?</p></li>
+    <li class="s14-mv" data-step="1" data-build="left" data-delay="200"><span class="num">2</span>
+      <span class="s14-ic s14-ic--pair" aria-hidden="true"><span class="d">d</span><span class="D">D</span></span>
+      <p class="s14-mv-t">Label: small <span class="d">d</span> or big <span class="D">D</span>?</p>
+      <p class="s14-mv-s">say which kind each decision is</p></li>
+    <li class="s14-mv" data-step="1" data-build="left" data-delay="400"><span class="num">3</span>
+      <svg class="ic s14-ic" aria-hidden="true"><use href="#ic-clock"/></svg>
+      <p class="s14-mv-t">Deadline + flexibility after</p>
+      <p class="s14-mv-s">how open is it after Friday?</p></li>
+  </ol>
+
+  <footer class="sf"><p>Meyer (2014), pp. 157–160 · moves paraphrased</p></footer>
+</section>
+
+<!-- ===================================================================== S14b · Exam card (static) -->
+<section class="slide daylight" id="s14b" data-transition="fade" data-title="Exam card">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Recommendations · <b>Exam</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s14b-body">
+    <p class="kicker s14b-k">Exam question <span class="soft">· the Lecture I format</span></p>
+    <h2 class="s14b-q vt-text" data-morph="exam-q">Explain the difference between consensual and <span class="nb">top-down</span> decision making and give an example.</h2>
+
+    <div class="s14b-grid">
+      <article class="card s14b-pt s14b-pt--D">
+        <p class="s14b-lab"><span class="num num--teal">1</span><b class="teal">Consensual</b> <span class="D">D</span></p>
+        <p class="s14b-tx">groups, unanimous agreement <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> slow decision, fast implementation, fixed <span class="D">D</span></p>
+        <p class="s14b-eg"><i>e.g.</i> ringi (Japan), Per’s team (Sweden)</p>
+      </article>
+      <article class="card s14b-pt s14b-pt--d">
+        <p class="s14b-lab"><span class="num num--amber">2</span><b class="amber">Top-down</b> <span class="d">d</span></p>
+        <p class="s14b-tx">individuals, usually the boss <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> fast decision, flexible <span class="d">d</span> <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> continual revision, so implementation can take long</p>
+        <p class="s14b-eg"><i>e.g.</i> the US side of the merger</p>
+      </article>
+      <article class="card s14b-pt">
+        <p class="s14b-lab"><span class="num">3</span><b>Leading <svg class="ic" aria-hidden="true"><use href="#ic-neq"/></svg> Deciding</b></p>
+        <p class="s14b-tx">US egalitarian yet top-down; Germany, Japan hierarchical yet consensual</p>
+      </article>
+      <article class="card s14b-pt">
+        <p class="s14b-lab"><span class="num">4</span><b>Recommendations</b></p>
+        <p class="s14b-tx"><span class="teal">consensual</span> <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> get in early &amp; informally, be patient; <span class="amber nb">top-down</span> <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> follow the boss, stay flexible; mixed <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> agree how you decide</p>
+      </article>
+    </div>
+
+    <p class="s14b-photo"><svg class="ic" aria-hidden="true" viewBox="0 0 24 24"><path d="M3.5 8.5h3l1.6-2.5h7.8l1.6 2.5h3v10h-17z"/><circle cx="12" cy="13.2" r="3.4"/></svg>Take a photo.</p>
+  </div>
+
+  <button class="hot hot--goto at s14b-skip" style="--x:1600px;--y:904px" data-goto="s15" data-print="hide" aria-label="Skip true or false: jump to slide 29">II <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> 29</button>
+
+  <footer class="sf"><p>Lecture I, slide 7 (exam format); Meyer (2014), pp. 145–160</p></footer>
+</section>
+
+<!-- ===================================================================== S14c · True or false? -->
+<section class="slide daylight" id="s14c" data-transition="morph" data-title="True or false?">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Recommendations · <b>Exam</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s14c-body">
+    <h2 class="hl s14c-hl vt-text" data-morph="exam-q">True or false? Thumbs.</h2>
+    <p class="s14c-key" data-enter="fade" data-delay="760">
+      <svg class="s14c-thumb" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 18h6v16H7zM13 31.5c3 1.6 5.5 2.5 9.5 2.5h6.5c2 0 3.4-1.3 3.8-3l2-9c.4-2.2-1.1-4-3.3-4H24l1.4-6.2c.5-2.3-1-4.3-3.2-4.3h-.5L13 19.5"/></svg>
+      thumb up = true
+      <svg class="s14c-thumb s14c-thumb--dn" viewBox="0 0 40 40" aria-hidden="true"><path d="M7 18h6v16H7zM13 31.5c3 1.6 5.5 2.5 9.5 2.5h6.5c2 0 3.4-1.3 3.8-3l2-9c.4-2.2-1.1-4-3.3-4H24l1.4-6.2c.5-2.3-1-4.3-3.2-4.3h-.5L13 19.5"/></svg>
+      thumb down = false
+    </p>
+  </div>
+
+  <!-- click 1: statement · click 2: stamp · click 3: statement · click 4: stamp -->
+  <article class="card s14c-st s14c-st--1 at" data-step="1" data-build="rise">
+    <p class="s14c-n">1</p>
+    <p class="q s14c-q">Top-down decisions are made fast, so implementation is fast too.</p>
+    <p class="s14c-why" data-step="2" data-build="fade" data-delay="260"><svg class="ic" aria-hidden="true"><use href="#ic-loop"/></svg><span>continual revision: implementation can take long</span></p>
+    <div class="stamp stamp--ink s14c-stamp" data-step="2" data-build="stamp"><svg class="ic" aria-hidden="true"><use href="#ic-cross"/></svg><b>FALSE</b></div>
+  </article>
+  <article class="card s14c-st s14c-st--2 at" data-step="3" data-build="rise">
+    <p class="s14c-n">2</p>
+    <p class="q s14c-q">Japan is strongly hierarchical, yet one of the most consensual societies.</p>
+    <p class="s14c-why" data-step="4" data-build="fade" data-delay="260"><svg class="ic" aria-hidden="true"><use href="#ic-roots"/></svg><span><i>ringi</i>: group agreement, level by level</span></p>
+    <div class="stamp stamp--ink s14c-stamp s14c-stamp--t" data-step="4" data-build="stamp"><svg class="ic" aria-hidden="true"><use href="#ic-check"/></svg><b>TRUE</b></div>
+  </article>
+
+  <footer class="sf"><p>Meyer (2014), pp. 149, 154</p></footer>
+</section>

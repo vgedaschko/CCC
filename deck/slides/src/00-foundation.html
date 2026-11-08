@@ -1,0 +1,213 @@
+<!--
+  00-foundation.html · owner: foundation · slides: s01, s04b, s04z, s05 (reference slides)
+  Only <section class="slide"> elements. Order in the deck comes from manifest.json.
+-->
+
+<section class="slide bare" id="s01" data-transition="fade" data-title="Big D or little d?">
+  <h1 class="sr">BIG D or little d? Who decides — and how?</h1>
+  <!-- title lockup: the words shrink into the running-head title on S02; the glyphs slide off stage -->
+  <div class="s01-words vt-text" data-morph="rh-title" data-fixed-text aria-hidden="true">
+    <span class="s01-big">BIG</span>
+    <span class="s01-or">or <span class="s01-little">little</span></span>
+    <span class="s01-q">?</span>
+  </div>
+  <span class="glyph glyph--D g-glyph-D--title" data-morph="glyph-D" data-enter="set" aria-hidden="true">D</span>
+  <span class="glyph glyph--d g-glyph-d--title" data-morph="glyph-d" data-enter="write" data-delay="300" aria-hidden="true">d</span>
+
+  <div class="s01-side at stack">
+    <p class="s01-sub">Who decides —<br>and how?</p>
+    <div class="s01-credits stack">
+      <p class="s01-book">Erin Meyer · <i>The Culture Map</i></p>
+      <p class="s01-ch">Ch. 5 “Big D or Little d: Who Decides, and How?” (the Deciding scale)</p>
+      <p class="s01-team"><span class="ph">[MEMBER 1]</span> · <span class="ph">[MEMBER 2]</span> · <span class="ph">[MEMBER 3]</span></p>
+      <p class="s01-course">Cross-Cultural Communication ·<br>Prof. Sabrina Hegner · HSB · 06.01.2027</p>
+    </div>
+  </div>
+
+  <p class="s01-route at">Definition <i></i> Countries <i></i> Recommendations <i></i> Our cultures <i></i> Management implications</p>
+  <!--@axis {"preset":"title","show":[],"tiles":{"mu":"de","ny":"us"},"id":"s01-axis"}-->
+</section>
+
+<section class="slide story" id="s04b" data-transition="morph" data-title="Decision #2: the room decides">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Decision #2</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <!-- the rules card, parked (morphs from the large card on S04a) -->
+  <article class="card rules g-rules-parked" data-morph="rule-card">
+    <h3 class="rules-h">HOW WE DECIDE</h3>
+    <p class="rules-sub">(agreed before we decide)</p>
+    <ol class="rules-list">
+      <li><span class="num">1</span><span>All agree <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> stand up (or both hands up)</span></li>
+      <li><span class="num">2</span><span>Seated = a concern, not a veto</span></li>
+      <li><span class="num">3</span><span>Deadline: 2:00</span></li>
+      <li><span class="num">4</span><span>No unanimity? Majority vote. Everyone commits.</span></li>
+      <li><span class="num">5</span><span>Then: no reopening.</span></li>
+    </ol>
+  </article>
+  <p class="live s04b-live at" data-enter="fade" data-delay="500"><span class="rec" aria-hidden="true"></span><b>STAND</b> = agree · <b>SEATED</b> = concern</p>
+
+  <!-- right column: one flow grid (mail · flip zone · cards · chips · Müller); text growth pushes down,
+       the flip zone and the slack row absorb it. At the scripted text the cards sit on the registry
+       geometry (.g-scn-T / .g-scn-M), so the fade to S04z keeps them in place. -->
+  <div class="s04b-right at">
+    <article class="card mail" data-enter="notify" data-delay="200">
+      <p class="card-tag"><svg class="ic" aria-hidden="true"><use href="#ic-mail"/></svg>our email · Per-style</p>
+      <p class="mail-body">Hey class — I thought we could practise <b>SCENARIO T</b> at the end of Part&nbsp;I. What do you think?</p>
+    </article>
+
+    <!-- click 2: the flip arrow between the cards -->
+    <div class="s04b-flipzone">
+      <div class="s04b-flip" data-step="2" data-build="fade">
+        <svg viewBox="0 0 616 70" aria-hidden="true"><path d="M8 66C70 14 546 14 608 66"/><path d="M-3 52 8 66 22 60M597 60 608 66 619 52"/></svg>
+        <p class="s04b-pill">new data?</p>
+      </div>
+    </div>
+
+    <div class="s04b-cards">
+      <article class="card scn scn--T" data-enter="rise" data-delay="560">
+        <h3 class="scn-title">SCENARIO T</h3>
+        <p class="scn-body">Your proposal needs approval at Tokyo HQ. In four weeks.</p>
+        <span class="scn-mono" aria-hidden="true">T</span>
+        <div class="stamp stamp--D" data-triggered="dT" data-build="stamp"><b>D</b><span>no more<br>discussion!</span></div>
+        <div class="stamp stamp--vote" data-triggered="vT" data-build="stamp"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+      </article>
+      <article class="card scn scn--M" data-enter="rise" data-delay="680">
+        <h3 class="scn-title">SCENARIO M</h3>
+        <p class="scn-body">Your German–American team must pick a supplier. By Friday.</p>
+        <span class="scn-mono" aria-hidden="true">M</span>
+        <div class="stamp stamp--D" data-triggered="dM" data-build="stamp"><b>D</b><span>no more<br>discussion!</span></div>
+        <div class="stamp stamp--vote" data-triggered="vM" data-build="stamp"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+      </article>
+    </div>
+
+    <!-- trigger chips: mouse only, one group (a mis-click is corrected by clicking the right chip) -->
+    <div class="s04b-chips" data-enter="fade" data-delay="900">
+      <div class="row">
+        <button class="hot hot--D" data-trigger="dT" data-trigger-group="d2" data-set="d2.scenario=T; d2.method=D" data-stop-timer="" data-print="hide" aria-label="Stamp D on scenario T">D</button>
+        <button class="hot hot--vote" data-trigger="vT" data-trigger-group="d2" data-set="d2.scenario=T; d2.method=VOTE" data-stop-timer="" data-print="hide" aria-label="Stamp vote on scenario T">vote</button>
+      </div>
+      <div class="row">
+        <button class="hot hot--D" data-trigger="dM" data-trigger-group="d2" data-set="d2.scenario=M; d2.method=D" data-stop-timer="" data-print="hide" aria-label="Stamp D on scenario M">D</button>
+        <button class="hot hot--vote" data-trigger="vM" data-trigger-group="d2" data-set="d2.scenario=M; d2.method=VOTE" data-stop-timer="" data-print="hide" aria-label="Stamp vote on scenario M">vote</button>
+      </div>
+      <p class="s04b-print-outcome" data-print-only>D or VOTE? — decided live by the room</p>
+      <p class="s04b-fict">fictional exercises</p>
+    </div>
+
+    <!-- click 3: Müller -->
+    <blockquote class="quote s04b-muller" data-step="3" data-build="rise">
+      <p class="q">“They casually change the decision every week…”</p>
+      <p class="who"><span class="mono">MM</span><span>M. Müller <span class="role">· German director</span></span></p>
+    </blockquote>
+  </div>
+
+  <!-- the clock band: Decision #1 parked above, the hero consensus clock below (1776 px = 2:00) -->
+  <div class="bar bar--amber g-clock-td vt-shape" data-morph="clock-td"></div>
+  <p class="clock-lbl amber g-clock-td-lbl vt-swap" data-morph="clock-td-lbl"><b>Decision #1</b> · <svg class="ic" aria-hidden="true"><use href="#ic-approx"/></svg> 3 s <span class="soft">· one person</span></p>
+  <p class="clock-lbl teal g-clock-cons-lbl" data-enter="fade" data-delay="300"><b>Decision #2</b> <span class="soft">· the room · deadline 2:00</span></p>
+  <div class="track g-clock-cons s04b-face" data-enter="wipe" data-delay="300" aria-hidden="true"><i style="--at:25%"></i><i style="--at:50%"></i><i style="--at:75%"></i></div>
+  <div class="ticks g-clock-ticks" aria-hidden="true"><span style="--at:0%">0:00</span><span style="--at:25%">0:30</span><span style="--at:50%">1:00</span><span style="--at:75%">1:30</span><span style="--at:100%">2:00</span></div>
+  <p class="clock-num s04b-num s04b-ghost" aria-hidden="true">2:00</p>
+  <!-- click 1: the live countdown (stored as d2.elapsed / d2.elapsed_s when a stamp stops it) -->
+  <div class="s04b-timer" data-step="1" data-build="none" data-timer="120" data-timer-store="d2.elapsed" data-print="2:00" data-print-progress="0">
+    <span class="clock-num s04b-num" data-timer-text>2:00</span>
+    <span class="s04b-fill g-clock-cons" data-timer-bar aria-hidden="true"><span class="s04b-fill-bar"></span><i style="--at:25%"></i><i style="--at:50%"></i><i style="--at:75%"></i></span>
+    <span class="s04b-done">time · rule <span class="num num--amber">4</span></span>
+  </div>
+
+  <!-- a stamp covers the clock: "decided", with the elapsed time -->
+  <div class="cover cover--D g-cover s04b-cover" data-triggered="dT dM">
+    <p class="cover-word">decided</p>
+    <p class="cover-meta">Big D · no more discussion<span class="big" data-show-if="d2.elapsed">after <span data-bind="d2.elapsed">0:00</span></span></p>
+  </div>
+  <div class="cover cover--vote g-cover s04b-cover" data-triggered="vT vM">
+    <p class="cover-word">decided</p>
+    <p class="cover-meta">by majority vote · rule 4<span class="big" data-show-if="d2.elapsed">after <span data-bind="d2.elapsed">0:00</span></span></p>
+  </div>
+
+  <footer class="sf"><p>Meyer (2014), p. 160 (mixed team) · p. 149 (Fig. 5.1) · p. 159 (vote) · p. 147 (Müller)</p></footer>
+</section>
+
+<section class="slide story" id="s04z" data-transition="fade" data-auto="150" data-title="Bridge: two decisions, two clocks">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Decision #2</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+  <!-- bridge: only the two clock bars and the two cards; S05 morphs from here.
+       The room's stamp is mirrored from the store (d2.scenario / d2.method), so it survives the bridge. -->
+  <article class="card scn scn--T g-scn-T">
+    <h3 class="scn-title">SCENARIO T</h3>
+    <p class="scn-body">Your proposal needs approval at Tokyo HQ. In four weeks.</p>
+    <span class="scn-mono" aria-hidden="true">T</span>
+    <div class="stamp stamp--D" data-show-if="d2.scenario==T &amp;&amp; d2.method==D" data-print="hide"><b>D</b><span>no more<br>discussion!</span></div>
+    <div class="stamp stamp--vote" data-show-if="d2.scenario==T &amp;&amp; d2.method==VOTE" data-print="hide"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+  </article>
+  <article class="card scn scn--M g-scn-M">
+    <h3 class="scn-title">SCENARIO M</h3>
+    <p class="scn-body">Your German–American team must pick a supplier. By Friday.</p>
+    <span class="scn-mono" aria-hidden="true">M</span>
+    <div class="stamp stamp--D" data-show-if="d2.scenario==M &amp;&amp; d2.method==D" data-print="hide"><b>D</b><span>no more<br>discussion!</span></div>
+    <div class="stamp stamp--vote" data-show-if="d2.scenario==M &amp;&amp; d2.method==VOTE" data-print="hide"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+  </article>
+  <div class="bar bar--amber g-clock-td vt-shape" data-morph="clock-td"></div>
+  <div class="bar bar--teal g-clock-cons vt-shape" data-morph="clock-cons"></div>
+  <p class="print-tag" data-print-only>Bridge · animation step between S04 and S05</p>
+</section>
+
+<section class="slide daylight" id="s05" data-transition="morph" data-title="What you just felt has a name">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Definition</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <!-- held until the bars land (data-delay = --t-hold) -->
+  <div class="body s05-head" data-enter="fade" data-delay="760">
+    <p class="kicker">The Deciding scale <span class="soft">· Consensual <svg class="ic" aria-hidden="true"><use href="#ic-arrow-lr"/></svg> Top-down · who decides, and how?</span></p>
+    <h2 class="hl">What you just felt has a name.</h2>
+  </div>
+
+  <!-- TOP-DOWN row (Decision #1 came first) -->
+  <div class="s05-row s05-row--td at stack">
+    <p class="s05-rowlab amber" data-enter="fade" data-delay="760">TOP-DOWN</p>
+    <p class="label" data-enter="fade" data-delay="760">Decision #1 · one person · <svg class="ic" aria-hidden="true"><use href="#ic-approx"/></svg> 3 s</p>
+    <p class="q q-s s05-def" data-step="2" data-build="rise">“Decisions are made by individuals (usually the boss).”</p>
+    <p class="chip chip--amber s05-chip" data-step="4" data-build="rise">FAST IN · SLOW OUT <em>(flexible)</em></p>
+  </div>
+
+  <div class="bar bar--amber g-tl-td-disc vt-shape" data-morph="clock-td"></div>
+  <p class="label s05-seg s05-seg--td at" data-enter="fade" data-delay="760">Discussion</p>
+  <span class="glyph glyph--d g-glyph-d--tl" data-morph="glyph-d" data-enter="write" data-delay="820" aria-hidden="true">d</span>
+  <div class="impl impl--hatched amber g-tl-td-impl" data-morph="impl-td" data-step="1" data-build="wipe"></div>
+  <svg class="loop at s05-loop s05-loop--1" data-morph="loop-1" data-step="1" data-build="draw" data-delay="250" viewBox="0 0 96 96" aria-hidden="true"><use href="#loop-96"/></svg>
+  <svg class="loop at s05-loop s05-loop--2" data-morph="loop-2" data-step="1" data-build="draw" data-delay="450" viewBox="0 0 96 96" aria-hidden="true"><use href="#loop-96"/></svg>
+  <svg class="loop at s05-loop s05-loop--3" data-morph="loop-3" data-step="1" data-build="draw" data-delay="650" viewBox="0 0 96 96" aria-hidden="true"><use href="#loop-96"/></svg>
+  <p class="s05-flipnote at" data-step="1" data-delay="350">our CEO’s flip</p>
+  <p class="label s05-impl-lbl s05-impl-lbl--td at" data-step="1" data-build="rise">Implementation (more discussion, possible revisiting and altering of decision)</p>
+  <p class="ann s05-ann s05-ann--td at" data-step="2" data-build="rise" data-delay="150">“each decision is also flexible—a decision with a lowercase <span class="d">d</span>”</p>
+
+  <!-- CONSENSUAL row -->
+  <div class="s05-row s05-row--cons at stack">
+    <p class="s05-rowlab teal" data-enter="fade" data-delay="760">CONSENSUAL</p>
+    <p class="label" data-enter="fade" data-delay="760">Decision #2 · consensus rules · <span class="num-tab" data-bind="d2.elapsed" data-print="minutes">minutes</span></p>
+    <p class="q q-s s05-def" data-step="3" data-build="rise">“Decisions are made in groups through unanimous agreement.”</p>
+    <p class="chip chip--teal s05-chip" data-step="4" data-build="rise" data-delay="120">SLOW IN · FAST OUT</p>
+  </div>
+
+  <div class="bar bar--teal g-tl-cons-disc vt-shape" data-morph="clock-cons"></div>
+  <p class="label s05-seg s05-seg--cons at" data-enter="fade" data-delay="760">Discussion</p>
+  <span class="glyph glyph--D g-glyph-D--tl" data-morph="glyph-D" data-enter="dropD" data-delay="900" aria-hidden="true">D</span>
+  <div class="impl impl--solid teal g-tl-cons-impl" data-morph="impl-cons" data-step="1" data-build="wipe" data-delay="200"></div>
+  <p class="label s05-impl-lbl s05-impl-lbl--cons at" data-step="1" data-build="rise" data-delay="200">Implementation<br>(no more discussion!)</p>
+  <p class="ann s05-ann s05-ann--cons at" data-step="3" data-build="rise" data-delay="150">“fixed and inflexible—a decision with a capital <span class="D">D</span>”</p>
+
+  <footer class="sf"><p>Meyer (2014), Figs. 5.1–5.3 · mnemonic chips: <i>ours</i></p>
+    <p class="gesture sf-end s05-gest" data-step="5" data-build="rise">Gesture key:
+      <svg class="ic gest teal" aria-hidden="true"><use href="#ic-arms"/></svg> Big D = both arms up ·
+      <svg class="ic gest amber" aria-hidden="true"><use href="#ic-finger"/></svg> little d = one finger</p>
+  </footer>
+</section>

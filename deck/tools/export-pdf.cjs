@@ -2,8 +2,10 @@
 /*
  * export-pdf.cjs: one 16:9 page per physical slide, every slide in its final build state.
  *
- *   node tools/export-pdf.cjs <deck.html> <out.pdf>
+ *   node tools/export-pdf.cjs <deck.html> <out.pdf> [--paper]
  *
+ * --paper prints the light paper variant (?print&paper: the design maps its palette onto paper via the
+ * root class deck-paper). The dark variant stays the default.
  * Uses the engine's print mode (?print): all builds shown, triggered elements and live bindings in their
  * data-print defaults, hidden variant slides included and tagged. Chromium prints text as vector text.
  */
@@ -19,8 +21,9 @@ function countPdfPages(buf) {
   return m ? m.length : 0;
 }
 
-async function exportPdf(deckFile, outFile) {
-  const { browser, page, info, errors } = await openPrint(deckFile);
+async function exportPdf(deckFile, outFile, opts) {
+  const o = opts || {};
+  const { browser, page, info, errors } = await openPrint(deckFile, { paper: !!o.paper });
   try {
     fs.mkdirSync(path.dirname(path.resolve(outFile)), { recursive: true });
     await page.pdf({
@@ -41,14 +44,16 @@ async function exportPdf(deckFile, outFile) {
 }
 
 async function main() {
-  const [inFile, outFile] = process.argv.slice(2);
+  const args = process.argv.slice(2);
+  const paper = args.includes('--paper');
+  const [inFile, outFile] = args.filter((a) => !a.startsWith('--'));
   if (!inFile || !outFile) {
-    console.error('usage: node tools/export-pdf.cjs <deck.html> <out.pdf>');
+    console.error('usage: node tools/export-pdf.cjs <deck.html> <out.pdf> [--paper]');
     process.exit(2);
   }
-  const r = await exportPdf(inFile, outFile);
+  const r = await exportPdf(inFile, outFile, { paper });
   r.errors.forEach((e) => console.warn('export-pdf: page error: ' + e));
-  console.log('export-pdf: wrote ' + outFile + ' (' + r.pages + ' pages for ' + r.slides + ' slides)');
+  console.log('export-pdf: wrote ' + outFile + ' (' + r.pages + ' pages for ' + r.slides + ' slides' + (paper ? ', paper variant' : '') + ')');
   if (r.pages !== r.slides) {
     console.error('export-pdf: page count does not match slide count');
     process.exit(1);

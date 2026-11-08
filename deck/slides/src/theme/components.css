@@ -1,0 +1,640 @@
+/*
+ * components.css: the Noir component set. Markup examples for every component are in
+ * slides/src/DECK_SPEC.md ("Components"). Sizes never go below 28 px (--fs-min).
+ * No fixed heights on anything that holds text: cards grow with their content.
+ */
+
+/* ===================================================================== quote + monogram */
+/*
+ * <blockquote class="quote">
+ *   <p class="q">“They casually change the decision every week…”</p>
+ *   <p class="who"><span class="mono">MM</span><span>M. Müller · German director</span></p>
+ * </blockquote>
+ */
+.quote { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.q {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 470;
+  font-size: var(--fs-q);
+  line-height: 1.18;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.q.q-l { font-size: var(--fs-q-l); line-height: 1.14; }
+.q.q-s { font-size: 37px; line-height: 1.2; }
+.q.q-xs { font-size: var(--fs-sm); line-height: 1.25; }
+.who {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font: 600 var(--fs-min)/1.2 var(--sans);
+  font-stretch: 112%;
+  letter-spacing: .08em;
+  color: var(--ink-2);
+  font-style: normal;
+}
+.who .role { color: var(--ink-3); font-weight: 560; }
+.mono {
+  --w: 64px;
+  --h: 64px;
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 64px;
+  height: 64px;
+  border: var(--sw-1) solid var(--ink-3);
+  border-radius: 50%;
+  font: 720 var(--fs-min)/1 var(--sans);
+  font-stretch: 100%;
+  letter-spacing: 0;
+  color: var(--ink);
+  font-style: normal;
+}
+.mono.mono--teal { border-color: var(--teal); color: var(--teal); }
+.mono.mono--amber { border-color: var(--amber); color: var(--amber); }
+/* monogram chip: the size a quote card shrinks into (S02 cards -> S03 chips, registry: card-ln / card-mw) */
+.mono-chip {
+  display: inline-grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border: var(--sw-2) solid currentColor;
+  border-radius: 50%;
+  background: var(--bg-raise);
+  font: 760 36px/1 var(--sans);
+  font-stretch: 112%;
+  color: var(--ink);
+}
+
+/* ===================================================================== card */
+.card {
+  position: relative;
+  padding: 28px 32px;
+  border: var(--sw-hair) solid var(--card-edge);
+  border-radius: var(--radius);
+  background: var(--card-fill);
+  box-shadow: var(--shadow-card);
+  min-width: 0;
+}
+.card.card--teal { border-color: rgba(63, 216, 198, .55); }
+.card.card--amber { border-color: rgba(255, 181, 74, .55); }
+.card.card--solid { background: var(--bg-raise); }
+.card-tag {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font: 600 var(--fs-min)/1.15 var(--sans);
+  font-stretch: 108%;
+  letter-spacing: .04em;
+  color: var(--ink-2);
+}
+.card-tag .ic { width: 34px; height: 34px; stroke-width: 1.8; }
+
+/* ===================================================================== email card */
+/*
+ * <article class="card mail">
+ *   <p class="card-tag"><svg class="ic" aria-hidden="true"><use href="#ic-mail"/></svg>our email · Per-style</p>
+ *   <p class="mail-body">Hey class — I thought we could practise <b>SCENARIO T</b> … What do you think?</p>
+ * </article>
+ */
+.mail { padding: 24px 34px 28px; }
+.mail-body {
+  margin-top: 12px;
+  font: italic 450 38px/1.22 var(--serif);
+  color: var(--ink);
+  text-wrap: pretty;
+}
+.mail-body b {
+  font: 760 .82em/1 var(--sans);
+  font-stretch: 116%;
+  letter-spacing: .06em;
+  font-style: normal;
+}
+.mail-body + .mail-body { margin-top: 8px; }
+
+/* ===================================================================== scenario card */
+/*
+ * <article class="card scn scn--T">
+ *   <h3 class="scn-title">SCENARIO T</h3>
+ *   <p class="scn-body">Your proposal needs approval at Tokyo HQ. In four weeks.</p>
+ *   <span class="scn-mono" aria-hidden="true">T</span>
+ *   <div class="stamp stamp--D" data-triggered="dT" data-build="stamp">…</div>   (optional, inside the card)
+ * </article>
+ * When a stamp inside the card is shown, title and body yield to a large outline monogram under the
+ * stamp: a clean stamped card, no ghost text peeking out. The card needs >= 196 px height for a stamp.
+ */
+.scn { display: grid; grid-template-rows: auto 1fr; row-gap: 14px; padding: 26px 32px 28px; min-height: 196px; }
+.scn-title {
+  font: 720 var(--fs-sm)/1 var(--sans);
+  font-stretch: var(--wd-kicker);
+  letter-spacing: .16em;
+  color: var(--ink);
+}
+.scn-body {
+  font: 480 32px/1.28 var(--sans);
+  color: var(--ink);
+  text-wrap: balance;
+  align-self: end;
+}
+.scn-mono {
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  translate: 0 -50%;
+  font: 860 176px/1 var(--sans);
+  font-stretch: 125%;
+  color: transparent;
+  -webkit-text-stroke: var(--sw-1) var(--ink-3);
+  visibility: hidden;
+  pointer-events: none;
+}
+.scn:has(> .stamp.is-triggered) > :is(.scn-title, .scn-body) { visibility: hidden; }
+.scn > .stamp { left: 30px; top: 50%; translate: 0 -50%; }
+.scn:has(> .stamp.is-triggered) > .scn-mono { visibility: visible; }
+.scn:has(> .stamp--D.is-triggered) > .scn-mono { -webkit-text-stroke-color: rgba(63, 216, 198, .55); }
+.scn:has(> .stamp--vote.is-triggered) > .scn-mono { -webkit-text-stroke-color: rgba(255, 181, 74, .55); }
+/* a stamp mirrored from the store (data-show-if, e.g. on the S04z bridge) makes the same clean stamped card, live only */
+html:not(.deck-print) .scn:has(> .stamp[data-show-if]:not(.is-if-off)) > :is(.scn-title, .scn-body) { visibility: hidden; }
+html:not(.deck-print) .scn:has(> .stamp[data-show-if]:not(.is-if-off)) > .scn-mono { visibility: visible; }
+html:not(.deck-print) .scn:has(> .stamp--D[data-show-if]:not(.is-if-off)) > .scn-mono { -webkit-text-stroke-color: rgba(63, 216, 198, .55); }
+html:not(.deck-print) .scn:has(> .stamp--vote[data-show-if]:not(.is-if-off)) > .scn-mono { -webkit-text-stroke-color: rgba(255, 181, 74, .55); }
+
+/* ===================================================================== chips (labels) */
+/* <p class="chip chip--amber">FAST IN · SLOW OUT <em>(flexible)</em></p>   non-interactive */
+.chip {
+  display: inline-block;
+  width: max-content;
+  max-width: 100%;
+  padding: 10px 24px 10px;
+  border: var(--sw-1) solid currentColor;
+  border-radius: 999px;
+  font: 650 var(--fs-min)/1.15 var(--sans);
+  font-stretch: 104%;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-wrap: balance;
+}
+.chip em { margin-left: .3em; font: italic 500 32px/1 var(--serif); letter-spacing: 0; text-transform: none; }
+.chip.chip--teal { color: var(--teal); }
+.chip.chip--amber { color: var(--amber); }
+.chip.chip--ink { color: var(--ink); }
+.chip b { color: var(--ink); font-weight: 760; }
+
+/* ===================================================================== hotspots (mouse targets) */
+/*
+ * <button class="hot hot--D" data-trigger="dT" data-trigger-group="d2" data-print="hide" aria-label="…">D</button>
+ * <button class="hot hot--vote" …>vote</button>
+ * <button class="hot hot--goto" data-goto="s02m" data-print="hide">MUNICH <svg class="ic"><use href="#ic-arrow-r"/></svg> 3</button>
+ * Always >= 64 px tall, at least 40 px apart, labelled, and data-print="hide".
+ */
+.hot {
+  display: inline-grid;
+  grid-auto-flow: column;
+  place-items: center;
+  gap: 10px;
+  min-width: 104px;
+  height: 72px;
+  padding: 0 24px;
+  border: var(--sw-1) solid currentColor;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, .35);
+  color: var(--ink-2);
+  cursor: pointer;
+  font: 650 var(--fs-min)/1 var(--sans);
+  font-stretch: 108%;
+  letter-spacing: .06em;
+  transition: background .2s, box-shadow .2s, transform .15s;
+}
+.hot:hover { background: rgba(243, 238, 228, .08); }
+.hot:active { transform: scale(.96); }
+.hot:focus-visible { outline: var(--sw-2) solid var(--ink); outline-offset: 4px; }
+.hot[aria-pressed="true"] { box-shadow: 0 0 0 4px rgba(243, 238, 228, .12), 0 0 26px currentColor; background: rgba(243, 238, 228, .06); }
+.hot.hot--D { color: var(--teal); font: 860 40px/1 var(--sans); font-stretch: 125%; }
+.hot.hot--vote { color: var(--amber); font: italic 500 40px/1 var(--serif); }
+.hot.hot--goto { height: 64px; color: var(--ink-3); border-style: dashed; }
+.hot.hot--goto:hover { color: var(--ink); }
+
+/* ===================================================================== stamps */
+/*
+ * <div class="stamp stamp--D" data-triggered="dT" data-build="stamp"><b>D</b><span>no more<br>discussion!</span></div>
+ * <div class="stamp stamp--vote" data-triggered="vT" data-build="stamp"><b>VOTE</b><span>a top-down technique<br>(Meyer, p. 159)</span></div>
+ * <div class="stamp stamp--ink" data-step="2" data-build="stamp"><svg class="ic"><use href="#ic-check"/></svg><b>TRUE</b></div>
+ * Opaque: a stamp fully hides what is under it. Tilt with --tilt.
+ */
+.stamp {
+  position: absolute;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  padding: 18px 34px;
+  border: var(--sw-3) solid currentColor;
+  border-radius: 18px;
+  background: #0A0B0D;
+  box-shadow: 0 0 0 5px rgba(8, 9, 11, .92), 0 0 0 7px currentColor, 0 20px 60px rgba(0, 0, 0, .6);
+  rotate: var(--tilt, -5deg);
+  white-space: nowrap;
+}
+.stamp b { font: 860 96px/.86 var(--sans); font-stretch: 125%; }
+.stamp span { font: italic 500 36px/1.04 var(--serif); text-align: left; }
+.stamp.stamp--D { color: var(--teal); }
+.stamp.stamp--D b { text-shadow: var(--glow-stamp); }
+.stamp.stamp--vote { --tilt: 4deg; color: var(--amber); flex-direction: column; gap: 8px; padding: 14px 30px; }
+.stamp.stamp--vote b { font-size: 60px; letter-spacing: .14em; margin-right: -.14em; }
+.stamp.stamp--vote span { font: 560 var(--fs-min)/1.16 var(--sans); text-align: center; }
+.stamp.stamp--ink { --tilt: -3deg; color: var(--ink); }
+.stamp.stamp--ink b { font-size: 64px; letter-spacing: .12em; }
+.stamp.stamp--ink .ic { width: 64px; height: 64px; stroke-width: 3; }
+
+/* ===================================================================== "decided" cover */
+/*
+ * <div class="cover cover--D" data-triggered="dT dM">
+ *   <p class="cover-word">decided</p>
+ *   <p class="cover-meta" data-show-if="d2.elapsed">after <span data-bind="d2.elapsed">0:00</span></p>
+ * </div>
+ * Opaque panel that hides a running clock after an early decision.
+ */
+.cover {
+  position: absolute;
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  border: var(--sw-1) solid currentColor;
+  border-radius: var(--radius);
+  background: var(--bg-raise);
+  text-align: center;
+}
+.cover.cover--D { color: var(--teal); box-shadow: 0 0 60px rgba(63, 216, 198, .18); }
+.cover.cover--vote { color: var(--amber); box-shadow: 0 0 60px rgba(255, 181, 74, .16); }
+.cover-word { font: italic 460 110px/1 var(--serif); color: var(--ink); }
+.cover-meta {
+  font: 640 var(--fs-min)/1.2 var(--sans);
+  font-stretch: 118%;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: currentColor;
+  text-align: left;
+}
+.cover-meta .big { display: block; margin-top: 8px; font: 720 72px/1 var(--sans); letter-spacing: -.01em; font-variant-numeric: tabular-nums; font-stretch: 100%; }
+
+/* ===================================================================== bars, tracks, clocks */
+/* A solid time bar: <div class="bar bar--amber"></div> (amber = top-down / seconds, teal = consensus / minutes) */
+.bar { border-radius: 3px; min-height: 8px; }
+.bar.bar--amber { background: var(--amber); box-shadow: var(--glow-bar-amber); }
+.bar.bar--teal { background: linear-gradient(90deg, var(--teal-2), var(--teal)); box-shadow: var(--glow-bar-teal); }
+.bar.bar--empty { border: var(--sw-1) dashed var(--ink-2); background: transparent; }
+/* an outlined track with quarter ticks (the hero consensus clock face) */
+.track {
+  position: relative;
+  border-radius: 6px;
+  background: var(--teal-a);
+  box-shadow: inset 0 0 0 var(--sw-hair) rgba(63, 216, 198, .55);
+  overflow: hidden;
+}
+.track > .deck-timer-fill,
+.track > .track-fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--teal-2), var(--teal));
+  transform-origin: 0 50%;
+  transform: scaleX(var(--deck-progress, 0));
+}
+.track > .track-fill.is-full { transform: none; }
+.track > i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  margin-left: -1.5px;
+  background: rgba(11, 12, 14, .9);
+  left: var(--at);
+}
+.ticks { position: relative; height: 34px; }
+.ticks > span {
+  position: absolute;
+  top: 0;
+  left: var(--at);
+  translate: -50% 0;
+  font: 520 var(--fs-min)/1 var(--sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+.ticks > span:first-child { translate: 0 0; }
+.ticks > span:last-child { translate: -100% 0; }
+.clock-num {
+  font: 720 150px/.9 var(--sans);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em;
+  color: var(--teal);
+  text-shadow: var(--glow-num-teal);
+}
+[data-timer-state="done"] .clock-num { color: var(--amber); text-shadow: var(--glow-num-amber); }
+/* <p class="clock-lbl amber"><b>Decision #1</b> · <svg class="ic"><use href="#ic-approx"/></svg> 3 s <span class="soft">· one person</span></p> */
+.clock-lbl {
+  font: 600 var(--fs-min)/1.2 var(--sans);
+  font-stretch: 108%;
+  letter-spacing: .04em;
+}
+.clock-lbl b { font-weight: 720; font-stretch: 118%; letter-spacing: .12em; text-transform: uppercase; }
+.clock-lbl .ic { width: .9em; height: .9em; stroke-width: 2.6; vertical-align: -.1em; }
+.clock-lbl.amber { color: var(--amber); }
+.clock-lbl.teal { color: var(--teal); }
+.clock-lbl .soft { font-weight: 520; color: var(--ink-2); }
+
+/* ===================================================================== D / d glyph pair */
+/*
+ * <span class="glyph glyph--D" data-morph="glyph-D" aria-hidden="true">D</span>
+ * <span class="glyph glyph--d" data-morph="glyph-d" aria-hidden="true">d</span>
+ * Sizes and positions are registry geometry (geometry.css: .g-glyph-*). Motion: data-enter /
+ * data-build "set" (Big D sets from condensed to 125 %), "drop" (D falls with weight, no bounce),
+ * "write" (little d is written left to right).
+ */
+.glyph {
+  display: block;
+  width: max-content;
+  line-height: 1;
+  font-kerning: none;
+  white-space: nowrap;
+}
+.glyph--D {
+  font-family: var(--sans);
+  font-weight: var(--w-heavy);
+  font-stretch: 125%;
+  color: var(--teal);
+  text-shadow: var(--glow-teal);
+}
+.glyph--d {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 430;
+  color: var(--amber);
+  text-shadow: var(--glow-amber);
+}
+/* inline D / d inside running text */
+.D { font-family: var(--sans); font-weight: 800; font-stretch: 125%; font-style: normal; color: var(--teal); }
+.d { font-family: var(--serif); font-style: italic; font-weight: 500; color: var(--amber); }
+
+/* ===================================================================== implementation strokes */
+/*
+ * Solid = closed, no more discussion (Big D). Hatched = still open, revisable (little d).
+ * The difference survives greyscale and beamer washout.
+ * <div class="impl impl--solid teal at" style="--x:1556px;--y:850px;--w:300px"></div>
+ * <div class="impl impl--hatched amber at" style="--x:860px;--y:494px;--w:1000px"></div>
+ */
+.impl {
+  position: relative;
+  height: 22px;
+  margin-right: 22px;
+}
+.impl::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -26px;
+  width: 30px;
+  height: 34px;
+  translate: 0 -50%;
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.impl.impl--solid { border-radius: 3px; background: currentColor; }
+.impl.impl--solid.teal { box-shadow: var(--glow-bar-teal); }
+.impl.impl--hatched {
+  border: var(--sw-2) solid currentColor;
+  border-radius: 3px;
+  background: repeating-linear-gradient(-55deg, currentColor 0 3px, transparent 3px 13px);
+}
+
+/* revision loop (↺ drawn as SVG): <svg class="loop" viewBox="0 0 96 96" aria-hidden="true"><use href="#ic-loop"/></svg> */
+.loop {
+  width: 96px;
+  height: 96px;
+  overflow: visible;
+  color: var(--amber);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 5.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* annotation pinned to a timeline: italic serif, may wrap */
+.ann {
+  font: italic 470 37px/1.15 var(--serif);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+/* ===================================================================== rules card (S04a, S04b, S13) */
+/*
+ * Sized in em so the large card (S04a, S13) is an exact scale of the parked card (S04b):
+ * the morph is a clean uniform scale. Registry: rule-card (.g-rules-large / .g-rules-parked).
+ */
+.rules { padding: 1.05em 1.15em 1.1em; font-optical-sizing: none; }  /* same glyph shapes at both scales: clean morph */
+.rules-h { font: 760 1.17em/1 var(--sans); font-stretch: 125%; letter-spacing: .14em; color: var(--ink); }
+.rules-sub { margin-top: .32em; font: italic 450 1em/1.15 var(--serif); font-variation-settings: "opsz" 29; color: var(--ink-2); }  /* the font shorthand resets optical sizing: pin opsz so S04a / S04b / S13 scale cleanly */
+.rules-list { margin-top: .62em; display: grid; gap: .22em; }
+.rules-list li {
+  display: grid;
+  grid-template-columns: 1.9em minmax(0, 1fr);
+  align-items: start;
+  column-gap: .1em;
+  font: 500 1em/1.26 var(--sans);
+  color: var(--ink);
+}
+.rules-list .ic { width: .9em; height: .9em; vertical-align: -.1em; }
+.num {
+  display: inline-grid;
+  place-items: center;
+  width: 1.45em;
+  height: 1.45em;
+  border: var(--sw-1) solid var(--ink-2);
+  border-radius: 50%;
+  font: 700 .97em/1 var(--sans);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  margin-top: -.12em;
+}
+.num.num--amber { border-color: var(--amber); color: var(--amber); }
+.num.num--teal { border-color: var(--teal); color: var(--teal); }
+
+/* live line: <p class="live"><span class="rec"></span><b>STAND</b> = agree · <b>SEATED</b> = concern</p> */
+.live { font: 500 var(--fs-sm)/1.3 var(--sans); color: var(--ink-2); text-wrap: balance; }
+.live b { font-weight: 780; letter-spacing: .03em; color: var(--ink); }
+.rec {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background: var(--teal);
+  box-shadow: 0 0 14px var(--teal);
+  animation: noir-rec 1.6s ease-in-out infinite;
+}
+@keyframes noir-rec { 50% { opacity: .35; } }
+
+/* gesture key: <p class="gesture">Gesture key: <svg class="ic gest teal"><use href="#ic-arms"/></svg> Big D = both arms up · <svg class="ic gest amber"><use href="#ic-finger"/></svg> little d = one finger</p> */
+.gesture { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 14px; font: 560 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); }
+.gesture .gest { width: 46px; height: 52px; stroke-width: 2.6; }
+
+/* ===================================================================== Deciding axis (generated) */
+/*
+ * Generated at assemble time from slides/src/data/countries.json by <!--@axis {…}--> (see DECK_SPEC.md).
+ * .dax is a full-stage layer; --x0/--x1 are the two arrow tips, --y the rail; a country sits at
+ * x0 + f * (x1 - x0). Labels follow the book's two staggered rows (.dax-up / .dax-lo).
+ */
+.dax { position: absolute; inset: 0; z-index: 2; pointer-events: none; --dx: calc(var(--x1) - var(--x0)); }
+.dax-rail {
+  position: absolute;
+  left: var(--x0);
+  top: calc(var(--y) - 2.5px);
+  width: var(--dx);
+  height: 5px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--teal), var(--grey) 50%, var(--amber));
+}
+.dax-rail::before,
+.dax-rail::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: 32px;
+  height: 28px;
+  translate: 0 -50%;
+}
+.dax-rail::before { left: -26px; background: var(--teal); clip-path: polygon(0 50%, 100% 0, 100% 100%); }
+.dax-rail::after { right: -26px; background: var(--amber); clip-path: polygon(0 0, 100% 50%, 0 100%); }
+.dax.dax--thin .dax-rail { top: calc(var(--y) - 2px); height: 4px; }
+/* the Leading rail (S07): neutral, no teal/amber meaning */
+.dax.dax--lead .dax-rail { background: linear-gradient(90deg, var(--ink-3), var(--ink-2)); }
+.dax.dax--lead .dax-rail::before,
+.dax.dax--lead .dax-rail::after { background: var(--ink-2); }
+.dax.dax--lead .dax-end { color: var(--ink-2); }
+.dax.dax--thin .dax-rail::before,
+.dax.dax--thin .dax-rail::after { display: none; }
+.dax-end {
+  position: absolute;
+  top: calc(var(--y) + var(--end-dy, 30px));
+  font: 700 var(--fs-end, 34px)/1 var(--sans);
+  font-stretch: 112%;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+.dax-end--l { left: var(--x0); color: var(--teal); }
+.dax-end--r { right: calc(var(--W) - var(--x1)); color: var(--amber); }
+.dax-c {
+  position: absolute;
+  left: calc(var(--x0) + var(--f) * var(--dx));
+  top: var(--y);
+  width: 0;
+  height: 0;
+  /* a real 16 x 16 border box centred on the dot, so a keyed dot + label (dot-<k>) is drawn during a
+     View Transition (a 0 x 0 box snapshots as nothing and pops in at the end). The border is transparent and
+     the padding box stays 0 x 0 at the dot centre: children keep their coordinates. */
+  box-sizing: content-box;
+  border: 8px solid transparent;
+  margin: -8px 0 0 -8px;
+}
+.dax-dot {
+  position: absolute;
+  left: -8px;
+  top: -8px;
+  width: 16px;
+  height: 16px;
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  background: var(--ink);
+  box-sizing: border-box;
+}
+.dax-lab {
+  position: absolute;
+  left: 0;
+  translate: -50% 0;
+  font: 560 var(--fs-lab, 38px)/1 var(--sans);
+  color: var(--ink);
+  white-space: nowrap;
+  text-shadow: 0 0 10px var(--bg), 0 0 20px var(--bg), 0 0 4px var(--bg);
+}
+.dax-up .dax-lab { top: calc(-1 * var(--row-up, 154px)); }
+.dax-lo .dax-lab { top: calc(-1 * var(--row-lo, 86px)); }
+.dax-below .dax-lab { top: 30px; }
+.dax-ghost .dax-dot { background: var(--grey); opacity: .45; }
+.dax-ghost .dax-lab { color: var(--grey); }
+/* the S01 slivers ("tiles") that stand on the axis */
+.dax-tile {
+  position: absolute;
+  left: calc(var(--x0) + var(--f) * var(--dx) - 3px);
+  top: calc(var(--y) - 24px);
+  width: 6px;
+  height: 48px;
+  border-radius: 3px;
+  background: var(--ink-2);
+  box-shadow: var(--glow-tile);
+}
+.dax-bells { position: absolute; left: 0; top: 0; width: var(--W); height: var(--H); overflow: visible; }
+.dax-bells--down .dax-bell { transform-origin: 50% 0; }
+.dax-bell {
+  fill: var(--c);
+  fill-opacity: .08;
+  stroke: var(--c);
+  stroke-opacity: .8;
+  stroke-width: 2.5;
+  stroke-linejoin: round;
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+
+/* Sized components also set --w / --h: placed with .at (which sizes by var(--w) / var(--h)) they keep their
+   size unless the slide passes its own --w / --h. */
+/* ===================================================================== Tokyo, ringi, hanko (g4) */
+/* seat: <i class="seat at" style="--x:…;--y:…"></i>  grey by default; .seat--teal (aligned group), .seat--ink (Sheldon) */
+.seat { --w: 56px; --h: 56px; width: 56px; height: 56px; border-radius: 50%; border: var(--sw-1) solid var(--grey); background: rgba(150, 152, 158, .25); }
+.seat.seat--teal { border-color: var(--teal); background: rgba(63, 216, 198, .35); box-shadow: var(--glow-seat); }
+.seat.seat--ink { border-color: var(--ink); background: rgba(243, 238, 228, .25); }
+/* ringisho: the paper proposal document (registry: ringisho, 360 x 256 px) */
+.ringisho {
+  --w: 360px;
+  width: 360px;
+  padding: 18px 22px 18px;
+  border-radius: 8px;
+  background: var(--paper);
+  color: var(--paper-ink);
+  box-shadow: var(--shadow-sheet);
+}
+.ringisho-t { font: italic 560 38px/1 var(--serif); }
+.ringisho-s { margin-top: 4px; font: 560 var(--fs-min)/1.1 var(--sans); color: #3B3A37; }
+.ringisho-ln { height: 8px; margin-top: 12px; border-radius: 4px; background: #C9C0AE; }
+.ringisho-ln.s { width: 62%; }
+.seals { display: flex; gap: 8px; margin-top: 16px; }
+.seals > span { position: relative; width: 46px; height: 46px; border: var(--sw-hair) solid #B9AF9B; border-radius: 4px; }
+/* hanko: vermilion seal, the only vermilion in the deck. .hanko--D is the final teal capital-D seal. */
+.hanko {
+  position: absolute;
+  inset: 3px;
+  display: grid;
+  place-items: center;
+  border: 3px solid var(--verm);
+  border-radius: 50%;
+  rotate: var(--r, 0deg);
+}
+.hanko::before {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 34%, rgba(214, 59, 34, .78), rgba(214, 59, 34, .95) 55%, rgba(196, 48, 28, .86));
+}
+.hanko.hanko--D { inset: -7px; z-index: 2; border-color: var(--teal-deep); border-width: 3.5px; background: rgba(10, 127, 114, .08); }
+.hanko.hanko--D::before { display: none; }
+.hanko.hanko--D b { font: 860 30px/1 var(--sans); font-stretch: 125%; color: var(--teal-deep); }
+
+/* ===================================================================== Part II: member dots, rings, bracket (g6) */
+.mem { --w: 30px; --h: 30px; width: 30px; height: 30px; border-radius: 50%; background: var(--ink); box-shadow: 0 0 0 4px var(--bg), 0 0 22px rgba(243, 238, 228, .45); }
+.ring { --w: 52px; --h: 52px; width: 52px; height: 52px; border-radius: 50%; border: var(--sw-2) solid var(--ink); background: transparent; }
+.ring.ring--self { border-style: dashed; }
+.bracket { height: 36px; border: var(--sw-2) solid var(--ink-2); border-bottom: 0; border-radius: 6px 6px 0 0; }

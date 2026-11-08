@@ -8,6 +8,8 @@
  *   data-enter[="effect"]    entrance played when the slide is entered going forward
  *   data-delay="ms" / data-duration="ms"
  *   data-morph="key"         persistent element, paired across slides by the View Transitions API
+ *                            (an incoming element whose partner shows the same text gets data-morph-same
+ *                            during the transition, for designs that swap only changed words)
  *   data-hidden[="backup"]   skipped by linear navigation, reachable by number or data-goto
  *   data-next="id"           what Next does at the end of this slide
  *   data-auto="ms"           auto-advance (bridge slides)
@@ -18,12 +20,14 @@
  *   data-bind="key" data-print="text"           live text
  *   data-show-if="key==V"    live condition; data-print="show" shows it in print
  *   data-print="hide" / data-print-only          print-time visibility
+ *   data-folio-text[="2"]    filled with the slide's visible number (folio), optionally zero-padded
+ * Root classes added by the engine for designs: deck-lit (lit-room mode, key L), deck-paper (?paper).
  */
 (() => {
   'use strict';
   if (window.Deck && window.Deck.version) return;
 
-  const VERSION = '1.0.0';
+  const VERSION = '1.2.0';
   const W = 1920;
   const H = 1080;
   const NS = 'ccc-deck/1';
@@ -31,6 +35,8 @@
   const root = doc.documentElement;
   const params = new URLSearchParams(location.search);
   const rawHash = safeDecode(location.hash.replace(/^#/, ''));
+  const PAPER = params.has('paper') && params.get('paper') !== '0';
+  const LIT_PARAM = params.has('lit') ? params.get('lit') !== '0' : null;
   const MODE = params.has('print') ? 'print'
     : params.has('embed') ? 'embed'
       : (params.has('presenter') || rawHash === 'presenter') ? 'presenter'
@@ -77,7 +83,7 @@
   /* ------------------------------------------------------------------ utils */
 
   function freshLive() {
-    return { store: {}, timers: {}, fired: {}, history: [], clock: { acc: 0, since: null }, reached: {} };
+    return { store: {}, timers: {}, fired: {}, history: [], clock: { acc: 0, since: null }, reached: {}, lit: false };
   }
   function safeDecode(s) { try { return decodeURIComponent(s); } catch { return s; } }
   function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
@@ -126,6 +132,7 @@
       history: Array.isArray(l.history) ? l.history.filter((h) => h && typeof h.id === 'string') : f.history,
       clock: l.clock && typeof l.clock === 'object' ? { acc: +l.clock.acc || 0, since: l.clock.since || null } : f.clock,
       reached: l.reached && typeof l.reached === 'object' ? l.reached : f.reached,
+      lit: !!l.lit,
     };
   }
 
@@ -206,7 +213,32 @@
     return n.matches('a[href], button, input, select, textarea, summary');
   }
 
+  /**
+   * Folio: the visible-slide number. Hidden slides are not counted (no number); an auto-advancing
+   * bridge slide repeats the number of the slide before it. The design formats and places it.
+   */
+  function assignFolios() {
+    let n = 0;
+    metas.forEach((m) => {
+      if (!m.hidden && (m.auto == null || n === 0)) n += 1;
+      m.folio = m.hidden ? '' : String(n);
+    });
+    stage.setAttribute('data-folio-total', String(n));
+    metas.forEach((m) => {
+      const el = m.el;
+      el.setAttribute('data-folio', m.folio);
+      if (m.hidden) el.setAttribute('data-folio-hidden', m.hiddenKind === 'backup' ? 'backup' : 'variant');
+      else el.removeAttribute('data-folio-hidden');
+      el.querySelectorAll('[data-folio-text]').forEach((t) => {
+        const pad = parseInt(t.getAttribute('data-folio-text'), 10) || 0;
+        const text = m.hidden ? '' : m.folio.padStart(pad, '0');
+        if (t.textContent !== text) t.textContent = text;
+      });
+    });
+  }
+
   function prepare() {
+    assignFolios();
     slides.forEach((el, i) => {
       const m = metas[i];
       el.setAttribute('data-pos', String(m.pos));
@@ -440,10 +472,23 @@
 
   /* ---------------------------------------------------------- slide display */
 
-  function setMorphNames(slideEl) {
-    stage.querySelectorAll('[data-morph]').forEach((n) => { if (n.style.viewTransitionName) n.style.viewTransitionName = ''; });
+  // Names the revealed [data-morph] elements of slideEl. With prevEl (the outgoing slide, already captured),
+  // an incoming element whose shown partner has the same text gets data-morph-same for the transition, so a
+  // design can let unchanged words travel steadily instead of swapping them (e.g. an unchanged breadcrumb).
+  function setMorphNames(slideEl, prevEl) {
+    stage.querySelectorAll('[data-morph]').forEach((n) => {
+      if (n.style.viewTransitionName) n.style.viewTransitionName = '';
+      if (n.hasAttribute('data-morph-same')) n.removeAttribute('data-morph-same');
+    });
     if (!slideEl) return;
     const seen = new Set();
+    const before = new Map();
+    if (prevEl && prevEl !== slideEl) {
+      prevEl.querySelectorAll('[data-morph]').forEach((p) => {
+        const k = sanitizeKey(p.getAttribute('data-morph'));
+        if (k && !before.has(k) && isShown(p, prevEl)) before.set(k, p);
+      });
+    }
     slideEl.querySelectorAll('[data-morph]').forEach((n) => {
       const key = sanitizeKey(n.getAttribute('data-morph'));
       if (!key) return;
@@ -451,6 +496,8 @@
       if (!isShown(n, slideEl)) return;
       seen.add(key);
       n.style.viewTransitionName = 'deck-m-' + key;
+      const p = before.get(key);
+      if (p && p.textContent.replace(/\s+/g, ' ').trim() === n.textContent.replace(/\s+/g, ' ').trim()) n.setAttribute('data-morph-same', '');
     });
   }
 
@@ -498,7 +545,8 @@
     if (token !== navToken) return;
     const m = metas[cur.index];
     clearTimeout(autoTimer);
-    if (MODE === 'audience' && m.auto != null && !printing) {
+    // ?noauto: bridges hold (screenshots of a bridge slide; tools only)
+    if (MODE === 'audience' && m.auto != null && !printing && !params.has('noauto')) {
       autoTimer = setTimeout(() => {
         if (token === navToken && !black) next({ auto: true });
       }, m.auto);
@@ -528,7 +576,7 @@
       if (token !== navToken || printing) return false;
       setMorphNames(null);
       const started = showOnly(cur.index, enter);
-      if (type === 'morph' && mode === 'view-transition') setMorphNames(slides[cur.index]);
+      if (type === 'morph' && mode === 'view-transition') setMorphNames(slides[cur.index], oldEl);
       return started;
     };
 
@@ -797,9 +845,27 @@
     }
   }
 
+  function applyLit() {
+    root.classList.toggle('deck-lit', !!live.lit);
+  }
+
+  /** Lit-room mode: a room condition, not a live outcome. Persisted and mirrored with the live state. */
+  function setLit(on) {
+    live.lit = !!on;
+    applyLit();
+    if (MODE === 'audience') {
+      toast(live.lit ? 'Lit-room mode on' : 'Lit-room mode off');
+      emit('lit', { on: live.lit });
+      afterChange();
+    }
+    return true;
+  }
+
   function resetLive() {
     const keepIndex = cur.index;
+    const keepLit = live.lit;
     live = freshLive();
+    live.lit = keepLit;
     live.history.push({ id: metas[keepIndex].id, linear: true });
     doneTimers.clear();
     slides.forEach((s) => stripAnim(s));
@@ -851,7 +917,9 @@
       total: metas.length,
       hidden: !!m.hidden,
       title: m.title,
+      folio: m.folio,
       black,
+      lit: !!live.lit,
       mode: MODE,
     };
   }
@@ -871,7 +939,7 @@
       index: cur.index,
       step: cur.step,
       black,
-      live: { store: live.store, timers: live.timers, fired: live.fired, clock: live.clock, reached: live.reached },
+      live: { store: live.store, timers: live.timers, fired: live.fired, clock: live.clock, reached: live.reached, lit: !!live.lit },
       at: now(),
     };
   }
@@ -947,6 +1015,7 @@
     ['B  or  .', 'black screen on / off'],
     ['F', 'fullscreen'],
     ['P', 'presenter window'],
+    ['L', 'lit-room mode on / off (flat, high contrast)'],
     ['Shift + R', 'reset live outcomes, timers and talk clock'],
     ['?  /  Esc', 'this help / close'],
   ];
@@ -1029,6 +1098,7 @@
       case 'jump': return jumpTo(d.n);
       case 'go': { const t = parseTarget(d.target); return t ? go(t, { kind: 'jump' }) : false; }
       case 'black': return setBlack(d.value == null ? !black : !!d.value);
+      case 'lit': return setLit(d.value == null ? !live.lit : !!d.value);
       case 'clock': return clockOp(d.op, d.ms);
       case 'reset': return resetLive();
       case 'goto':
@@ -1115,6 +1185,7 @@
     else if (k === 'F5') toggleFullscreen(true);
     else if (k === '?') toggleHelp();
     else if ((k === 'p' || k === 'P') && MODE === 'audience') openPresenter();
+    else if (k === 'l' || k === 'L') act({ cmd: 'lit' });
     else if (k === 'R' && e.shiftKey) act({ cmd: 'reset' });
     else handled = false;
     if (handled) e.preventDefault();
@@ -1200,6 +1271,7 @@
   function applyMirror(d) {
     live = adoptLive(d.live);
     black = !!d.black;
+    applyLit();
     const index = clamp(d.index | 0, 0, slides.length - 1);
     const step = clamp(d.step | 0, 0, metas[index].steps);
     const sig = index + '/' + step + '/' + JSON.stringify([live.store, live.fired, live.timers]);
@@ -1277,7 +1349,7 @@
     cpSec.appendChild(ui.cpList);
 
     const nav = el('section', 'dp-nav');
-    [['prev', '◀ Prev'], ['next', 'Next ▶'], ['black', 'Black']].forEach(([cmd, label]) => {
+    [['prev', '◀ Prev'], ['next', 'Next ▶'], ['black', 'Black'], ['lit', 'Lit room']].forEach(([cmd, label]) => {
       const b = el('button', 'dp-btn', label);
       b.type = 'button';
       b.dataset.dp = cmd;
@@ -1357,6 +1429,7 @@
     if (m.hidden) flags.push('hidden');
     if (m.auto != null) flags.push('auto');
     if (black) flags.push('BLACK');
+    if (live.lit) flags.push('LIT');
     ui.flags.textContent = flags.join(' · ');
     root.classList.toggle('deck-remote-black', black);
     ui.curTitle.textContent = m.title;
@@ -1436,6 +1509,7 @@
     collect();
     prepare();
     root.classList.add('deck-js', 'deck-mode-' + MODE);
+    if (PAPER) root.classList.add('deck-paper');
     if (!metas.length) { console.warn('[deck] no <section class="slide"> found'); finishInit(); return; }
 
     if (MODE === 'print') {
@@ -1452,6 +1526,8 @@
     if (MODE === 'audience') {
       const saved = load();
       if (saved) live = adoptLive(saved.live);
+      if (LIT_PARAM != null) live.lit = LIT_PARAM;
+      applyLit();
       let start = parseTarget(rawHash);
       if (!start && saved && saved.cur && metas[saved.cur.index]) start = { index: saved.cur.index, step: clamp(saved.cur.step | 0, 0, metas[saved.cur.index].steps) };
       if (!start) start = { index: firstLinear(), step: 0 };
@@ -1469,6 +1545,7 @@
       afterChange();
       afterShown(navToken);
     } else if (MODE === 'embed') {
+      if (LIT_PARAM != null) { live.lit = LIT_PARAM; applyLit(); }
       showOnly(0, false);
       fit();
       doc.addEventListener('keydown', onKey);
@@ -1498,7 +1575,7 @@
     get isReady() { return isReady; },
     get lastTransition() { return lastTransition; },
     get slides() {
-      return metas.map((m) => ({ id: m.id, pos: m.pos, steps: m.steps, hidden: m.hidden, auto: m.auto, next: m.next, transition: m.transition, title: m.title }));
+      return metas.map((m) => ({ id: m.id, pos: m.pos, folio: m.folio, steps: m.steps, hidden: m.hidden, auto: m.auto, next: m.next, transition: m.transition, title: m.title }));
     },
     get checkpoints() { return checkpoints.map((c) => ({ slide: c.slide, by: c.by, label: c.label })); },
     state,
@@ -1509,6 +1586,9 @@
     go: (target, step) => act({ cmd: 'go', target: step != null ? target + '/' + step : String(target) }),
     jump: (n) => act({ cmd: 'jump', n }),
     black: (on) => act({ cmd: 'black', value: on }),
+    lit: (on) => act({ cmd: 'lit', value: on }),
+    get isLit() { return !!live.lit; },
+    get paper() { return PAPER; },
     trigger: (name) => act({ cmd: 'trigger', slide: metas[cur.index] && metas[cur.index].id, name }),
     store: {
       get: storeGet,

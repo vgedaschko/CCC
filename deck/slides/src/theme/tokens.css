@@ -1,0 +1,116 @@
+/*
+ * tokens.css: Noir Cinema design tokens, mapped onto the engine's variables.
+ * Owned by the foundation. Builders read these; they never redefine them globally.
+ *
+ * Colour meaning (deck-wide, see DECK_SPEC.md "Colour rules"):
+ *   teal family  = consensual / Big D        amber family = top-down / little d
+ *   grey         = "the usual pattern"       vermilion    = hanko seals only (S11b-d)
+ *   ink (warm off-white) = anything neutral (Sheldon's seat, TRUE/FALSE stamps)
+ */
+:root {
+  /* ------------------------------------------------------------ palette (dark default) */
+  --bg: #0B0C0E;              /* graphite stage */
+  --bg-raise: #121418;        /* opaque panels that must hide what is under them (covers, stamps) */
+  --bar: #000;                /* letterbox bars (story mode) */
+  --ink: #F3EEE4;             /* primary text */
+  --ink-2: #C9C3B8;           /* secondary text */
+  --ink-3: #ADA79E;           /* tertiary text: >= 4.5:1 on --bg even under the beamer-washout filter */
+  --line: rgba(243, 238, 228, .16);
+  --line-2: rgba(243, 238, 228, .30);
+  --glass: rgba(243, 238, 228, .045);
+  --glass-2: rgba(243, 238, 228, .07);
+  --teal: #3FD8C6;
+  --teal-2: #22B3A3;
+  --teal-deep: #0A7F72;
+  --teal-a: rgba(63, 216, 198, .14);
+  --amber: #FFB54A;
+  --amber-2: #E99A2C;
+  --amber-deep: #9A5A06;
+  --amber-a: rgba(255, 181, 74, .13);
+  --grey: #96989E;            /* the usual pattern, ghost dots */
+  --verm: #D63B22;            /* hanko only */
+  --paper: #EDE6D7;           /* the ringisho sheet */
+  --paper-ink: #1B1B1D;
+
+  /* light pools (story/daylight): colours of the three pools, placed per slide (see chrome.css) */
+  --pool-teal: 40 205 186;
+  --pool-amber: 255 166 52;
+  --pool-spot: 255 244 222;
+  --pool-teal-a: .20;
+  --pool-amber-a: .17;
+  --pool-spot-a: .13;
+  --vignette: rgba(0, 0, 0, .5);
+
+  /* glows (dropped in lit-room mode and print) */
+  --glow-teal: 0 0 28px rgba(63, 216, 198, .35), 0 0 110px rgba(63, 216, 198, .30);
+  --glow-amber: 0 0 24px rgba(255, 181, 74, .28), 0 0 90px rgba(255, 181, 74, .24);
+  --glow-ink: 0 0 50px rgba(243, 238, 228, .08);
+  --glow-num-teal: 0 0 40px rgba(63, 216, 198, .35);
+  --glow-num-amber: 0 0 40px rgba(255, 181, 74, .3);
+  --glow-stamp: 0 0 30px rgba(63, 216, 198, .45);
+  --glow-pill: 0 0 30px rgba(255, 181, 74, .25);
+  --glow-tile: 0 0 18px rgba(243, 238, 228, .35);
+  --glow-bar-teal: 0 0 22px rgba(63, 216, 198, .35);
+  --glow-bar-amber: 0 0 22px rgba(255, 181, 74, .40);
+  --glow-seat: 0 0 18px rgba(63, 216, 198, .35);              /* aligned seats (S10b, S11a) */
+  --shadow-sheet: 0 0 0 1px rgba(0, 0, 0, .3), 0 30px 70px rgba(0, 0, 0, .65), 0 0 120px rgba(255, 244, 222, .12);  /* the ringisho */
+  /* glow strength multiplier for colour-parametric glows in group CSS, e.g.
+     box-shadow: 0 0 34px color-mix(in srgb, var(--c) calc(55% * var(--glow-a)), transparent);
+     lit-room and paper set it to 0, so such a glow vanishes without a per-mode override */
+  --glow-a: 1;
+  --shadow-card: 0 30px 80px rgba(0, 0, 0, .45), inset 0 1px 0 rgba(243, 238, 228, .08);
+  --card-fill: linear-gradient(180deg, rgba(243, 238, 228, .065), rgba(243, 238, 228, .03));
+  --card-edge: rgba(243, 238, 228, .17);
+
+  /* stroke weights (raised in lit-room mode) */
+  --sw-hair: 1.5px;
+  --sw-1: 2px;
+  --sw-2: 3px;
+  --sw-3: 4px;
+  --sw-bold: 7px;
+
+  /* ------------------------------------------------------------------ type */
+  --sans: "Archivo", sans-serif;
+  --serif: "Newsreader", serif;
+  --fs-display: 132px;   /* one-word statements, big numerals */
+  --fs-h1: 100px;        /* slide headline (serif) */
+  --fs-h2: 76px;         /* secondary headline */
+  --fs-h3: 56px;         /* panel headline, large quote */
+  --fs-q-l: 54px;        /* hero quote */
+  --fs-q: 44px;          /* standard quote */
+  --fs-lead: 40px;       /* lead text, card body (serif) */
+  --fs-body: 34px;       /* body text (sans) */
+  --fs-sm: 30px;         /* dense lists, card text */
+  --fs-min: 28px;        /* labels, captions, running head, footer: THE FLOOR, nothing smaller */
+  --w-body: 500;         /* body weight (>= 480 for beamers) */
+  --w-label: 600;
+  --w-kicker: 680;
+  --w-heavy: 860;        /* Big D, stamps */
+  --wd-kicker: 125%;     /* Archivo expanded for kickers / labels / Big D */
+
+  /* ---------------------------------------------------------------- layout */
+  --W: 1920px;
+  --H: 1080px;
+  --m: 72px;             /* side margin */
+  --band: 64px;          /* running head / footer band = letterbox bar height */
+  --gut: 32px;           /* column gutter */
+  --body-top: 112px;     /* first body line (band + 48) */
+  --body-bottom: 984px;  /* last body pixel (1080 - band - 32) */
+  --radius: 20px;
+  --radius-sm: 12px;
+
+  /* ---------------------------------------------------------------- motion */
+  --ease: cubic-bezier(.65, .05, .25, 1);      /* camera: slow in, slow out */
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-drop: cubic-bezier(.55, 0, .85, .35);  /* weight: accelerates, lands without bounce */
+  --t-hold: 760ms;       /* hold text on an incoming morph slide until the shapes land (data-delay) */
+
+  /* engine variables (deck.css) mapped to the design timing */
+  --deck-letterbox: #000;
+  --deck-build-duration: 600ms;
+  --deck-build-ease: var(--ease-out);
+  --deck-morph-duration: 800ms;
+  --deck-morph-ease: var(--ease);
+  --deck-fade-duration: 300ms;     /* script: "Fade 0.3 s" */
+  --deck-fallback-duration: 350ms;
+}

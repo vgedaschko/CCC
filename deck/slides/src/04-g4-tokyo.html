@@ -1,0 +1,344 @@
+<!--
+  04-g4-tokyo.html · owner: g4-tokyo · slides: s10a, s10b, s11a, s11b, s11c, s11d
+  Only <section class="slide"> elements. Order in the deck comes from manifest.json.
+  One morph chain from S10a to S11d: diagrams on the left, words on the right.
+    S10a -> S10b   the table glides left, the 8 Japanese seats turn teal (morph recolour)
+    S10b -> S11a   table -> lectern, seats -> classroom rows, the 3-weeks bar -> the scene divider
+    S11a -> S11b   the four desk rows swell into the four pyramid tiers (keys tier-top … tier-staff)
+    S11b -> S11c -> S11d   the ringisho climbs; the climb trail and hollow markers stay on passed levels
+  Internal keys (g4 only): g4-kicker, g4-hl, lbl-jp, lbl-nj, lbl-js, bar-3w, bar-3w-lbl, tier-*, tl-*,
+  ringisho, g4-def, g4-mori, trail-1, mk-mid (hanko travel inside the ringisho card, no keys needed).
+-->
+
+<!-- ===================================================================== S10a · Tokyo: already decided? -->
+<section class="slide story" id="s10a" data-transition="fade" data-title="Tokyo: already decided?">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Case · <b>Tokyo</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s10-body">
+    <div class="s10-head stack">
+      <p class="kicker" data-morph="g4-kicker">Tokyo HQ <span class="soft">· a meeting at Astellas</span></p>
+      <h2 class="hl s10-hl" data-morph="g4-hl">Three weeks of preparation.<br>Already decided?</h2>
+    </div>
+  </div>
+
+  <!-- top view of the meeting: 8 Japanese managers (top + bottom rows), 2 non-Japanese "old hands" (left end) -->
+  <div class="g4-table at" data-morph="table" style="--x:720px;--y:495px;--w:480px;--h:170px"></div>
+  <i class="seat at" data-morph="seat-1" style="--x:764px;--y:423px"></i>
+  <i class="seat at" data-morph="seat-2" style="--x:876px;--y:423px"></i>
+  <i class="seat at" data-morph="seat-3" style="--x:988px;--y:423px"></i>
+  <i class="seat at" data-morph="seat-4" style="--x:1100px;--y:423px"></i>
+  <i class="seat at" data-morph="seat-5" style="--x:764px;--y:681px"></i>
+  <i class="seat at" data-morph="seat-6" style="--x:876px;--y:681px"></i>
+  <i class="seat at" data-morph="seat-7" style="--x:988px;--y:681px"></i>
+  <i class="seat at" data-morph="seat-8" style="--x:1100px;--y:681px"></i>
+  <i class="seat at" data-morph="seat-9" style="--x:644px;--y:517px"></i>
+  <i class="seat at" data-morph="seat-10" style="--x:644px;--y:587px"></i>
+  <p class="g4-lbl g4-lbl--c at" data-morph="lbl-jp" style="--x:760px;--y:360px;--w:400px">8 Japanese managers</p>
+  <p class="g4-lbl g4-lbl--r at" data-morph="lbl-nj" style="--x:346px;--y:545px;--w:280px">2 non-Japanese<br>“old hands”</p>
+
+  <!-- click 1: Sheldon's three weeks wipe across; his seat rises from the end of the bar into its place -->
+  <div class="g4-bar at" data-morph="bar-3w" data-step="1" data-build="wipe" data-duration="1500" style="--x:72px;--y:873px;--w:1238px;--h:14px"></div>
+  <p class="g4-lbl g4-barlbl at" data-morph="bar-3w-lbl" data-step="1" data-build="fade" data-delay="300" style="--x:72px;--y:905px"><b>3 weeks</b> of preparation</p>
+  <span class="seat seat--ink g4-js s10a-js at" data-morph="seat-js" data-step="1" data-build="glide" data-delay="1150" data-duration="900" style="--x:1250px;--y:550px">JS</span>
+  <p class="g4-lbl g4-lbl-js at" data-morph="lbl-js" data-step="1" data-build="fade" data-delay="1900" style="--x:1250px;--y:628px;--w:330px"><b>Jack Sheldon, Astellas</b><br><i>outside the group</i></p>
+
+  <footer class="sf"><p>Meyer (2014), pp. 154–155</p></footer>
+</section>
+
+<!-- ===================================================================== S10b · 100 percent aligned -->
+<section class="slide story" id="s10b" data-transition="morph" data-title="Tokyo, second step: 100 percent aligned">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Case · <b>Tokyo</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s10-body">
+    <div class="s10-head stack">
+      <p class="kicker vt-leave" data-morph="g4-kicker">Tokyo HQ <span class="soft">· a meeting at Astellas</span></p>
+      <h2 class="hl s10-hl" data-morph="g4-hl">Three weeks of preparation.<br>Already decided?</h2>
+    </div>
+    <!-- click 1: both quotes -->
+    <blockquote class="quote s10b-quotes">
+      <p class="q" data-step="1" data-build="rise">“…it seemed that the decision had already been finalized within the group.”</p>
+      <p class="q q-l s10b-aligned" data-step="1" data-build="rise" data-delay="180">“100 percent aligned”</p>
+      <p class="who" data-step="1" data-build="fade" data-delay="320"><span class="mono">JS</span><span>J. Sheldon <span class="role">· at Tokyo HQ</span></span></p>
+    </blockquote>
+  </div>
+
+  <!-- the same room, moved left; the 8 Japanese seats turn teal at the same instant (morph recolour) -->
+  <div class="g4-table at" data-morph="table" style="--x:400px;--y:495px;--w:480px;--h:170px"></div>
+  <!-- click 2: thin roots grow under the table, back into the weeks before the meeting (nemawashi teaser) -->
+  <svg class="g4-roots at" data-step="2" data-build="draw" data-delay="350" data-duration="1300" viewBox="100 660 820 230" style="--x:100px;--y:660px;--w:820px;--h:230px" aria-hidden="true">
+    <path class="rt" pathLength="100" d="M528 664C524 730 452 772 360 806S216 852 156 880"/>
+    <path class="rt" pathLength="100" d="M640 664C646 740 612 800 598 880"/>
+    <path class="rt" pathLength="100" d="M752 664C760 724 820 780 852 826S880 866 884 880"/>
+    <path class="rb" pathLength="100" d="M454 772C430 800 420 834 424 866"/>
+    <path class="rb" pathLength="100" d="M296 830C286 846 288 862 298 880"/>
+    <path class="rb" pathLength="100" d="M630 762C664 784 690 818 700 852"/>
+    <path class="rb" pathLength="100" d="M802 774C782 802 774 834 778 862"/>
+  </svg>
+  <i class="seat seat--teal at" data-morph="seat-1" style="--x:444px;--y:423px"></i>
+  <i class="seat seat--teal at" data-morph="seat-2" style="--x:556px;--y:423px"></i>
+  <i class="seat seat--teal at" data-morph="seat-3" style="--x:668px;--y:423px"></i>
+  <i class="seat seat--teal at" data-morph="seat-4" style="--x:780px;--y:423px"></i>
+  <i class="seat seat--teal at" data-morph="seat-5" style="--x:444px;--y:681px"></i>
+  <i class="seat seat--teal at" data-morph="seat-6" style="--x:556px;--y:681px"></i>
+  <i class="seat seat--teal at" data-morph="seat-7" style="--x:668px;--y:681px"></i>
+  <i class="seat seat--teal at" data-morph="seat-8" style="--x:780px;--y:681px"></i>
+  <i class="seat at" data-morph="seat-9" style="--x:324px;--y:517px"></i>
+  <i class="seat at" data-morph="seat-10" style="--x:324px;--y:587px"></i>
+  <p class="g4-lbl g4-lbl--c teal vt-leave at" data-morph="lbl-jp" style="--x:440px;--y:360px;--w:400px">8 Japanese managers</p>
+  <p class="g4-lbl g4-lbl--r vt-leave at" data-morph="lbl-nj" style="--x:26px;--y:545px;--w:280px">2 non-Japanese<br>“old hands”</p>
+  <span class="seat seat--ink g4-js at" data-morph="seat-js" style="--x:930px;--y:550px">JS</span>
+  <p class="g4-lbl g4-lbl-js vt-leave at" data-morph="lbl-js" style="--x:930px;--y:628px;--w:330px"><b>Jack Sheldon, Astellas</b><br><i>outside the group</i></p>
+
+  <div class="g4-bar vt-leave at" data-morph="bar-3w" style="--x:72px;--y:873px;--w:918px;--h:14px"></div>
+  <!-- click 2: a rewind scrubber runs back along the bar, right to left -->
+  <div class="g4-scrub at" data-step="2" data-build="wipe-left" data-duration="1100" style="--x:72px;--y:877px;--w:918px;--h:6px" aria-hidden="true"></div>
+  <span class="g4-knob at" data-step="2" data-build="zoom" data-delay="1000" style="--x:46px;--y:852px" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M11.5 6 3.5 12l8 6zM20.5 6l-8 6 8 6z"/></svg></span>
+  <p class="g4-lbl g4-barlbl vt-leave at" data-morph="bar-3w-lbl" style="--x:72px;--y:905px"><b>3 weeks</b> of preparation</p>
+
+  <footer class="sf"><p>Meyer (2014), pp. 154–155</p></footer>
+</section>
+
+<!-- ===================================================================== S11a · Later, in Meyer's seminar -->
+<section class="slide story" id="s11a" data-transition="morph" data-title="Later, in Meyer’s seminar">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Case · Tokyo <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> <b>Seminar</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s11a-body">
+    <h2 class="hl-2 s11-hl vt-swap" data-morph="g4-hl">Later, in Meyer’s seminar for Astellas</h2>
+    <!-- click 1: Mori's line -->
+    <blockquote class="quote s11a-mori" data-step="1" data-build="rise" data-delay="150">
+      <p class="q q-l">“In Japan, decisions tend to be made by group consensus…”</p>
+      <p class="who"><span class="mono mono--teal">SM</span><span>S. Mori<span class="role">, Japanese participant in Meyer’s Astellas seminar</span></span></p>
+    </blockquote>
+  </div>
+
+  <!-- the scene divider draws across: a change of place and time -->
+  <div class="g4-divider at" data-enter="wipe" data-delay="300" data-duration="900" style="--x:72px;--y:226px;--w:1776px;--h:3px"></div>
+
+  <!-- the seminar room: the table becomes the lectern, JS stands at the front, the seats re-form as rows -->
+  <div class="g4-lectern vt-leave at" data-morph="table" style="--x:560px;--y:280px;--w:160px;--h:44px"></div>
+  <span class="seat seat--ink g4-js vt-leave at" data-morph="seat-js" style="--x:744px;--y:272px">JS</span>
+  <p class="g4-lbl at" data-enter="fade" data-delay="760" style="--x:830px;--y:284px">JS tells the story</p>
+
+  <div class="g4-desk at" data-morph="tier-top" style="--x:576px;--y:400px;--w:128px"></div>
+  <div class="g4-desk at" data-morph="tier-senior" style="--x:512px;--y:536px;--w:256px"></div>
+  <div class="g4-desk at" data-morph="tier-mid" style="--x:448px;--y:672px;--w:384px"></div>
+  <div class="g4-desk at" data-morph="tier-staff" style="--x:384px;--y:808px;--w:512px"></div>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-2" style="--x:612px;--y:418px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-1" style="--x:548px;--y:554px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-3" style="--x:676px;--y:554px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-5" style="--x:484px;--y:690px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-6" style="--x:612px;--y:690px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-4" style="--x:740px;--y:690px"></i>
+  <i class="seat vt-leave at" data-morph="seat-9" style="--x:420px;--y:826px"></i>
+  <i class="seat vt-leave at" data-morph="seat-10" style="--x:548px;--y:826px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-7" style="--x:676px;--y:826px"></i>
+  <i class="seat seat--teal vt-leave at" data-morph="seat-8" style="--x:804px;--y:826px"></i>
+  <p class="g4-lbl at" data-enter="fade" data-delay="760" style="--x:880px;--y:683px">Japanese participants<br>confer</p>
+  <!-- click 1: Mori's monogram among the teal seats -->
+  <span class="mono mono--teal g4-sm at" data-step="1" data-build="zoom" style="--x:608px;--y:686px" aria-hidden="true">SM</span>
+
+  <footer class="sf"><p>Meyer (2014), pp. 154–156</p></footer>
+</section>
+
+<!-- ===================================================================== S11b · ringi: mid-management -->
+<section class="slide story" id="s11b" data-transition="morph" data-title="Ringi: the decision climbs, stamp by stamp">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Case · <b>Ringi</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s11-body">
+    <h2 class="hl-2 s11-hl vt-swap" data-morph="g4-hl">The decision climbs — stamp by stamp.</h2>
+    <div class="s11-col stack">
+      <div class="s11-def stack" data-morph="g4-def" data-enter="fade" data-delay="760">
+        <p class="kicker">Ringi <span class="soft">· how the proposal climbs</span></p>
+        <p class="text">Each person reads the <i class="ital">ringisho</i>, may suggest changes and adds a stamp of approval. Then it moves up one level.</p>
+      </div>
+      <!-- click 1: Mori's line -->
+      <blockquote class="quote s11-mori" data-morph="g4-mori" data-step="1" data-build="rise">
+        <p class="q q-l">“…hierarchical, bottom-up, and consensual all at the same time.”</p>
+        <p class="who"><span class="mono mono--teal">SM</span><span>S. Mori</span></p>
+      </blockquote>
+    </div>
+  </div>
+
+  <!-- the pyramid: four tiers (registry: pyramid), lit = where the ringisho is now -->
+  <svg class="g4-tier at" data-morph="tier-top" viewBox="0 0 200.6 183" style="--x:539.7px;--y:236px;--w:200.6px;--h:183px" aria-hidden="true"><polygon points="100.3,0 200.6,183 0,183"/></svg>
+  <svg class="g4-tier at" data-morph="tier-senior" viewBox="0 0 405.6 179" style="--x:437.2px;--y:427px;--w:405.6px;--h:179px" aria-hidden="true"><polygon points="98.1,0 307.5,0 405.6,179 0,179"/></svg>
+  <svg class="g4-tier is-on at" data-morph="tier-mid" viewBox="0 0 610.6 179" style="--x:334.7px;--y:614px;--w:610.6px;--h:179px" aria-hidden="true"><polygon points="98.1,0 512.5,0 610.6,179 0,179"/></svg>
+  <svg class="g4-tier at" data-morph="tier-staff" viewBox="0 0 820 183" style="--x:230px;--y:801px;--w:820px;--h:183px" aria-hidden="true"><polygon points="100.3,0 719.7,0 820,183 0,183"/></svg>
+  <p class="g4-tl at" data-morph="tl-top" data-enter="fade" data-delay="760" style="--y:340px">top management</p>
+  <p class="g4-tl at" data-morph="tl-senior" data-enter="fade" data-delay="760" style="--y:498px">senior</p>
+  <p class="g4-tl g4-tl--mid is-on at" data-morph="tl-mid" data-enter="fade" data-delay="760" style="--y:685px">mid-management</p>
+  <p class="g4-tl at" data-morph="tl-staff" data-enter="fade" data-delay="760" style="--y:874px">staff</p>
+
+  <!-- the ringisho appears at mid-management; hanko 1-3 stamp on 0.1 s apart -->
+  <div class="ringisho g4-ring at" data-morph="ringisho" data-enter="drop" data-delay="700" style="--x:484px;--y:613px">
+    <p class="ringisho-t">ringisho</p><p class="ringisho-s">(proposal document)</p>
+    <div class="ringisho-ln"></div>
+    <div class="seals">
+      <span><i class="hanko" data-enter="stamp" data-delay="1080" style="--r:-8deg"></i></span>
+      <span><i class="hanko" data-enter="stamp" data-delay="1180" style="--r:6deg"></i></span>
+      <span><i class="hanko" data-enter="stamp" data-delay="1280" style="--r:-3deg"></i></span>
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <footer class="sf"><p>Meyer (2014), pp. 156–158</p></footer>
+</section>
+
+<!-- ===================================================================== S11c · ringi: senior -->
+<section class="slide story" id="s11c" data-transition="morph" data-title="Ringi: the ringisho reaches senior level">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Case · <b>Ringi</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s11-body">
+    <h2 class="hl-2 s11-hl" data-morph="g4-hl">The decision climbs — stamp by stamp.</h2>
+    <div class="s11-col stack">
+      <div class="s11-def stack vt-leave" data-morph="g4-def">
+        <p class="kicker">Ringi <span class="soft">· how the proposal climbs</span></p>
+        <p class="text">Each person reads the <i class="ital">ringisho</i>, may suggest changes and adds a stamp of approval. Then it moves up one level.</p>
+      </div>
+      <blockquote class="quote s11-mori vt-leave" data-morph="g4-mori">
+        <p class="q q-l">“…hierarchical, bottom-up, and consensual all at the same time.”</p>
+        <p class="who"><span class="mono mono--teal">SM</span><span>S. Mori</span></p>
+      </blockquote>
+    </div>
+  </div>
+
+  <svg class="g4-tier at" data-morph="tier-top" viewBox="0 0 200.6 183" style="--x:539.7px;--y:236px;--w:200.6px;--h:183px" aria-hidden="true"><polygon points="100.3,0 200.6,183 0,183"/></svg>
+  <svg class="g4-tier is-on at" data-morph="tier-senior" viewBox="0 0 405.6 179" style="--x:437.2px;--y:427px;--w:405.6px;--h:179px" aria-hidden="true"><polygon points="98.1,0 307.5,0 405.6,179 0,179"/></svg>
+  <svg class="g4-tier at" data-morph="tier-mid" viewBox="0 0 610.6 179" style="--x:334.7px;--y:614px;--w:610.6px;--h:179px" aria-hidden="true"><polygon points="98.1,0 512.5,0 610.6,179 0,179"/></svg>
+  <svg class="g4-tier at" data-morph="tier-staff" viewBox="0 0 820 183" style="--x:230px;--y:801px;--w:820px;--h:183px" aria-hidden="true"><polygon points="100.3,0 719.7,0 820,183 0,183"/></svg>
+  <p class="g4-tl at" data-morph="tl-top" style="--y:340px">top management</p>
+  <p class="g4-tl is-on at" data-morph="tl-senior" style="--y:498px">senior</p>
+  <p class="g4-tl g4-tl--mid at" data-morph="tl-mid" style="--y:685px">mid-management</p>
+  <p class="g4-tl at" data-morph="tl-staff" style="--y:874px">staff</p>
+
+  <!-- climb trail: dotted, a hollow marker on the level the ringisho has passed -->
+  <i class="g4-trail at" data-morph="trail-1" data-enter="wipe-down" data-delay="420" data-duration="520" style="--y:531px;--h:157px" aria-hidden="true"></i>
+  <i class="g4-mk at" data-morph="mk-mid" data-enter="zoom" data-delay="560" style="--y:688px" aria-hidden="true"></i>
+
+  <!-- the ringisho climbs to senior (morph); hanko 4-5 pop on -->
+  <div class="ringisho g4-ring at" data-morph="ringisho" style="--x:484px;--y:426px">
+    <p class="ringisho-t">ringisho</p><p class="ringisho-s">(proposal document)</p>
+    <div class="ringisho-ln"></div>
+    <div class="seals">
+      <span><i class="hanko" style="--r:-8deg"></i></span>
+      <span><i class="hanko" style="--r:6deg"></i></span>
+      <span><i class="hanko" style="--r:-3deg"></i></span>
+      <span><i class="hanko" data-enter="stamp" data-delay="840" style="--r:9deg"></i></span>
+      <span><i class="hanko" data-enter="stamp" data-delay="940" style="--r:-5deg"></i></span>
+      <span></span>
+    </div>
+  </div>
+
+  <footer class="sf"><p>Meyer (2014), pp. 156–158</p></footer>
+</section>
+
+<!-- ===================================================================== S11d · ringi: top; nemawashi -->
+<section class="slide story" id="s11d" data-transition="morph" data-title="Ringi reaches the top; nemawashi">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Case · <b>Ringi</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s11-body">
+    <h2 class="hl-2 s11-hl" data-morph="g4-hl">The decision climbs — stamp by stamp.</h2>
+    <div class="s11-col s11d-col stack">
+      <!-- click 1: Meyer's fragment with the teal capital D -->
+      <div class="s11d-meyer" data-step="1" data-build="rise">
+        <span class="s11d-seal" aria-hidden="true">D</span>
+        <blockquote class="quote">
+          <p class="q">“a decision with a capital <span class="D">D</span>”</p>
+          <p class="who">Meyer</p>
+        </blockquote>
+      </div>
+      <!-- click 2: nemawashi, a plant with bound roots -->
+      <div class="s11d-nema" data-step="2" data-build="fade">
+        <svg class="s11d-plant" data-step="2" data-build="draw" data-delay="120" data-duration="1100" viewBox="0 0 190 250" aria-hidden="true">
+          <g class="pl-stem">
+            <path pathLength="100" d="M95 128V40"/>
+            <path pathLength="100" d="M95 92c-26-2-44-16-48-40 24 0 44 14 48 40z"/>
+            <path pathLength="100" d="M95 70c22-4 38-20 40-42-22 2-38 18-40 42z"/>
+            <path pathLength="100" d="M95 44c-8-8-10-22-2-32 8 8 8 22 2 32z"/>
+          </g>
+          <path class="pl-soil" pathLength="100" d="M26 128h138"/>
+          <g class="pl-roots">
+            <path pathLength="100" d="M95 130c0 30-6 52-20 78M95 132c4 26 14 46 30 70M92 150c-16 8-30 22-36 40M98 156c18 6 30 18 38 34M84 186c-6 14-6 26 0 38M110 180c8 12 10 24 6 38"/>
+          </g>
+          <g class="pl-bind">
+            <ellipse pathLength="100" cx="95" cy="176" rx="56" ry="52"/>
+            <path pathLength="100" d="M47 150 143 202M49 202 141 150M39 177h112M95 124v104"/>
+          </g>
+        </svg>
+        <div class="s11d-nema-tx stack">
+          <p class="s11d-word">nemawashi</p>
+          <p class="s11d-eq"><span class="s11d-eqs">=</span> “root-binding”</p>
+          <p class="label">informal, face-to-face talks before anyone signs</p>
+        </div>
+      </div>
+      <!-- click 3: Sheldon's lesson, in his own words -->
+      <blockquote class="quote s11d-sheldon" data-step="3" data-build="rise">
+        <p class="q q-s">“…do my ‘root binding’ well before the actual meeting.”</p>
+        <p class="q q-s">“…it becomes very hard to go back on the group decision…”</p>
+        <p class="who"><span class="mono">JS</span><span>J. Sheldon</span></p>
+      </blockquote>
+    </div>
+  </div>
+
+  <svg class="g4-tier is-on at" data-morph="tier-top" viewBox="0 0 200.6 183" style="--x:539.7px;--y:236px;--w:200.6px;--h:183px" aria-hidden="true"><polygon points="100.3,0 200.6,183 0,183"/></svg>
+  <svg class="g4-tier at" data-morph="tier-senior" viewBox="0 0 405.6 179" style="--x:437.2px;--y:427px;--w:405.6px;--h:179px" aria-hidden="true"><polygon points="98.1,0 307.5,0 405.6,179 0,179"/></svg>
+  <svg class="g4-tier at" data-morph="tier-mid" viewBox="0 0 610.6 179" style="--x:334.7px;--y:614px;--w:610.6px;--h:179px" aria-hidden="true"><polygon points="98.1,0 512.5,0 610.6,179 0,179"/></svg>
+  <svg class="g4-tier at" data-morph="tier-staff" viewBox="0 0 820 183" style="--x:230px;--y:801px;--w:820px;--h:183px" aria-hidden="true"><polygon points="100.3,0 719.7,0 820,183 0,183"/></svg>
+  <p class="g4-tl is-on at" data-morph="tl-top" style="--y:340px">top management</p>
+  <p class="g4-tl at" data-morph="tl-senior" style="--y:498px">senior</p>
+  <p class="g4-tl g4-tl--mid at" data-morph="tl-mid" style="--y:685px">mid-management</p>
+  <p class="g4-tl at" data-morph="tl-staff" style="--y:874px">staff</p>
+
+  <i class="g4-trail at" data-morph="trail-1" style="--y:531px;--h:157px" aria-hidden="true"></i>
+  <i class="g4-mk at" data-morph="mk-mid" style="--y:688px" aria-hidden="true"></i>
+  <i class="g4-trail at" data-morph="trail-2" data-enter="wipe-down" data-delay="420" data-duration="420" style="--y:430px;--h:71px" aria-hidden="true"></i>
+  <i class="g4-mk at" data-morph="mk-senior" data-enter="zoom" data-delay="560" style="--y:501px" aria-hidden="true"></i>
+
+  <!-- the ringisho reaches the top; the last stamp is a teal capital D that sets to full width -->
+  <div class="ringisho g4-ring at" data-morph="ringisho" style="--x:484px;--y:268px">
+    <p class="ringisho-t">ringisho</p><p class="ringisho-s">(proposal document)</p>
+    <div class="ringisho-ln"></div>
+    <div class="seals">
+      <span><i class="hanko" style="--r:-8deg"></i></span>
+      <span><i class="hanko" style="--r:6deg"></i></span>
+      <span><i class="hanko" style="--r:-3deg"></i></span>
+      <span><i class="hanko" style="--r:9deg"></i></span>
+      <span><i class="hanko" style="--r:-5deg"></i></span>
+      <span><i class="hanko hanko--D g4-dseal" data-enter="stamp" data-delay="860" style="--r:-9deg"><b>D</b></i></span>
+    </div>
+  </div>
+
+  <!-- optional nemawashi reveal (script S11b-d): only if the team did its December talks; mouse only, never printed -->
+  <button class="hot hot--goto g4-hook at" data-trigger="nema" data-print="hide" style="--x:1522px;--y:116px"
+          aria-label="Reveal our own nemawashi (only if we talked to classmates in December)"><svg class="ic" aria-hidden="true"><use href="#ic-roots"/></svg> our nemawashi</button>
+  <div class="card card--solid card--teal g4-reveal at" data-triggered="nema" data-build="notify" style="--x:72px;--y:782px;--w:990px">
+    <p class="kicker">Our nemawashi <span class="soft">· December</span><span class="ours">ours</span></p>
+    <p class="lead">Decision #2 had early supporters — the consensus started before the meeting.</p>
+  </div>
+
+  <footer class="sf"><p>Meyer (2014), pp. 156–158</p></footer>
+</section>

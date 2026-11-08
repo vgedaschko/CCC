@@ -44,6 +44,7 @@ cite { display: block; margin-top: 8px; color: var(--muted); font-size: 24px; fo
 
 /* shared pieces */
 .crumb { left: 120px; top: 64px; color: var(--muted); font-size: 24px; font-weight: 600; letter-spacing: .14em; }
+.folio { right: 120px; top: 64px; color: var(--muted); font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; }
 .headline { left: 120px; top: 110px; font-size: 64px; font-weight: 600; line-height: 1.1; }
 .chip {
   padding: 10px 22px;

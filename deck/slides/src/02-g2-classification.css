@@ -1,0 +1,405 @@
+/*
+ * 02-g2-classification.css · owner: g2-classification · scope every rule to your slide ids: #s06, #s07, #s08a, #s08b, #h3, #h5
+ * Theme tokens and components: slides/src/theme/ (read-only for builders), handbook: slides/src/DECK_SPEC.md.
+ * Morph geometry on S06 keeps S05's x positions (the two timelines only slide vertically onto each other).
+ */
+
+/* ===================================================================== S06 · when the two systems collide */
+#s06 {
+  --lt-x: 860px;  --lt-y: 640px; --lt-s: .95;
+  --la-x: 1240px; --la-y: 370px; --la-s: .85;
+}
+#s06 .s06-hl { grid-column: 1 / 9; }
+
+/* click 2: Meyer's verdict, top right */
+#s06 .s06-meyer { --x: 1240px; --y: 112px; --w: 608px; gap: 6px; z-index: 4; }
+#s06 .s06-meyer .q { color: var(--ink); }
+#s06 .s06-meyer .who { margin-top: 4px; }
+
+/* row labels */
+#s06 .s06-side {
+  --w: 500px;
+  font: 720 var(--fs-min)/1.2 var(--sans);
+  font-stretch: 125%;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+#s06 .s06-side--us { --x: 72px; --y: 401px; }
+#s06 .s06-side--de { --x: 72px; --y: 597px; }
+
+/* the timelines: S05's x, new y (American on top, German right under it) */
+#s06 .s06-disc { --h: 30px; z-index: 3; }
+#s06 .s06-disc--us { --x: 600px; --y: 404px; --w: 132px; }
+#s06 .s06-disc--de { --x: 600px; --y: 600px; --w: 720px; }
+#s06 .s06-impl { --h: 22px; z-index: 3; }
+#s06 .s06-impl--us { --x: 872px; --y: 408px; --w: 920px; }
+#s06 .s06-impl--de { --x: 1536px; --y: 604px; --w: 256px; }
+#s06 .s06-loop { --y: 326px; --w: 96px; --h: 96px; z-index: 3; }
+#s06 .s06-loop--1 { --x: 1004px; }
+#s06 .s06-loop--2 { --x: 1284px; }
+#s06 .s06-loop--3 { --x: 1564px; }
+#s06 .s06-d { --x: 736px; --y: 271px; z-index: 4; font-size: 200px; }
+#s06 .s06-D { --x: 1338px; --y: 492px; z-index: 4; font-size: 196px; }
+
+/* click 1: frustration zone (hatched, grey) where the German D lands on the American loops */
+#s06 .s06-zone {
+  --x: 1322px; --y: 312px; --w: 512px; --h: 380px; --z: 1;
+  border: var(--sw-1) dashed color-mix(in srgb, var(--grey) 75%, transparent);
+  border-radius: 16px;
+  background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--grey) 24%, transparent) 0 3px, transparent 3px 16px);
+}
+#s06 .s06-zone-lbl {
+  --x: 1548px; --y: 638px; --w: 276px; --z: 3;
+  text-align: right;
+  font: italic 480 34px/1.1 var(--serif);
+  color: var(--ink);
+}
+
+/* click 1: the pins dock onto d (American) and D (German) */
+#s06 .s06-pin {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 16px;
+  padding-left: 18px;
+  border-left: var(--sw-3) solid currentColor;
+  z-index: 4;
+}
+#s06 .s06-pin .q { color: var(--ink); font-size: 32px; }
+#s06 .s06-pin-who { font: 600 var(--fs-min)/1.2 var(--sans); letter-spacing: .06em; color: var(--ink-2); }
+#s06 .s06-pin--us { --x: 720px; --y: 452px; --w: 600px; }
+#s06 .s06-pin--de { --x: 990px; --y: 532px; --w: 326px; }
+
+/* click 3: waterline (a wave, recoloured by the tokens) and the water below it */
+#s06 .s06-water {
+  --x: 0px; --y: 716px; --w: 1920px; --h: 300px; --z: 0;
+  background: linear-gradient(180deg, var(--glass-2), transparent 85%);
+}
+#s06 .s06-wave {
+  --x: 72px; --y: 704px; --w: 1776px; --h: 24px; --z: 2;
+  background: var(--ink-3);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='24'%3E%3Cpath d='M0 12q12-9 24 0t24 0' fill='none' stroke='%23000' stroke-width='3.5'/%3E%3C/svg%3E") repeat-x 0 0 / 48px 24px;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='48' height='24'%3E%3Cpath d='M0 12q12-9 24 0t24 0' fill='none' stroke='%23000' stroke-width='3.5'/%3E%3C/svg%3E") repeat-x 0 0 / 48px 24px;
+}
+
+/* click 3: roots below the waterline */
+#s06 .s06-root { z-index: 3; }
+#s06 .s06-root--us { --x: 72px; --y: 800px; --w: 760px; display: flex; align-items: center; gap: 26px; }
+#s06 .s06-wagon {
+  flex: none;
+  width: 230px;
+  height: 100px;
+  overflow: visible;
+  fill: none;
+  stroke: var(--amber);
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+#s06 .s06-wagon .trail { stroke: var(--ink-3); stroke-width: 4; stroke-dasharray: 2 13; }
+#s06 .s06-wagon .spk { stroke-width: 2.5; }
+#s06 .s06-root-t { --gap: 8px; }
+#s06 .s06-root--de { --x: 880px; --y: 772px; --w: 968px; --gap: 8px; }
+#s06 .s06-board { display: flex; align-items: center; gap: 16px; margin-top: 8px; }
+#s06 .s06-box {
+  display: grid;
+  gap: 2px;
+  padding: 10px 20px 12px;
+  border: var(--sw-1) solid var(--teal);
+  border-radius: 12px;
+  background: var(--glass);
+}
+#s06 .s06-box b { font: 720 30px/1.1 var(--sans); color: var(--ink); }
+#s06 .s06-box span { font: 500 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); }
+#s06 .s06-appoints { display: grid; justify-items: center; gap: 2px; font: italic 470 var(--fs-min)/1 var(--serif); color: var(--ink-2); }
+#s06 .s06-appoints .ic { width: 60px; height: 34px; color: var(--teal); stroke-width: 2.4; }
+
+/* click 4: the iceberg label straddles the waterline (left column) */
+#s06 .s06-ice {
+  --x: 72px; --w: 760px; --z: 3;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: 600 30px/1.15 var(--sans);
+  color: var(--ink);
+}
+#s06 .s06-ice .ic { width: 30px; height: 30px; color: var(--ink-2); stroke-width: 2.6; }
+#s06 .s06-ice-k { font: italic 470 var(--fs-min)/1.15 var(--serif); color: var(--ink-2); }
+#s06 .s06-ice--up { --y: 660px; }
+#s06 .s06-ice--dn { --y: 738px; }
+
+/* ===================================================================== S07 · Leading ≠ Deciding (and H5, same rails) */
+#s07 {
+  --lt-x: 360px;  --lt-y: 830px; --lt-s: .8;
+  --la-x: 1480px; --la-y: 840px; --la-s: .7;
+  --ls-x: 960px;  --ls-y: 590px; --ls-s: 1.25; --ls-o: .5;
+}
+#s07 .s07-hl { font-size: 88px; }
+#s07 .s07-neq { width: .74em; height: .74em; vertical-align: -.02em; stroke-width: 2.3; color: var(--ink-2); }
+
+/* rail heads in the side margins (rails 320-1600, arrow tips at 294 / 1626) */
+:is(#s07, #h5) .s07-end {
+  display: grid;
+  gap: 4px;
+  font: 600 30px/1.1 var(--sans);
+  color: var(--ink-2);
+  translate: 0 -50%;
+}
+:is(#s07, #h5) .s07-end b {
+  font: 720 var(--fs-min)/1.1 var(--sans);
+  font-stretch: 125%;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+:is(#s07, #h5) .s07-end--l { --x: 72px; --w: 206px; text-align: right; }
+:is(#s07, #h5) .s07-end--r { --x: 1640px; --w: 208px; text-align: left; }
+:is(#s07, #h5) .s07-end--lead { --y: 460px; }
+:is(#s07, #h5) .s07-end--dec { --y: 720px; }
+:is(#s07, #h5) .s07-end--l.s07-end--lead,
+:is(#s07, #h5) .s07-end--l.s07-end--dec { translate: 0 calc(-50% - 17px); }
+
+/* connectors: grey = the usual pattern, amber = more top-down than the Leading place, teal = more consensual */
+:is(#s07, #h5) .s07-conn { --x: 0px; --y: 0px; --w: 1920px; --h: 1080px; --z: 1; overflow: visible; fill: none; stroke-linecap: round; }
+:is(#s07, #h5) .s07-conn .c { stroke-width: var(--sw-3); }
+:is(#s07, #h5) .s07-conn .c--grey { stroke: var(--grey); stroke-width: var(--sw-2); }
+:is(#s07, #h5) .s07-conn .c--amber { stroke: var(--amber); stroke-width: 5px; }
+:is(#s07, #h5) .s07-conn .c--teal { stroke: var(--teal); stroke-width: 5px; }
+#s07 .s07-conn .tick { stroke: var(--ink-3); stroke-width: var(--sw-1); stroke-dasharray: 3 6; }
+#s07 .s07-conn .s07-hi { fill: var(--teal-a); stroke: var(--teal); stroke-width: var(--sw-1); stroke-dasharray: 12 9; }
+
+/* the generated rails: one Deciding layer (Fig. 5.3 + KR, VN), four Leading layers (one per click) */
+#s07 .s07-layer { --x: 0px; --y: 0px; --w: 1920px; --h: 1080px; --z: 2; pointer-events: none; }
+:is(#s07, #h5) .s07-norail .dax-rail { display: none; }
+:is(#s07, #h5) .dax--lead .dax-dot { width: 20px; height: 20px; left: -10px; top: -10px; }
+#s07 .s07-lead--grey .dax-dot { background: var(--grey); }
+#s07 .s07-lead--amber .dax-dot { background: var(--amber); }
+#s07 .s07-lead--teal .dax-dot { background: var(--teal); }
+#s07 :is(.s07-dec, .s07-cm) .dax-lab { top: 22px; font-size: 32px; }
+#s07 :is(.dax-se, .dax-vn, .dax-kr) .dax-lab { top: 66px; }
+#s07 .s07-cm .dax-dot { background: var(--ink-2); }
+#s07 .s07-cm .dax-lab::after,
+#s07 .s07-cmk {
+  content: "CM";
+  display: inline-block;
+  padding: 3px 8px 2px;
+  border: var(--sw-1) solid var(--ink-3);
+  border-radius: 6px;
+  font: 650 var(--fs-min)/1 var(--sans);
+  font-style: normal;
+  letter-spacing: .08em;
+  color: var(--ink-2);
+}
+#s07 .s07-cm .dax-lab::after { position: absolute; left: 100%; top: -1px; margin-left: 10px; }
+#s07 .s07-cmk { margin-left: 8px; vertical-align: .06em; }
+
+/* tags: a coloured rule + kicker; the three top tags sit on their Leading dot (dashed tick) */
+:is(#s07, #h5) .s07-tag {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 20px;
+  border-left: var(--sw-3) solid currentColor;
+  z-index: 3;
+}
+:is(#s07, #h5) .s07-tag .kicker { color: currentColor; }
+:is(#s07, #h5) .s07-tag :is(.q, .text-sm) { color: var(--ink); }
+#s07 .s07-tag--top { top: auto; bottom: calc(1080px - 416px); }
+#s07 .s07-tag--us { --x: 420px; --w: 450px; }
+#s07 .s07-tag--de { --x: 900px; --w: 404px; }
+#s07 .s07-tag--jp { --x: 1340px; --w: 508px; }
+#s07 .s07-tag--usual { --x: 1556px; --y: 512px; --w: 292px; color: var(--grey); }
+#s07 .s07-usual { font: italic 500 34px/1.1 var(--serif); color: var(--grey); }
+#s07 .s07-tag--ex { --x: 600px; --y: 860px; --w: 1248px; color: var(--ink-2); }
+#s07 .s07-tag--vn { --x: 72px; --y: 860px; --w: 480px; }
+#s07 .s07-src { display: block; color: var(--ink-2); }
+
+/* ===================================================================== S08a · Fig. 5.3 */
+#s08a {
+  --lt-x: 300px;  --lt-y: 700px; --lt-s: .9;
+  --la-x: 1640px; --la-y: 700px; --la-s: .85;
+  --ls-x: 960px;  --ls-y: 560px; --ls-s: 1.2; --ls-o: .55;
+}
+#s08a .s08a-body { row-gap: 12px; }
+#s08a .s08a-ax .dax-lab { font-size: 42px; }
+#s08a .s08a-ax .dax-bells {
+  -webkit-mask: linear-gradient(90deg, transparent 92px, #000 176px, #000 1744px, transparent 1828px);
+  mask: linear-gradient(90deg, transparent 92px, #000 176px, #000 1744px, transparent 1828px);
+}
+#s08a .s08a-line { font-size: 44px; margin-top: 4px; }
+#s08a .s08a-chip { justify-self: start; }
+#s08a .s08a-chip b { font-weight: 760; }
+#s08a .s08a-leg { --y: 800px; --w: 780px; display: grid; gap: 8px; }
+#s08a .s08a-leg--l { --x: 96px; }
+#s08a .s08a-leg--r { --x: 1044px; text-align: right; }
+#s08a .s08a-end {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font: 720 34px/1.1 var(--sans);
+  font-stretch: 112%;
+  letter-spacing: .04em;
+}
+#s08a .s08a-leg--r .s08a-end { justify-content: flex-end; }
+#s08a .s08a-end .ic { width: 34px; height: 34px; stroke-width: 2.6; }
+#s08a .s08a-def { font: italic 470 32px/1.2 var(--serif); color: var(--ink-2); text-wrap: pretty; }
+
+/* ===================================================================== S08b · Asia is not one block (Country Mapping panel) */
+#s08b {
+  --lt-x: 300px;  --lt-y: 560px; --lt-s: .8;
+  --la-x: 1560px; --la-y: 560px; --la-s: .8;
+}
+#s08b .s08b-panel {
+  --x: 72px; --y: 272px; --w: 1776px; --h: 440px; --z: 1;
+  border: var(--sw-hair) solid var(--card-edge);
+  border-radius: var(--radius);
+  background: var(--card-fill);
+  box-shadow: var(--shadow-card);
+}
+#s08b .s08b-src { --x: 112px; --y: 300px; --z: 3; }
+#s08b .s08b-src-p { color: var(--ink); font-weight: 700; }
+/* the Country Mapping look: a flat grey bar, the scale name inside it, round dots on it */
+#s08b .s08b-ax .dax-rail {
+  top: calc(var(--y) - 22px);
+  height: 44px;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--grey) 34%, transparent);
+}
+#s08b .s08b-ax .dax-rail::before,
+#s08b .s08b-ax .dax-rail::after { display: none; }
+#s08b .s08b-ax .dax-dot { width: 34px; height: 34px; left: -17px; top: -17px; border-width: 4px; }
+#s08b .s08b-ax .dax-lab { top: -100px; font-size: 40px; }
+#s08b .s08b-ax .dax-kr .dax-lab { top: -150px; }
+#s08b .s08b-scale {
+  --x: 760px; --y: 547px; --w: 400px; --z: 1;
+  text-align: center;
+  font: 650 var(--fs-min)/1 var(--sans);
+  letter-spacing: .62em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+#s08b .s08b-end { --y: 622px; --w: 300px; font: 720 34px/1 var(--sans); font-stretch: 112%; letter-spacing: .04em; }
+#s08b .s08b-end--l { --x: 232px; }
+#s08b .s08b-end--r { --x: 1388px; text-align: right; }
+/* click 1: rings at both ends (JP; CN + KR) — centred on the cm2022 dots: x0 + f * 1456 */
+#s08b .s08b-ring { --y: 522px; --h: 80px; --z: 3; border: var(--sw-3) solid; border-radius: 999px; }
+#s08b .s08b-ring--jp { --x: 264.8px; --w: 80px; border-color: var(--teal); box-shadow: var(--glow-bar-teal); }
+#s08b .s08b-ring--ck { --x: 1444.2px; --w: 167.3px; border-color: var(--amber); box-shadow: var(--glow-bar-amber); }
+#s08b .s08b-cap {
+  --x: 430px; --y: 614px; --w: 940px; --z: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 22px;
+  font: italic 470 44px/1.1 var(--serif);
+  color: var(--ink);
+}
+#s08b .s08b-cap .ic { width: 44px; height: 44px; stroke-width: 2.2; }
+/* the source caveat with two mini rails */
+#s08b .s08b-note { --x: 72px; --y: 752px; --w: 1776px; display: grid; gap: 14px; }
+#s08b .s08b-note-t { font: 560 30px/1.2 var(--sans); color: var(--ink-2); }
+#s08b .s08b-cmp {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  column-gap: 32px;
+}
+#s08b .s08b-mini-l { font: 650 var(--fs-min)/1.15 var(--sans); color: var(--ink); text-align: right; }
+#s08b .s08b-mini-l span { display: block; font-weight: 520; color: var(--ink-2); }
+#s08b .s08b-mini { position: relative; height: 104px; margin-right: 48px; }
+#s08b .s08b-mini::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50px;
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, var(--grey) 14%, color-mix(in srgb, var(--grey) 40%, var(--amber)) 86%, transparent);
+}
+#s08b .s08b-pt { position: absolute; left: calc(var(--f) * 100%); top: 52px; width: 0; height: 0; }
+#s08b .s08b-pt::before {
+  content: "";
+  position: absolute;
+  left: -9px;
+  top: -9px;
+  width: 18px;
+  height: 18px;
+  box-sizing: border-box;
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  background: var(--ink);
+}
+#s08b .s08b-pt span { position: absolute; left: 0; translate: -50% 0; font: 600 var(--fs-min)/1 var(--sans); white-space: nowrap; color: var(--ink); }
+#s08b .s08b-pt--up span { top: -50px; }
+#s08b .s08b-pt--lo span { top: 18px; }
+
+/* ===================================================================== H3 · backup: zones by region */
+#h3 .h3-body { row-gap: 26px; }
+#h3 .h3-head { display: grid; gap: 6px; }
+#h3 .h3-zones {
+  display: grid;
+  grid-template-columns: .82fr .98fr 1fr 1.46fr 1.34fr;
+  column-gap: 26px;
+  row-gap: 16px;
+}
+#h3 .h3-scale {
+  grid-column: 1 / -1;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--teal), var(--grey) 50%, var(--amber));
+}
+#h3 .h3-zone { display: grid; align-content: start; gap: 8px; }
+#h3 .h3-zn { font: 720 30px/1.1 var(--sans); font-stretch: 108%; color: var(--ink); }
+#h3 .h3-zone--1 .h3-zn { color: var(--teal); }
+#h3 .h3-zone--2 .h3-zn { color: color-mix(in srgb, var(--teal) 70%, var(--ink)); }
+#h3 .h3-zone--4 .h3-zn { color: color-mix(in srgb, var(--amber) 70%, var(--ink)); }
+#h3 .h3-zone--5 .h3-zn { color: var(--amber); }
+#h3 .h3-list { font: 500 30px/1.32 var(--sans); color: var(--ink-2); }
+#h3 .h3-list li { display: inline-block; margin-right: .32em; }
+#h3 .h3-list li:not(:last-child)::after { content: "·"; margin-left: .32em; color: var(--ink-3); }
+#h3 .h3-notes { grid-column: 1 / 11; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 32px; }
+#h3 .h3-note { padding-left: 18px; border-left: var(--sw-2) solid var(--line-2); font: 500 var(--fs-min)/1.3 var(--sans); color: var(--ink); text-wrap: pretty; }
+#h3 .h3-note b { font-weight: 720; }
+#h3 .h3-note .ic { width: .9em; height: .9em; color: var(--ink-2); }
+#h3 .h3-line { grid-column: 1 / 11; font: italic 470 32px/1.2 var(--serif); color: var(--ink-2); }
+
+/* ===================================================================== H5 · backup: more rails */
+#h5 {
+  --lt-x: 400px;  --lt-y: 800px; --lt-s: .75;
+  --la-x: 1460px; --la-y: 800px; --la-s: .7;
+}
+#h5 .h5-hl { margin-top: -10px; }
+#h5 .h5-ax .dax-lab { font-size: 32px; }
+#h5 .h5-lead .dax-lo .dax-lab { top: -54px; }
+#h5 .h5-lead .dax-up .dax-lab { top: -100px; }
+#h5 .h5-dec .dax-lab { top: 22px; }
+#h5 .h5-dec :is(.dax-be, .dax-il, .dax-ru) .dax-lab { top: 66px; }
+#h5 .h5-ax :is(.dax-dk, .dax-uk, .dax-fr, .dax-ru) .dax-dot { background: var(--grey); }
+#h5 .h5-ax .dax-il .dax-dot { background: var(--amber); }
+#h5 .h5-ax .dax-be .dax-dot { background: var(--teal); }
+#h5 .h5-dec .dax-dot { border-color: var(--bg); }
+#h5 .h5-notes {
+  --x: 72px; --y: 838px; --w: 1528px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 32px;
+}
+#h5 .h5-tag--grey { color: var(--grey); }
+
+
+/* ===================================================================== seam S06 -> S07
+ * Keys that exist on one side only fade with the UA default (the whole 800 ms, from 0 %), so the S06
+ * timelines would linger over the new rails and the S07 Deciding rail/dots would print over the S06 roots.
+ * :only-child limits both rules to single-sided groups; paired morphs (S05 -> S06, S07 <-> S08a) keep theirs. */
+#s06 :is(.s06-d, .s06-D, .s06-impl, .s06-loop) { view-transition-class: leave; }
+#s06 .s06-disc { view-transition-class: shape leave; }
+#s07 :is(.s07-dec .dax-rail, .dax-c[data-morph]) { view-transition-class: arrive; }   /* theme seam helpers "leave" / "arrive" (motion.css) */
+
+/* seam S07 -> S08a: each dot group carries its label (below on S07, above on S08a); old label out early,
+   new label in late, so the S08a rows never print over the S07 connectors (class read from the incoming side) */
+#s08a .dax-c[data-morph] { view-transition-class: g2-dot; }
+html.deck-vt-morph::view-transition-old(*.g2-dot) { animation-name: g2-dot-out; }
+html.deck-vt-morph::view-transition-new(*.g2-dot) { animation-name: g2-dot-in; }
+@keyframes g2-dot-out { 0% { opacity: 1; } 55%, 100% { opacity: 0; } }
+@keyframes g2-dot-in { 0%, 30% { opacity: 0; } 75%, 100% { opacity: 1; } }

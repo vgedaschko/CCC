@@ -1,0 +1,420 @@
+/*
+ * 06-g6-part2.css · owner: g6-part2 · scope every rule to your slide ids: #s15, #s16, #s17, #s17b, #s18, #s19
+ * Theme tokens and components: slides/src/theme/ (read-only for builders), handbook: slides/src/DECK_SPEC.md.
+ */
+
+/* =====================================================================================================
+ * FILL-IN: member positions (Part II). Fractions of the Deciding axis, 0 = consensual end, 1 = top-down end,
+ * read by eye from each member's Country Mapping 2022 region page (never print a score). One place for
+ * S15–S18, so every dot, card rail, ring and the S18 bracket stay in sync.
+ *   --mN       the culture's dot on Deciding        --mN-lead  the culture's dot on Leading (P card rails)
+ *   --rN       my ring: where I place myself (self-assessed)
+ * The values below are PLACEHOLDERS (evenly spread) until the members fill them in.
+ * ===================================================================================================== */
+#s15, #s16, #s17, #s17b, #s18 {
+  --m1: .22;  --m1-lead: .30;  --r1: .15;
+  --m2: .50;  --m2-lead: .42;  --r2: .58;
+  --m3: .78;  --m3-lead: .86;  --r3: .70;
+}
+
+/* ---------------------------------------------------------------- shared geometry (axis x 120–1800) */
+#s15 { --ay: 600px; --ms: 30px; }
+#s16, #s17, #s17b { --ay: 930px; --ms: 22px; }
+#s18 { --ay: 424px; --ms: 30px; }
+#s16 { --me: var(--m1); --me-lead: var(--m1-lead); --me-ring: var(--r1); }
+#s17 { --me: var(--m2); --me-lead: var(--m2-lead); --me-ring: var(--r2); }
+#s17b { --me: var(--m3); --me-lead: var(--m3-lead); --me-ring: var(--r3); }
+
+:is(#s15, #s16, #s17, #s17b, #s18) .g6-mem--1 { --f: var(--m1); }
+:is(#s15, #s16, #s17, #s17b, #s18) .g6-mem--2 { --f: var(--m2); }
+:is(#s15, #s16, #s17, #s17b, #s18) .g6-mem--3 { --f: var(--m3); }
+
+/* member dots (registry keys mem-1…3) */
+:is(#s15, #s16, #s17, #s17b, #s18) .g6-mem {
+  --z: 6;
+  --w: var(--ms); --h: var(--ms);
+  --x: calc(120px + var(--f) * 1680px - var(--ms) / 2);
+  --y: calc(var(--ay) - var(--ms) / 2);
+}
+/* a culture that is on neither source: dashed, self-assessed marker (add class is-self, say why on the slide) */
+:is(#s15, #s16, #s17, #s17b, #s18) .g6-mem.is-self {
+  background: var(--bg);
+  border: var(--sw-2) dashed var(--ink);
+  box-shadow: 0 0 0 4px var(--bg);
+}
+
+/* P labels on the strip (P slides) and on the S18 axis: above the dots */
+:is(#s16, #s17, #s17b, #s18) .g6-plab {
+  --z: 5;
+  --x: calc(120px + var(--f) * 1680px);
+  --y: calc(var(--ay) - 60px);
+  translate: -50% 0;
+  font: 720 var(--fs-min)/1 var(--sans);
+  font-stretch: 112%;
+  letter-spacing: .06em;
+  color: var(--ink-2);
+}
+:is(#s16, #s17, #s17b, #s18) .g6-plab--1 { --f: var(--m1); }
+:is(#s16, #s17, #s17b, #s18) .g6-plab--2 { --f: var(--m2); }
+:is(#s16, #s17, #s17b, #s18) .g6-plab--3 { --f: var(--m3); }
+:is(#s16, #s17, #s17b) .g6-plab.is-me { color: var(--ink); }
+
+/* end labels of the strip / S18 axis (held until the rail has landed) */
+:is(#s16, #s17, #s17b, #s18) .g6-end {
+  --y: calc(var(--ay) + 22px);
+  font: 650 var(--fs-min)/1 var(--sans);
+  font-stretch: 112%;
+  letter-spacing: .04em;
+}
+:is(#s16, #s17, #s17b, #s18) .g6-end--l { --x: 120px; color: var(--teal); }
+:is(#s16, #s17, #s17b, #s18) .g6-end--r { left: auto; right: 120px; color: var(--amber); }
+
+/* =====================================================================================================
+ * S15 · the room maps itself
+ * ===================================================================================================== */
+#s15 {
+  --lt-x: 170px; --lt-y: 660px; --lt-s: .85;
+  --la-x: 1750px; --la-y: 660px; --la-s: .85;
+}
+#s15 .s15-body > .a { grid-column: 1 / 10; }
+#s15 .s15-body > .b { grid-column: 10 / 13; padding-top: 12px; }
+#s15 .s15-hl { font-size: 88px; line-height: 1.04; text-wrap: pretty; }
+#s15 .s15-show { font-style: italic; font-weight: 450; color: var(--ink-2); }
+:is(#s15) .g6-bigD {
+  font: 860 .8em/1 var(--sans);
+  font-stretch: 125%;
+  letter-spacing: .005em;
+  color: var(--teal);
+}
+:is(#s15) .g6-littled { font-family: var(--serif); font-style: italic; font-weight: 430; color: var(--amber); }
+#s15 .s15-g { display: flex; align-items: center; gap: 18px; font: 500 30px/1.15 var(--sans); color: var(--ink-2); }
+#s15 .s15-g b { display: block; font-weight: 760; color: currentColor; }
+#s15 .s15-g.teal b { font-stretch: 125%; }
+#s15 .s15-g.amber b { font: italic 500 36px/1 var(--serif); }
+#s15 .s15-g .ic { width: 70px; height: 80px; stroke-width: 2.6; color: currentColor; }
+#s15 .s15-g span { color: var(--ink-2); }
+#s15 .s15-g.teal span b { color: var(--teal); }
+#s15 .s15-g.amber span b { color: var(--amber); }
+
+/* the axis layer (full stage; wiped in on entry) */
+#s15 .g6-layer { --x: 0px; --y: 0px; --w: 1920px; --h: 1080px; pointer-events: none; }
+#s15 .g6-ax { --fs-end: 30px; --end-dy: 26px; }
+/* ghost labels: one row close to the rail, a second row for the tight clusters; labels of near neighbours
+   are anchored away from each other; a hairline ties each label to its dot */
+#s15 .g6-ax .dax-c { --row: 66px; }
+#s15 .g6-ax :is(.dax-it, .dax-ru, .dax-ng) { --row: 112px; }
+#s15 .g6-ax .dax-lab { top: calc(-1 * var(--row)); font: 560 30px/1 var(--sans); }
+#s15 .g6-ax :is(.dax-se, .dax-us, .dax-in) .dax-lab { left: 5px; translate: -100% 0; }
+#s15 .g6-ax :is(.dax-jp, .dax-fr, .dax-cn) .dax-lab { left: -5px; translate: 0 0; }
+#s15 .g6-ax .dax-c::after {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: calc(-1 * var(--row) + 36px);
+  width: 2px;
+  height: calc(var(--row) - 48px);
+  background: var(--grey);
+  opacity: .55;
+}
+
+/* member labels under the rail, staggered so close dots never collide; anchored by position */
+#s15 .g6-mlab {
+  --z: 5;
+  --x: calc(120px + var(--f) * 1680px);
+  width: max-content;
+  max-width: 560px;
+  translate: calc(var(--f) * -100%) 0;
+  font: 600 30px/1.2 var(--sans);
+  color: var(--ink);
+}
+#s15 .g6-mlab b { font-weight: 760; font-stretch: 112%; letter-spacing: .05em; margin-right: 6px; }
+#s15 .g6-mlab--1 { --f: var(--m1); --y: 676px; }
+#s15 .g6-mlab--2 { --f: var(--m2); --y: 724px; }
+#s15 .g6-mlab--3 { --f: var(--m3); --y: 772px; }
+#s15 .g6-mlab::before {
+  content: "";
+  position: absolute;
+  left: calc(var(--f) * 100% - 1px);
+  top: calc(var(--ay) + 22px - var(--y));
+  width: 2px;
+  height: calc(var(--y) - var(--ay) - 28px);
+  background: var(--ink-2);
+}
+
+/* rings (click 2): my own place */
+#s15 .g6-ring {
+  --z: 7;
+  --w: 52px; --h: 52px;
+  --x: calc(120px + var(--f) * 1680px - 26px);
+  --y: calc(var(--ay) - 26px);
+}
+#s15 .g6-ring--1 { --f: var(--r1); }
+#s15 .g6-ring--2 { --f: var(--r2); }
+#s15 .g6-ring--3 { --f: var(--r3); }
+
+/* legend + Bennett */
+#s15 .s15-legend { --x: 72px; --y: 866px; --w: 820px; --gap: 14px; }
+#s15 .g6-key { display: flex; align-items: center; gap: 18px; font: 500 30px/1.2 var(--sans); color: var(--ink-2); }
+#s15 .g6-key b { font-weight: 720; color: var(--ink); }
+#s15 .g6-key .soft { color: var(--ink-3); }
+#s15 .g6-key-dot,
+#s15 .g6-key-ring { flex: none; width: 34px; height: 34px; display: grid; place-items: center; }
+#s15 .g6-key-dot::before { content: ""; width: 26px; height: 26px; border-radius: 50%; background: var(--ink); }
+#s15 .g6-key-ring::before { content: ""; width: 34px; height: 34px; box-sizing: border-box; border-radius: 50%; border: var(--sw-2) solid var(--ink); }
+#s15 .s15-bennett { --x: 952px; --y: 850px; --w: 896px; gap: 10px; padding-left: 26px; border-left: var(--sw-1) solid var(--line-2); }
+#s15 .s15-bennett .q { color: var(--ink); }
+
+/* =====================================================================================================
+ * S16 / S17 / S17b · one template for the P slides
+ * ===================================================================================================== */
+#s16, #s17, #s17b {
+  --lt-x: 120px; --lt-y: 980px; --lt-s: .75;
+  --la-x: 1800px; --la-y: 980px; --la-s: .75;
+  --ls-x: 960px; --ls-y: 420px; --ls-s: 1.4; --ls-o: .5;
+}
+
+/* the card: a flow grid; the shell behind it carries the mem key and grows with the content */
+:is(#s16, #s17, #s17b) .g6-card {
+  --x: 72px; --y: 108px; --w: 1776px; --z: 3;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 52px;
+  row-gap: 30px;
+  align-items: start;
+  padding: 34px 48px 40px;
+}
+:is(#s16, #s17, #s17b) .g6-shell {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border: var(--sw-hair) solid var(--card-edge);
+  border-radius: 28px;
+  background: var(--card-fill);
+  box-shadow: var(--shadow-card);
+}
+:is(#s16, #s17, #s17b) .g6-head { grid-column: 1 / 3; grid-row: 1; --gap: 16px; }
+:is(#s16, #s17, #s17b) .g6-who { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; font: 600 30px/1.2 var(--sans); color: var(--ink-2); }
+:is(#s16, #s17, #s17b) .g6-who .mono { width: 72px; height: 72px; border-color: var(--ink-2); font-size: 30px; letter-spacing: .02em; }
+:is(#s16, #s17, #s17b) .g6-hl { font-size: 72px; line-height: 1.12; text-wrap: pretty; }
+:is(#s16, #s17, #s17b) .g6-hl .ph { font-size: .74em; vertical-align: .08em; }
+
+/* verdict (click 3): one class switches the slot: g6-v--tbd (empty), g6-v--D, g6-v--d */
+:is(#s16, #s17, #s17b) .g6-verdict {
+  grid-column: 3;
+  grid-row: 1;
+  justify-self: end;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-width: 330px;
+  padding: 14px 34px 22px;
+  border: var(--sw-1) solid var(--line-2);
+  border-radius: 24px;
+  background: var(--glass);
+}
+:is(#s16, #s17, #s17b) .g6-verdict .label { text-transform: uppercase; letter-spacing: .18em; font-weight: 650; font-stretch: 118%; color: var(--ink-3); }
+:is(#s16, #s17, #s17b) .g6-vglyph { display: flex; align-items: center; justify-content: center; gap: 26px; margin-top: 10px; }
+/* one line box for either glyph, so D and d verdicts give the card the same height */
+:is(#s16, #s17, #s17b) .g6-vglyph .glyph { line-height: 172px; }
+:is(#s16, #s17, #s17b) .g6-vglyph .glyph--D { font-size: 168px; }
+:is(#s16, #s17, #s17b) .g6-vglyph .glyph--d { font-size: 190px; }
+:is(#s16, #s17, #s17b) .g6-v--D { border-color: var(--teal); box-shadow: 0 0 60px rgb(var(--pool-teal) / calc(.18 * var(--glow-a))); }
+:is(#s16, #s17, #s17b) .g6-v--d { border-color: var(--amber); box-shadow: 0 0 60px rgb(var(--pool-amber) / calc(.16 * var(--glow-a))); }
+:is(#s16, #s17, #s17b) .g6-v--D :is(.g6-v-d, .g6-v-tbd),
+:is(#s16, #s17, #s17b) .g6-v--d :is(.g6-v-D, .g6-v-tbd) { display: none; }
+/* empty slot: both glyphs as outlines, the placeholder tag under them */
+:is(#s16, #s17, #s17b) .g6-v--tbd { border-style: dashed; }
+:is(#s16, #s17, #s17b) .g6-v--tbd .g6-vglyph { flex-wrap: wrap; column-gap: 30px; row-gap: 2px; }
+:is(#s16, #s17, #s17b) .g6-v--tbd .glyph { color: transparent; text-shadow: none; -webkit-text-stroke: var(--sw-1) currentColor; }
+:is(#s16, #s17, #s17b) .g6-v--tbd .glyph { line-height: 124px; }
+:is(#s16, #s17, #s17b) .g6-v--tbd .glyph--D { font-size: 120px; -webkit-text-stroke-color: var(--teal); }
+:is(#s16, #s17, #s17b) .g6-v--tbd .glyph--d { font-size: 140px; -webkit-text-stroke-color: var(--amber); }
+:is(#s16, #s17, #s17b) .g6-v--tbd .g6-v-tbd { flex: 0 0 100%; text-align: center; font-size: 30px; line-height: 1.3; }
+
+/* the three cue columns */
+:is(#s16, #s17, #s17b) .g6-cue { grid-row: 2; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+:is(#s16, #s17, #s17b) .g6-cue-h {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font: 680 30px/1.2 var(--sans);
+  font-stretch: 104%;
+  color: var(--ink-2);
+}
+:is(#s16, #s17, #s17b) .g6-cue-h .num { font-size: 29px; flex: none; }
+:is(#s16, #s17, #s17b) .g6-cue-h + .g6-cue-h,
+:is(#s16, #s17, #s17b) .g6-kw + .g6-cue-h { margin-top: 14px; }
+
+/* 1 · mini rails (Leading over Deciding), the culture's connector, my ring (click 3) */
+:is(#s16, #s17, #s17b) .g6-rails { display: flex; flex-direction: column; gap: 4px; container-type: inline-size; }
+:is(#s16, #s17, #s17b) .g6-ends { display: flex; justify-content: space-between; gap: 12px; font: 540 var(--fs-min)/1.2 var(--sans); color: var(--ink-3); }
+:is(#s16, #s17, #s17b) .g6-ends b { font-weight: 720; color: var(--ink-2); }
+:is(#s16, #s17, #s17b) .g6-railbox { position: relative; height: 116px; }
+:is(#s16, #s17, #s17b) .g6-rail { position: absolute; left: 0; right: 0; height: 5px; margin-top: -2.5px; border-radius: 3px; }
+:is(#s16, #s17, #s17b) .g6-rail--lead { top: 20px; background: linear-gradient(90deg, var(--ink-3), var(--ink-2)); }
+:is(#s16, #s17, #s17b) .g6-rail--dec { top: 96px; background: linear-gradient(90deg, var(--teal), var(--grey) 50%, var(--amber)); }
+:is(#s16, #s17, #s17b) .g6-conn {
+  --dx: calc((var(--me) - var(--me-lead)) * 100cqw);
+  --dy: 76px;
+  position: absolute;
+  left: calc(var(--me-lead) * 100%);
+  top: 20px;
+  width: hypot(var(--dx), var(--dy));
+  height: 4px;
+  margin-top: -2px;
+  border-radius: 2px;
+  background: var(--ink-2);
+  transform-origin: 0 50%;
+  rotate: atan2(var(--dy), var(--dx));
+}
+:is(#s16, #s17, #s17b) .g6-pt { position: absolute; width: 24px; height: 24px; border-radius: 50%; translate: -50% -50%; box-shadow: 0 0 0 4px var(--bg); }
+:is(#s16, #s17, #s17b) .g6-pt--lead { left: calc(var(--me-lead) * 100%); top: 20px; background: var(--ink-2); }
+:is(#s16, #s17, #s17b) .g6-pt--dec { left: calc(var(--me) * 100%); top: 96px; background: var(--ink); }
+:is(#s16, #s17, #s17b) .g6-ring-mini { position: absolute; left: calc(var(--me-ring) * 100%); top: 96px; width: 44px; height: 44px; translate: -50% -50%; }
+:is(#s16, #s17, #s17b) .g6-badge { margin-top: 10px; border-radius: 18px; }
+
+/* 2 · episode + cue icons */
+:is(#s16, #s17, #s17b) .g6-ep { font: italic 450 38px/1.25 var(--serif); color: var(--ink); text-wrap: pretty; }
+:is(#s16, #s17, #s17b) .g6-cues { display: grid; gap: 12px; margin-top: 4px; }
+:is(#s16, #s17, #s17b) .g6-cues li { display: flex; align-items: center; gap: 16px; font: 560 30px/1.2 var(--sans); color: var(--ink); }
+:is(#s16, #s17, #s17b) .g6-cues .ic { width: 42px; height: 42px; stroke-width: 2; color: var(--ink-2); }
+
+/* 3–4 · where the map is too simple, what I need */
+:is(#s16, #s17, #s17b) .g6-kw { font: 560 34px/1.25 var(--sans); color: var(--ink); }
+:is(#s16, #s17, #s17b) .g6-need { font: italic 460 40px/1.2 var(--serif); color: var(--ink); text-wrap: pretty; }
+
+/* the strip */
+:is(#s16, #s17, #s17b) .g6-ax--strip .dax-dot { left: -6px; top: -6px; width: 12px; height: 12px; border-width: 2px; }
+:is(#s16, #s17, #s17b) .g6-here {
+  --z: 5;
+  --w: 36px; --h: 36px;
+  --x: calc(120px + var(--f) * 1680px - 18px);
+  --y: calc(var(--ay) - 18px);
+  border: var(--sw-2) solid var(--ink);
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+/* =====================================================================================================
+ * S18 · how did WE decide?
+ * ===================================================================================================== */
+#s18 {
+  --lt-x: 150px; --lt-y: 440px; --lt-s: .8;
+  --la-x: 1770px; --la-y: 440px; --la-s: .8;
+}
+#s18 .s18-hl { font-size: 80px; }
+#s18 .s18-we { font: 820 .8em/1 var(--sans); font-stretch: 125%; letter-spacing: .04em; }
+
+/* the widest pair: from the leftmost to the rightmost member dot */
+#s18 .g6-bracket {
+  --lo: min(var(--m1), var(--m2), var(--m3));
+  --hi: max(var(--m1), var(--m2), var(--m3));
+  --x: calc(120px + var(--lo) * 1680px);
+  --w: calc((var(--hi) - var(--lo)) * 1680px);
+  --y: 320px;
+  --h: 34px;
+  border-color: var(--ink-2);
+}
+#s18 .s18-gap {
+  --lo: min(var(--m1), var(--m2), var(--m3));
+  --hi: max(var(--m1), var(--m2), var(--m3));
+  --mid: calc((var(--lo) + var(--hi)) / 2);
+  --x: calc(120px + var(--mid) * 1680px);
+  --y: 276px;
+  width: max-content;
+  translate: calc(var(--mid) * -100%) 0;
+  font: 600 30px/1.2 var(--sans);
+  color: var(--ink-2);
+}
+
+/* click 2 · our own decision as a mini timeline; one class switches the look: g6-v--tbd / g6-v--D / g6-v--d */
+#s18 .s18-tl { --x: 72px; --y: 500px; --w: 1776px; display: flex; flex-direction: column; gap: 10px; }
+#s18 .s18-line { display: flex; align-items: center; gap: 22px; min-height: 104px; }
+#s18 .s18-disc { flex: 0 0 var(--disc, 36%); height: 30px; border-radius: 4px; }
+#s18 .s18-impl { position: relative; flex: 1 1 auto; height: 22px; margin-right: 30px; border-radius: 3px; }
+#s18 .s18-impl::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -28px;
+  width: 30px;
+  height: 34px;
+  translate: 0 -50%;
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+#s18 .s18-mark { display: flex; align-items: center; }
+#s18 .s18-mark .glyph { line-height: 96px; }
+#s18 .s18-mark .glyph--D { font-size: 104px; }
+#s18 .s18-mark .glyph--d { font-size: 124px; }
+#s18 .s18-mark .g6-v-tbd { font-size: 34px; }
+#s18 .g6-v--tbd .s18-disc { border: var(--sw-2) dashed var(--ink-3); }
+#s18 .g6-v--tbd .s18-impl { border: var(--sw-2) dashed var(--ink-3); color: var(--ink-3); }
+#s18 .g6-v--D { --disc: 58%; }
+#s18 .g6-v--D .s18-disc { background: linear-gradient(90deg, var(--teal-2), var(--teal)); box-shadow: var(--glow-bar-teal); }
+#s18 .g6-v--D .s18-impl { flex: 0 1 18%; background: var(--teal); color: var(--teal); }
+#s18 .g6-v--d { --disc: 10%; }
+#s18 .g6-v--d .s18-disc { background: var(--amber); box-shadow: var(--glow-bar-amber); }
+#s18 .g6-v--d .s18-impl { color: var(--amber); border: var(--sw-2) solid currentColor; background: repeating-linear-gradient(-55deg, currentColor 0 3px, transparent 3px 13px); }
+#s18 :is(.g6-v--D, .g6-v--d) .s18-line { justify-content: flex-start; }
+#s18 .g6-v--D .s18-mark :is(.g6-v-d, .g6-v-tbd),
+#s18 .g6-v--d .s18-mark :is(.g6-v-D, .g6-v-tbd),
+#s18 .g6-v--tbd .s18-mark .glyph { display: none; }
+#s18 .s18-q { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1fr); column-gap: 40px; }
+#s18 .s18-q p { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; font: 560 30px/1.25 var(--sans); color: var(--ink); }
+#s18 .s18-q .label { color: var(--ink-2); }
+
+/* click 3 · risk and fix, by position */
+#s18 .s18-risk { --x: 72px; --y: 774px; --w: 1776px; display: grid; gap: 14px; padding: 20px 30px 22px; }
+#s18 .s18-sides { display: grid; grid-template-columns: 1fr 1fr; column-gap: 40px; }
+#s18 .s18-side { padding-left: 20px; border-left: var(--sw-3) solid currentColor; font: 500 30px/1.28 var(--sans); color: var(--ink-2); }
+#s18 .s18-side b { font-weight: 720; }
+#s18 .s18-side--t { border-left-color: var(--teal); }
+#s18 .s18-side--t b { color: var(--teal); }
+#s18 .s18-side--a { border-left-color: var(--amber); }
+#s18 .s18-side--a b { color: var(--amber); }
+#s18 .s18-side .q { color: var(--ink); }
+#s18 .s18-src { font-size: var(--fs-min); color: var(--ink-3); white-space: nowrap; }
+#s18 .s18-fix { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; font: 560 32px/1.25 var(--sans); color: var(--ink); }
+#s18 .s18-fix b { font-weight: 760; font-stretch: 118%; letter-spacing: .12em; text-transform: uppercase; font-size: 28px; color: var(--ink-2); }
+#s18 .s18-dot { width: 8px; height: 8px; margin-inline: 10px; border-radius: 50%; background: var(--ink-3); }
+
+/* =====================================================================================================
+ * S19 · three moves for managers
+ * ===================================================================================================== */
+#s19 {
+  --lt-x: 260px; --lt-y: 780px; --lt-s: .9;
+  --la-x: 1680px; --la-y: 780px; --la-s: .9;
+}
+#s19 .s19-body { row-gap: 28px; }
+#s19 .s19-card { display: flex; flex-direction: column; gap: 14px; padding: 24px 30px 28px; }
+#s19 .s19-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 64px; }
+#s19 .s19-num { font-size: 38px; border-width: var(--sw-2); }
+#s19 .s19-ico { display: flex; align-items: center; gap: 16px; }
+#s19 .s19-ico .ic { width: 60px; height: 60px; stroke-width: 1.9; }
+#s19 .s19-rules { width: 48px; height: 58px; fill: none; stroke: var(--ink-2); stroke-width: 3.5; stroke-linecap: round; }
+#s19 .s19-D { font: 860 58px/1 var(--sans); font-stretch: 125%; color: var(--teal); text-shadow: var(--glow-teal); }
+#s19 .s19-d { margin-left: -4px; font: italic 430 70px/1 var(--serif); color: var(--amber); text-shadow: var(--glow-amber); }
+#s19 .s19-rails { width: 132px; height: 57px; overflow: visible; fill: none; stroke-width: 5; stroke-linecap: round; }
+#s19 .s19-rails .l { stroke: var(--ink-3); }
+#s19 .s19-rails .dc { stroke: var(--ink-2); }
+#s19 .s19-rails .c { stroke: var(--teal); }
+#s19 .s19-rails .p { fill: var(--ink); stroke: none; }
+#s19 .s19-neq { color: var(--ink-2); }
+#s19 .s19-t { font: 500 44px/1.08 var(--serif); letter-spacing: -.005em; color: var(--ink); text-wrap: balance; }
+#s19 .s19-t .D { font-size: .82em; }
+#s19 .s19-team { font: 560 30px/1.3 var(--sans); color: var(--ink-2); }
+#s19 .s19-pts { display: grid; gap: 12px; margin-top: 2px; }
+#s19 .s19-pts li { position: relative; padding-left: 24px; font: 500 30px/1.3 var(--sans); color: var(--ink); text-wrap: pretty; }
+#s19 .s19-pts li::before { content: ""; position: absolute; left: 0; top: .55em; width: 9px; height: 9px; border-radius: 50%; background: var(--ink-3); }
+#s19 .s19-p { display: inline-block; font-size: var(--fs-min); color: var(--ink-3); }
+#s19 .s19-globe { gap: 6px; margin-top: 2px; padding-left: 22px; border-left: var(--sw-2) solid var(--line-2); }
+#s19 .s19-globe .who { letter-spacing: .04em; }
+#s19 .s19-cq { font: 560 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); }
+#s19 .s19-cq b { font-weight: 760; color: var(--ink); letter-spacing: .06em; }
+
+/* The member dots carry the theme seam helper .vt-collapse (motion.css): a dot may receive a collapsing card;
+   "vt-shape" would stretch the incoming dot to the card's size (a white balloon). */

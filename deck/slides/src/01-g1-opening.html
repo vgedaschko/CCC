@@ -1,0 +1,253 @@
+<!--
+  01-g1-opening.html · owner: g1-opening · slides: s02, s02m, s03, s04a
+  Only <section class="slide"> elements. Order in the deck comes from manifest.json.
+  Contract and components: slides/src/DECK_SPEC.md.
+  Skylines: generic thin-line silhouettes drawn for this deck (no landmarks traced, no logos);
+  viewBox 864 x 500 = the tile, ground line at y 470.
+-->
+
+<!-- ===================================================================== S02 · Decision #1 (New York first) -->
+<section class="slide story" id="s02" data-transition="morph" data-title="Decision #1: one person decides">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Decision #1</b></p>
+    <p class="rh-title vt-text" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s02-body">
+    <h2 class="hl s02-hl" data-enter="fade" data-delay="760">Whose story first?</h2>
+    <!-- click 1: the CEO decides (badge; neutral: it does not point at a city) -->
+    <div class="s02-ceo" data-step="1" data-build="zoom" data-duration="300">
+      <svg class="ic" aria-hidden="true"><use href="#ic-person"/></svg>
+      <p><b>CEO</b><span>today</span></p>
+    </div>
+  </div>
+
+  <!-- registry (seam S01 → S02): the glyphs slide off stage, the axis slivers unfold into the tiles -->
+  <span class="glyph glyph--D g-glyph-D--off" data-morph="glyph-D" data-offstage aria-hidden="true">D</span>
+  <span class="glyph glyph--d g-glyph-d--off" data-morph="glyph-d" data-offstage aria-hidden="true">d</span>
+  <div class="s02-tile s02-tile--ny at vt-grow" data-morph="tile-ny" aria-hidden="true">
+    <svg class="s02-sky" viewBox="0 0 864 500" data-enter="draw" data-delay="380" data-duration="1500">
+      <path class="s02-sky-gnd" pathLength="100" d="M0 470H864"/>
+      <path class="s02-sky-sil" pathLength="100" d="M16 470 L16 372 L64 372 L64 352 L75.9 330 L106.1 330 L118 352 L118 352 L170 352 L170 320 L181.9 320 L181.9 294 L193.8 294 L193.8 268 L212.2 268 L212.2 294 L224.1 294 L224.1 320 L236 320 L236 322 L278 322 L278 230 L302 230 L302 186 L310 186 L310 230 L334 230 L334 300 L380 300 L380 284 L395.2 284 L395.2 252 L412 252 L418 168 L424 252 L440.8 252 L440.8 284 L456 284 L456 262 L500 262 L500 244 L509.6 244 L530 176 L550.4 244 L560 244 L560 288 L604 288 L604 92 L636 92 L636 48 L644 48 L644 92 L676 92 L676 236 L720 236 L720 228 L732.6 228 L732.6 202 L745.2 202 L745.2 176 L764.8 176 L764.8 202 L777.4 202 L777.4 228 L790 228 L790 300 L848 300 L848 470"/>
+      <path class="s02-sky-det" d="M26 400H54M26 426H54M74 358H108M74 388H108M74 418H108M184 338h13M207 338h13M184 368h13M207 368h13M184 398h13M207 398h13M184 428h13M207 428h13M288 258H324M288 282H324M288 306H324M288 330H324M288 354H324M288 378H324M288 402H324M288 426H324M394 304h18M422 304h18M394 332h18M422 332h18M394 360h18M422 360h18M394 388h18M422 388h18M394 416h18M422 416h18M394 444h18M422 444h18M466 290H490M466 312H490M466 334H490M466 356H490M466 378H490M466 400H490M466 422H490M466 444H490M510 232H550M510 258H550M510 284H550M510 310H550M510 336H550M510 362H550M510 388H550M510 414H550M510 440H550M618 120h7.3M635.3 120h7.3M652.7 120h7.3M618 144h7.3M635.3 144h7.3M652.7 144h7.3M618 168h7.3M635.3 168h7.3M652.7 168h7.3M618 192h7.3M635.3 192h7.3M652.7 192h7.3M618 216h7.3M635.3 216h7.3M652.7 216h7.3M618 240h7.3M635.3 240h7.3M652.7 240h7.3M618 264h7.3M635.3 264h7.3M652.7 264h7.3M618 288h7.3M635.3 288h7.3M652.7 288h7.3M618 312h7.3M635.3 312h7.3M652.7 312h7.3M618 336h7.3M635.3 336h7.3M652.7 336h7.3M618 360h7.3M635.3 360h7.3M652.7 360h7.3M618 384h7.3M635.3 384h7.3M652.7 384h7.3M618 408h7.3M635.3 408h7.3M652.7 408h7.3M618 432h7.3M635.3 432h7.3M652.7 432h7.3M686 264H710M686 294H710M686 324H710M686 354H710M686 384H710M686 414H710M686 444H710M734 246h15M759 246h15M734 274h15M759 274h15M734 302h15M759 302h15M734 330h15M759 330h15M734 358h15M759 358h15M734 386h15M759 386h15M734 414h15M759 414h15M734 442h15M759 442h15M800 328H838M800 354H838M800 380H838M800 406H838M800 432H838" data-enter="fade" data-delay="1500" data-duration="700"/>
+    </svg>
+  </div>
+  <div class="s02-tile s02-tile--mu at vt-grow" data-morph="tile-mu" aria-hidden="true">
+    <svg class="s02-sky" viewBox="0 0 864 500" data-enter="draw" data-delay="480" data-duration="1500">
+      <path class="s02-sky-gnd" pathLength="100" d="M0 470H864"/>
+      <path class="s02-sky-sil" pathLength="100" d="M16 470 L16 361.2 L46 336 L76 361.2 L76 374 L86.6 352 L113.4 352 L124 374 L124 356 L138.4 356 L138.4 334 L149.9 334 L149.9 312 L160 300 L170.1 312 L170.1 334 L181.6 334 L181.6 356 L196 356 L196 372.2 L220 352 L244 372.2 L244 346 L248 346 L268 196 L288 346 L292 346 L292 352 L305.2 330 L338.8 330 L352 352 L352 324.6 L386 296 L420 324.6 L420 368 L431.2 368 L431.2 346 L440.2 346 L440.2 324 L448 312 L455.8 324 L455.8 346 L464.8 346 L464.8 368 L476 368 L476 149 L476 133 A29 30.5 0 0 1 505 112 A29 30.5 0 0 1 534 133 L534 149 L534 247 L559 226 L584 247 L584 149 L584 133 A29 30.5 0 0 1 613 112 A29 30.5 0 0 1 642 133 L642 149 L642 346 L652.6 324 L679.4 324 L690 346 L690 230 L694 230 L717 80 L740 230 L744 230 L744 341.5 L772 318 L800 341.5 L800 372 L810.6 350 L837.4 350 L848 372 L848 470"/>
+      <path class="s02-sky-det" d="M30 387.2h3.3M43.3 387.2h3.3M56.7 387.2h3.3M30 421.2h3.3M43.3 421.2h3.3M56.7 421.2h3.3M138 328h7.3M155.3 328h7.3M172.7 328h7.3M138 362h7.3M155.3 362h7.3M172.7 362h7.3M138 396h7.3M155.3 396h7.3M172.7 396h7.3M138 430h7.3M155.3 430h7.3M172.7 430h7.3M306 358h10M326 358h10M306 392h10M326 392h10M306 426h10M326 426h10M366 350.6h6M382 350.6h6M398 350.6h6M366 384.6h6M382 384.6h6M398 384.6h6M366 418.6h6M382 418.6h6M398 418.6h6M486 173H524M486 213H524M486 253H524M486 293H524M486 333H524M486 373H524M486 413H524M594 173H632M594 213H632M594 253H632M594 293H632M594 333H632M594 373H632M594 413H632M758 367.5h8M776 367.5h8M758 401.5h8M776 401.5h8M758 435.5h8M776 435.5h8M814 378h4M828 378h4M814 412h4M828 412h4M814 446h4M828 446h4" data-enter="fade" data-delay="1600" data-duration="700"/>
+    </svg>
+  </div>
+
+  <!-- the two columns over the tiles: the city on top, the quote card at the bottom (cards: registry card-ln / card-mw → S03 chips) -->
+  <div class="s02-cols at">
+    <div class="s02-col s02-col--ny">
+      <div class="s02-city" data-enter="fade" data-delay="760">
+        <p class="s02-name">New York</p>
+        <p class="s02-sub">a New York City financial firm</p>
+      </div>
+      <article class="card s02-card" data-morph="card-ln" data-step="2" data-build="rise">
+        <p class="s02-who"><span class="mono">LN</span><span><b>Larry Nicoli</b><span class="role">New York · no. 2 of the firm</span></span></p>
+        <p class="q">“Incredible! These Germans are incredibly hierarchical.”</p>
+        <p class="q">“Who cares what grade level he’s at? … these Germans do!”</p>
+      </article>
+    </div>
+    <div class="s02-col s02-col--mu">
+      <div class="s02-city" data-enter="fade" data-delay="760">
+        <p class="s02-name">Munich</p>
+        <p class="s02-sub">its German merger partner</p>
+      </div>
+      <article class="card s02-card" data-morph="card-mw" data-step="3" data-build="rise" data-delay="250">
+        <p class="s02-who"><span class="mono">MW</span><span><b>Matthias Wulf</b><span class="role">Munich · HR executive leading the merger</span></span></p>
+        <p class="q">“Don’t be fooled. They are much more hierarchical than we are!”</p>
+        <p class="q">“…‘March left!’ the Americans all click their heels and turn left…”</p>
+      </article>
+    </div>
+  </div>
+
+  <!-- click 1: about 3 seconds (amber sliver: registry clock-td, parked bottom-left until S04z) -->
+  <div class="bar bar--amber g-clock-td vt-shape" data-morph="clock-td" data-step="1" data-build="wipe" data-delay="150"></div>
+  <p class="clock-lbl amber g-clock-td-lbl vt-swap" data-morph="clock-td-lbl" data-step="1" data-delay="250">#1 <svg class="ic" aria-hidden="true"><use href="#ic-approx"/></svg> 3 s</p>
+
+  <!-- click 3: the flip (a little-d revision): banner, a revision loop on the sliver, Wulf's card -->
+  <p class="s02-revised s02-revised--mu at" data-step="3" data-build="wipe"><b>REVISED</b><span>new data from Munich</span></p>
+  <svg class="loop s02-loop at" data-step="3" data-build="draw" data-delay="150" viewBox="0 0 96 96" aria-hidden="true"><use href="#loop-96"/></svg>
+
+  <!-- click 4: "March left!" (arrows already pointing left, wiping in from the right), the big "?" and the poll -->
+  <div class="s02-march at" data-step="4" data-build="wipe-left" aria-hidden="true">
+    <svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg>
+  </div>
+  <p class="s02-qmark at" data-step="4" data-build="zoom" data-delay="200" aria-hidden="true">?</p>
+  <p class="s02-poll at" data-step="4" data-build="rise" data-delay="380">Who is more hierarchical?</p>
+
+  <!-- the only hyperlink: the CEO said "Munich" → hidden S02M (slide 3) -->
+  <button class="hot hot--goto at s02-goto" data-goto="s02m" data-set="d1.first=MU" data-print="hide" aria-label="Munich first: jump to slide 3">MUNICH <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> 3</button>
+
+  <footer class="sf"><p>Meyer (2014), pp. 143–144; top-down recommendations, p. 159</p></footer>
+</section>
+
+<!-- ===================================================================== S02M · Munich first (hidden variant, fade) -->
+<!-- Starts as S02 after click 1 (CEO badge and sliver placed), plays Munich first; the end layout equals S02's. -->
+<section class="slide story" id="s02m" data-transition="fade" data-hidden data-next="s03" data-title="Decision #1: Munich first (variant)">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Decision #1</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s02-body">
+    <h2 class="hl s02-hl">Whose story first?</h2>
+    <!-- already placed: matches S02 after its click 1 -->
+    <div class="s02-ceo">
+      <svg class="ic" aria-hidden="true"><use href="#ic-person"/></svg>
+      <p><b>CEO</b><span>today</span></p>
+    </div>
+  </div>
+
+  <div class="s02-tile s02-tile--ny at vt-grow" data-morph="tile-ny" aria-hidden="true">
+    <svg class="s02-sky" viewBox="0 0 864 500">
+      <path class="s02-sky-gnd" d="M0 470H864"/>
+      <path class="s02-sky-sil" d="M16 470 L16 372 L64 372 L64 352 L75.9 330 L106.1 330 L118 352 L118 352 L170 352 L170 320 L181.9 320 L181.9 294 L193.8 294 L193.8 268 L212.2 268 L212.2 294 L224.1 294 L224.1 320 L236 320 L236 322 L278 322 L278 230 L302 230 L302 186 L310 186 L310 230 L334 230 L334 300 L380 300 L380 284 L395.2 284 L395.2 252 L412 252 L418 168 L424 252 L440.8 252 L440.8 284 L456 284 L456 262 L500 262 L500 244 L509.6 244 L530 176 L550.4 244 L560 244 L560 288 L604 288 L604 92 L636 92 L636 48 L644 48 L644 92 L676 92 L676 236 L720 236 L720 228 L732.6 228 L732.6 202 L745.2 202 L745.2 176 L764.8 176 L764.8 202 L777.4 202 L777.4 228 L790 228 L790 300 L848 300 L848 470"/>
+      <path class="s02-sky-det" d="M26 400H54M26 426H54M74 358H108M74 388H108M74 418H108M184 338h13M207 338h13M184 368h13M207 368h13M184 398h13M207 398h13M184 428h13M207 428h13M288 258H324M288 282H324M288 306H324M288 330H324M288 354H324M288 378H324M288 402H324M288 426H324M394 304h18M422 304h18M394 332h18M422 332h18M394 360h18M422 360h18M394 388h18M422 388h18M394 416h18M422 416h18M394 444h18M422 444h18M466 290H490M466 312H490M466 334H490M466 356H490M466 378H490M466 400H490M466 422H490M466 444H490M510 232H550M510 258H550M510 284H550M510 310H550M510 336H550M510 362H550M510 388H550M510 414H550M510 440H550M618 120h7.3M635.3 120h7.3M652.7 120h7.3M618 144h7.3M635.3 144h7.3M652.7 144h7.3M618 168h7.3M635.3 168h7.3M652.7 168h7.3M618 192h7.3M635.3 192h7.3M652.7 192h7.3M618 216h7.3M635.3 216h7.3M652.7 216h7.3M618 240h7.3M635.3 240h7.3M652.7 240h7.3M618 264h7.3M635.3 264h7.3M652.7 264h7.3M618 288h7.3M635.3 288h7.3M652.7 288h7.3M618 312h7.3M635.3 312h7.3M652.7 312h7.3M618 336h7.3M635.3 336h7.3M652.7 336h7.3M618 360h7.3M635.3 360h7.3M652.7 360h7.3M618 384h7.3M635.3 384h7.3M652.7 384h7.3M618 408h7.3M635.3 408h7.3M652.7 408h7.3M618 432h7.3M635.3 432h7.3M652.7 432h7.3M686 264H710M686 294H710M686 324H710M686 354H710M686 384H710M686 414H710M686 444H710M734 246h15M759 246h15M734 274h15M759 274h15M734 302h15M759 302h15M734 330h15M759 330h15M734 358h15M759 358h15M734 386h15M759 386h15M734 414h15M759 414h15M734 442h15M759 442h15M800 328H838M800 354H838M800 380H838M800 406H838M800 432H838"/>
+    </svg>
+  </div>
+  <div class="s02-tile s02-tile--mu at vt-grow" data-morph="tile-mu" aria-hidden="true">
+    <svg class="s02-sky" viewBox="0 0 864 500">
+      <path class="s02-sky-gnd" d="M0 470H864"/>
+      <path class="s02-sky-sil" d="M16 470 L16 361.2 L46 336 L76 361.2 L76 374 L86.6 352 L113.4 352 L124 374 L124 356 L138.4 356 L138.4 334 L149.9 334 L149.9 312 L160 300 L170.1 312 L170.1 334 L181.6 334 L181.6 356 L196 356 L196 372.2 L220 352 L244 372.2 L244 346 L248 346 L268 196 L288 346 L292 346 L292 352 L305.2 330 L338.8 330 L352 352 L352 324.6 L386 296 L420 324.6 L420 368 L431.2 368 L431.2 346 L440.2 346 L440.2 324 L448 312 L455.8 324 L455.8 346 L464.8 346 L464.8 368 L476 368 L476 149 L476 133 A29 30.5 0 0 1 505 112 A29 30.5 0 0 1 534 133 L534 149 L534 247 L559 226 L584 247 L584 149 L584 133 A29 30.5 0 0 1 613 112 A29 30.5 0 0 1 642 133 L642 149 L642 346 L652.6 324 L679.4 324 L690 346 L690 230 L694 230 L717 80 L740 230 L744 230 L744 341.5 L772 318 L800 341.5 L800 372 L810.6 350 L837.4 350 L848 372 L848 470"/>
+      <path class="s02-sky-det" d="M30 387.2h3.3M43.3 387.2h3.3M56.7 387.2h3.3M30 421.2h3.3M43.3 421.2h3.3M56.7 421.2h3.3M138 328h7.3M155.3 328h7.3M172.7 328h7.3M138 362h7.3M155.3 362h7.3M172.7 362h7.3M138 396h7.3M155.3 396h7.3M172.7 396h7.3M138 430h7.3M155.3 430h7.3M172.7 430h7.3M306 358h10M326 358h10M306 392h10M326 392h10M306 426h10M326 426h10M366 350.6h6M382 350.6h6M398 350.6h6M366 384.6h6M382 384.6h6M398 384.6h6M366 418.6h6M382 418.6h6M398 418.6h6M486 173H524M486 213H524M486 253H524M486 293H524M486 333H524M486 373H524M486 413H524M594 173H632M594 213H632M594 253H632M594 293H632M594 333H632M594 373H632M594 413H632M758 367.5h8M776 367.5h8M758 401.5h8M776 401.5h8M758 435.5h8M776 435.5h8M814 378h4M828 378h4M814 412h4M828 412h4M814 446h4M828 446h4"/>
+    </svg>
+  </div>
+
+  <div class="s02-cols at">
+    <div class="s02-col s02-col--ny">
+      <div class="s02-city">
+        <p class="s02-name">New York</p>
+        <p class="s02-sub">a New York City financial firm</p>
+      </div>
+      <article class="card s02-card" data-morph="card-ln" data-step="2" data-build="rise" data-delay="250">
+        <p class="s02-who"><span class="mono">LN</span><span><b>Larry Nicoli</b><span class="role">New York · no. 2 of the firm</span></span></p>
+        <p class="q">“Incredible! These Germans are incredibly hierarchical.”</p>
+        <p class="q">“Who cares what grade level he’s at? … these Germans do!”</p>
+      </article>
+    </div>
+    <div class="s02-col s02-col--mu">
+      <div class="s02-city">
+        <p class="s02-name">Munich</p>
+        <p class="s02-sub">its German merger partner</p>
+      </div>
+      <article class="card s02-card" data-morph="card-mw" data-step="1" data-build="rise">
+        <p class="s02-who"><span class="mono">MW</span><span><b>Matthias Wulf</b><span class="role">Munich · HR executive leading the merger</span></span></p>
+        <p class="q">“Don’t be fooled. They are much more hierarchical than we are!”</p>
+        <p class="q">“…‘March left!’ the Americans all click their heels and turn left…”</p>
+      </article>
+    </div>
+  </div>
+
+  <!-- already placed: the sliver (registry clock-td) -->
+  <div class="bar bar--amber g-clock-td vt-shape" data-morph="clock-td"></div>
+  <p class="clock-lbl amber g-clock-td-lbl vt-swap" data-morph="clock-td-lbl">#1 <svg class="ic" aria-hidden="true"><use href="#ic-approx"/></svg> 3 s</p>
+
+  <!-- click 2: the flip, this time towards New York -->
+  <p class="s02-revised s02-revised--ny at" data-step="2" data-build="wipe"><b>REVISED</b><span>new data from New York</span></p>
+  <svg class="loop s02-loop at" data-step="2" data-build="draw" data-delay="150" viewBox="0 0 96 96" aria-hidden="true"><use href="#loop-96"/></svg>
+
+  <!-- click 3 -->
+  <div class="s02-march at" data-step="3" data-build="wipe-left" aria-hidden="true">
+    <svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg><svg class="ic"><use href="#ic-arrow-l"/></svg>
+  </div>
+  <p class="s02-qmark at" data-step="3" data-build="zoom" data-delay="200" aria-hidden="true">?</p>
+  <p class="s02-poll at" data-step="3" data-build="rise" data-delay="380">Who is more hierarchical?</p>
+
+  <footer class="sf"><p>Meyer (2014), pp. 143–144; top-down recommendations, p. 159</p></footer>
+</section>
+
+<!-- ===================================================================== S03 · One word, two rulebooks -->
+<!-- each column: own view (row 1) → the other side's view (row 2); the S02 cards shrink into the row-2 chips -->
+<section class="slide story" id="s03" data-transition="morph" data-title="One word, two rulebooks: decision">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · Case · <b>Merger</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body s03-body">
+    <h2 class="hl s03-hl" data-enter="fade" data-delay="760">One word, two rulebooks: decision</h2>
+
+    <!-- left: the stone DECISION (click 1 Müller, click 2 Nicoli) -->
+    <p class="kicker s03-kick s03-kick--D" data-step="1" data-build="fade">Munich’s rulebook</p>
+    <p class="s03-word s03-stone" data-step="1" data-build="dropD" data-text="DECISION">DECISION</p>
+    <div class="s03-row s03-row--D1" data-step="1" data-build="rise" data-delay="320">
+      <span class="mono-chip" aria-hidden="true">MM</span>
+      <div class="s03-said">
+        <p class="who">M. Müller <span class="role">· German director</span></p>
+        <p class="q">“A commitment. A promise.”</p>
+      </div>
+    </div>
+    <div class="s03-row s03-row--D2">
+      <span class="mono-chip" data-morph="card-ln" aria-hidden="true">LN</span>
+      <div class="s03-said">
+        <p class="who" data-enter="fade" data-delay="760">L. Nicoli <span class="role">· New York</span></p>
+        <p class="q" data-step="2" data-build="rise">“…they cling to it with their lives.”</p>
+      </div>
+    </div>
+
+    <!-- right: the pencilled decision (click 3 Nicoli, click 4 Wulf) -->
+    <p class="kicker s03-kick s03-kick--d" data-step="3" data-build="fade">New York’s rulebook</p>
+    <div class="s03-word s03-pencil-wrap">
+      <p class="s03-pencil" data-step="3" data-build="write" data-duration="620">decision</p>
+      <svg class="s03-pencil-line" data-step="3" data-build="draw" data-delay="420" viewBox="0 0 440 24" preserveAspectRatio="none" aria-hidden="true"><path pathLength="100" d="M4 15C60 9 118 18 176 13S300 7 352 12 412 16 436 10"/></svg>
+    </div>
+    <div class="s03-row s03-row--d1" data-step="3" data-build="rise" data-delay="380">
+      <span class="mono-chip" aria-hidden="true">LN</span>
+      <div class="s03-said">
+        <p class="who">L. Nicoli <span class="role">· New York</span></p>
+        <p class="q">“If decisions are not flexible, how can we beat the competition?”</p>
+      </div>
+    </div>
+    <div class="s03-row s03-row--d2">
+      <span class="mono-chip" data-morph="card-mw" aria-hidden="true">MW</span>
+      <div class="s03-said">
+        <p class="who" data-enter="fade" data-delay="760">M. Wulf <span class="role">· Munich</span></p>
+        <p class="q" data-step="4" data-build="rise">“…a ‘decision’ is simply an agreement to continue discussions.”</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- registry: the amber sliver stays parked bottom-left on S02–S04z -->
+  <div class="bar bar--amber g-clock-td vt-shape" data-morph="clock-td"></div>
+  <p class="clock-lbl amber g-clock-td-lbl vt-swap" data-morph="clock-td-lbl">#1 <svg class="ic" aria-hidden="true"><use href="#ic-approx"/></svg> 3 s</p>
+
+  <footer class="sf"><p>Meyer (2014), pp. 146–148</p><p class="sf-end">each column: own view <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> the other side’s view</p></footer>
+</section>
+
+<!-- ===================================================================== S04a · the rules card -->
+<section class="slide story" id="s04a" data-transition="morph" data-title="Decision #2: how we decide (rules card)">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">I · <b>Decision #2</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+  <h2 class="sr">How we decide</h2>
+
+  <!-- registry (seam S04a → S04b): the large rules card shrinks into the left third (.g-rules-parked) -->
+  <article class="card rules g-rules-large s04a-rules" data-morph="rule-card" data-enter="rise" data-delay="440">
+    <h3 class="rules-h">HOW WE DECIDE</h3>
+    <p class="rules-sub">(agreed before we decide)</p>
+    <ol class="rules-list">
+      <li data-enter="rise" data-delay="700"><span class="num">1</span><span>All agree <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> stand up (or both hands up)</span></li>
+      <li data-enter="rise" data-delay="800"><span class="num">2</span><span>Seated = a concern, not a veto</span></li>
+      <li data-enter="rise" data-delay="900"><span class="num">3</span><span>Deadline: 2:00</span></li>
+      <li data-enter="rise" data-delay="1000"><span class="num">4</span><span>No unanimity? Majority vote. Everyone commits.</span></li>
+      <li data-enter="rise" data-delay="1100"><span class="num">5</span><span>Then: no reopening.</span></li>
+    </ol>
+  </article>
+
+  <!-- registry: the amber sliver stays parked bottom-left -->
+  <div class="bar bar--amber g-clock-td vt-shape" data-morph="clock-td"></div>
+  <p class="clock-lbl amber g-clock-td-lbl vt-swap" data-morph="clock-td-lbl">#1 <svg class="ic" aria-hidden="true"><use href="#ic-approx"/></svg> 3 s</p>
+
+  <footer class="sf"><p>Meyer (2014), p. 160 (mixed team)</p></footer>
+</section>

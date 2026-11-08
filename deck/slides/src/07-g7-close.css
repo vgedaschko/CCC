@@ -1,0 +1,207 @@
+/*
+ * 07-g7-close.css · owner: g7-close · scope every rule to your slide ids: #s20, #h1, #h4, #s20e
+ * Theme tokens and components: slides/src/theme/ (read-only for builders), handbook: slides/src/DECK_SPEC.md.
+ */
+
+/* ===================================================================== S20 / S20e · close (bookend to S01) */
+/* S20e is the static end state of S20: every rule below serves both. */
+:is(#s20, #s20e) {
+  --lt-x: 380px; --lt-y: 540px; --lt-s: 1.05;
+  --la-x: 1000px; --la-y: 620px; --la-s: .8;
+  --ls-x: 1300px; --ls-y: 190px; --ls-s: .9; --ls-o: .5;
+}
+/* bare slide: the source line stays, quiet, without the hairline (as on S01, nothing frames the lockup) */
+:is(#s20, #s20e) > .sf::before { display: none; }
+
+/* the proposal: the S04b email card (.g-mail, 648 / 96 / 1200), the right end reserved for the stamp */
+:is(#s20, #s20e) .s20-mail { z-index: 4; padding-right: 452px; }
+:is(#s20, #s20e) .s20-mail .mail-body { font-size: 44px; line-height: 1.18; }
+:is(#s20, #s20e) .s20-stamp { right: 52px; top: 50%; translate: 0 -50%; --tilt: -6deg; }
+:is(#s20, #s20e) .s20-outcome {
+  position: absolute; right: 40px; top: 50%; translate: 0 -50%;
+  display: grid; place-items: center; width: 380px; min-height: 112px; padding: 12px 24px;
+  border: var(--sw-1) dashed var(--teal); border-radius: 16px;
+  font: italic 480 36px/1.1 var(--serif); color: var(--ink); text-align: center; text-wrap: balance;
+}
+
+/* click 1: the stand-up line, the stamp chip at the right end (under the stamp's landing spot) */
+:is(#s20, #s20e) .s20-stand {
+  --x: 1180px; --y: 326px; --w: 668px;
+  display: flex; align-items: center; justify-content: space-between; gap: 32px;
+}
+:is(#s20, #s20e) .s20-live { display: flex; align-items: baseline; gap: 14px; font: 650 40px/1.15 var(--sans); color: var(--ink); text-wrap: balance; }
+:is(#s20, #s20e) .s20-live .rec { flex: none; margin: 0; translate: 0 -.1em; }
+
+/* the lockup: D on the S01 title geometry; ? and d share the space S01's d and ? used */
+:is(#s20, #s20e) .glyph { z-index: 3; }
+:is(#s20, #s20e) .s20-qm {
+  position: absolute; left: 604px; top: 384px; z-index: 3;
+  font: 400 430px/1 var(--serif); color: var(--ink-2);
+}
+:is(#s20, #s20e) .s20-d { position: absolute; left: 850px; top: 384px; font-size: 430px; }
+
+/* the question, beside the lockup */
+:is(#s20, #s20e) .s20-hl { --x: 1180px; --y: 460px; --w: 668px; font-size: 88px; line-height: 1.02; }
+:is(#s20, #s20e) .s20-hl .D { font-size: .84em; letter-spacing: 0; }
+:is(#s20, #s20e) .s20-qa {
+  --x: 1180px; --y: 898px; --w: 668px;
+  font: italic 470 50px/1.1 var(--serif); color: var(--ink);
+}
+
+/* click 2: three decisions, one time scale (520 px = 2:00, so 3 s = 13 px) */
+:is(#s20, #s20e) .s20-three { --x: 72px; --y: 748px; --w: 1060px; --gap: 14px; }
+:is(#s20, #s20e) .s20-three .kicker { margin-bottom: 4px; }
+:is(#s20, #s20e) .s20-row { display: grid; grid-template-columns: 190px minmax(0, 1fr); align-items: center; column-gap: 20px; }
+:is(#s20, #s20e) .s20-word { font: 720 38px/1.1 var(--sans); font-stretch: 110%; letter-spacing: .01em; }
+:is(#s20, #s20e) .s20-word--ink { color: var(--ink); }
+:is(#s20, #s20e) .s20-lane { display: flex; align-items: center; gap: 22px; min-width: 0; }
+:is(#s20, #s20e) .s20-bar { display: block; flex: none; height: 26px; }
+:is(#s20, #s20e) .s20-bar--td { width: 13px; }
+:is(#s20, #s20e) .s20-bars { display: block; flex: none; }
+:is(#s20, #s20e) .s20-bars > .bar { width: calc(var(--s) * 520px / 120); }
+:is(#s20, #s20e) .s20-bar--yours { width: 520px; border-width: var(--sw-2); border-color: var(--ink-2); }
+:is(#s20, #s20e) .s20-track {
+  display: block; width: 520px; height: 26px; border-radius: 4px;
+  background: var(--teal-a); box-shadow: inset 0 0 0 var(--sw-1) var(--teal);
+}
+:is(#s20, #s20e) .s20-meta { font: 560 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); white-space: nowrap; }
+:is(#s20, #s20e) .s20-meta b { font-weight: 720; color: var(--ink); }
+
+/* the corner hotspot to the Q&A hub, in the footer band (above the footer's box) */
+:is(#s20, #s20e) .s20-hub { --x: 1718px; --y: 1010px; --z: 6; }
+
+
+/* ===================================================================== H1 · Q&A hub */
+#h1 { --lt-x: 300px; --lt-y: 860px; --lt-s: .8; --la-x: 1640px; --la-y: 260px; --la-s: .7; }
+#h1 .h1-body { row-gap: 30px; }
+#h1 .h1-head { --gap: 10px; }
+#h1 .h1-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px 48px; }
+#h1 .h1-tile {
+  display: flex; flex-direction: column; gap: 12px; min-width: 0;
+  padding: 24px 34px 26px;
+  border: var(--sw-hair) solid var(--card-edge); border-radius: var(--radius);
+  background: var(--card-fill); box-shadow: var(--shadow-card);
+  color: var(--ink); text-align: left; cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+#h1 .h1-tile:hover { border-color: var(--line-2); background: var(--glass-2); }
+#h1 .h1-tile:focus-visible { outline: var(--sw-2) solid var(--ink); outline-offset: 4px; }
+#h1 .h1-tile > span { display: block; }
+#h1 .h1-top { display: grid !important; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; column-gap: 24px; }
+#h1 .h1-art { align-self: start; margin-top: 4px; }
+#h1 .h1-no { font: 720 56px/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--ink-3); letter-spacing: -.01em; }
+#h1 .h1-t { font: 500 52px/1.05 var(--serif); color: var(--ink); text-wrap: balance; }
+#h1 .h1-art { width: 168px; height: 72px; overflow: visible; fill: none; }
+#h1 .h1-q { font: italic 470 36px/1.2 var(--serif); color: var(--ink); text-wrap: pretty; }
+#h1 .h1-what { font: 520 var(--fs-min)/1.3 var(--sans); color: var(--ink-3); text-wrap: pretty; }
+#h1 .h1-what i { font-family: var(--serif); font-style: italic; }
+#h1 .a-teal { fill: var(--teal); }
+#h1 .a-hatch { stroke: var(--amber); stroke-width: 2.5; }
+#h1 .a-amber-f { fill: var(--amber); }
+#h1 .a-amber, #h1 .a-teal-s { stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+#h1 .a-amber { stroke: var(--amber); }
+#h1 .a-teal-s { stroke: var(--teal); }
+#h1 .a-dot { fill: var(--ink); stroke: var(--bg); stroke-width: 3; }
+#h1 .a-ink, #h1 .a-ink-s { stroke-linecap: round; stroke-linejoin: round; }
+#h1 .a-ink { stroke: var(--ink-2); stroke-width: 3.5; }
+#h1 .a-ink-s { stroke: var(--ink-3); stroke-width: 2; }
+#h1 .h1-end { --x: 1632px; --y: 904px; }
+#h1 .h1-qa { --x: 72px; --y: 912px; --w: 1480px; font: italic 470 40px/1.2 var(--serif); color: var(--ink-2); }
+
+/* ===================================================================== H4 · course bridge */
+/* two columns (5 / 7): the frameworks (Hofstede, GLOBE) | the Japan paradox (Osland & Bird, our links) and Bennett */
+#h4 { --lt-x: 280px; --lt-y: 880px; --lt-s: .75; --la-x: 1660px; --la-y: 240px; --la-s: .6; }
+#h4 .h4-body { align-content: start; row-gap: 18px; }
+#h4 .h4-head { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 8px 32px; }
+#h4 .h4-key { display: flex; align-items: center; gap: 10px; font: 560 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); }
+#h4 .h4-key .soft { color: var(--ink-3); }
+#h4 .h4-dot { display: inline-block; width: 16px; height: 16px; border-radius: 50%; }
+#h4 .h4-dot--t { background: var(--teal); }
+#h4 .h4-dot--a { margin-left: 18px; background: var(--amber); }
+#h4 .h4-col { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+#h4 .h4-dmis { flex: 1; }
+#h4 .h4-col--l { grid-column: 1 / 6; }
+#h4 .h4-col--r { grid-column: 6 / 13; }
+
+#h4 .h4-blk {
+  display: flex; flex-direction: column; gap: 10px; min-width: 0;
+  padding: 14px 24px 18px;
+  border: var(--sw-hair) solid var(--card-edge); border-radius: var(--radius);
+  background: var(--card-fill);
+}
+#h4 .h4-bh { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 16px; font: italic 470 36px/1.1 var(--serif); color: var(--ink); }
+#h4 .h4-who {
+  font: 720 var(--fs-min)/1.2 var(--sans); font-style: normal; font-stretch: 118%;
+  letter-spacing: .16em; text-transform: uppercase; color: var(--ink);
+}
+#h4 .h4-back { --x: 1684px; --y: 1010px; --z: 6; background: var(--bg); }
+
+/* Hofstede: course-script country lists, each country dotted by its side on Meyer's Deciding scale */
+#h4 .h4-rows { display: grid; grid-template-columns: 168px minmax(0, 1fr); align-items: baseline; gap: 8px 18px; }
+#h4 .h4-rt { font: 600 var(--fs-min)/1.25 var(--sans); color: var(--ink-2); }
+#h4 .h4-cs { display: flex; flex-wrap: wrap; gap: 4px 22px; }
+#h4 .h4-c { display: inline-flex; align-items: center; gap: 10px; font: 560 30px/1.25 var(--sans); color: var(--ink); }
+#h4 .h4-c::before { content: ""; width: 15px; height: 15px; border-radius: 50%; flex: none; }
+#h4 .h4-c.t::before { background: var(--teal); }
+#h4 .h4-c.a::before { background: var(--amber); }
+#h4 .h4-note { font: italic 470 32px/1.2 var(--serif); color: var(--ink); text-wrap: pretty; }
+
+/* GLOBE: the two poles of Institutional Collectivism (course-script table), then the "decisive" quote */
+#h4 .h4-vs { display: grid; gap: 8px; }
+#h4 .h4-pole {
+  display: grid; grid-template-columns: 136px minmax(0, 1fr); align-items: baseline; column-gap: 12px;
+  padding: 4px 14px 6px; border-left: var(--sw-3) solid currentColor; border-radius: 4px;
+  background: var(--glass); font: 540 var(--fs-min)/1.25 var(--sans); color: var(--ink); text-wrap: pretty;
+}
+#h4 .h4-pole.t { border-left-color: var(--teal); }
+#h4 .h4-pole.a { border-left-color: var(--amber); }
+#h4 .h4-pl { font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+#h4 .h4-pole.t .h4-pl { color: var(--teal); }
+#h4 .h4-pole.a .h4-pl { color: var(--amber); }
+#h4 .h4-q .q { font-size: 30px; line-height: 1.18; }
+
+/* Osland & Bird: the lecture's Leading / Deciding rows, redrawn as vector, Japan circled */
+#h4 .h4-def { font-size: 30px; line-height: 1.2; }
+#h4 .h4-jp-row { display: grid; grid-template-columns: minmax(0, 1fr) 380px; gap: 28px; align-items: start; margin-top: 2px; }
+#h4 .h4-mini { display: flex; flex-direction: column; gap: 12px; min-width: 0; margin: 0; }
+#h4 .h4-rail { display: grid; grid-template-columns: 122px minmax(0, 1fr); grid-template-rows: 32px 22px auto; column-gap: 16px; }
+#h4 .h4-rn { grid-row: 2; align-self: center; font: 700 var(--fs-min)/1 var(--sans); color: var(--ink); }
+#h4 .h4-track { grid-column: 2; grid-row: 1 / 3; position: relative; margin-inline: 12px; }
+#h4 .h4-track::before {
+  content: ""; position: absolute; left: -12px; right: -12px; top: 41px; height: 4px; border-radius: 2px;
+  background: linear-gradient(90deg, var(--ink-3), var(--ink-2));
+}
+#h4 .h4-rail--dec .h4-track::before { background: linear-gradient(90deg, var(--teal), var(--grey) 50%, var(--amber)); }
+#h4 .h4-track > i {
+  position: absolute; left: calc(var(--f) * 100%); top: 43px; width: 13px; height: 13px; translate: -50% -50%;
+  border: 2px solid var(--bg); border-radius: 50%; background: var(--grey); box-sizing: content-box;
+}
+#h4 .h4-track > i.k { background: var(--ink-2); }
+#h4 .h4-track > i.jp { z-index: 2; width: 16px; height: 16px; background: var(--ink); box-shadow: 0 0 0 6px var(--bg), 0 0 0 9px var(--ink); }
+#h4 .h4-rail--dec .h4-track > i.jp { background: var(--teal); box-shadow: 0 0 0 6px var(--bg), 0 0 0 9px var(--teal); }
+#h4 .h4-lab { position: absolute; left: calc(var(--f) * 100%); top: 0; translate: -50% 0; font: 650 var(--fs-min)/1 var(--sans); color: var(--ink-2); }
+#h4 .h4-lab.jp { color: var(--ink); font-weight: 760; }
+#h4 .h4-rail--dec .h4-lab.jp { color: var(--teal); }
+#h4 .h4-ends { grid-column: 2; grid-row: 3; display: flex; justify-content: space-between; margin-top: 9px; font: 560 var(--fs-min)/1 var(--sans); color: var(--ink-3); }
+#h4 .h4-ours { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+#h4 .h4-ours li { font: 520 var(--fs-min)/1.3 var(--sans); color: var(--ink); text-wrap: pretty; }
+#h4 .h4-ours b { font-weight: 720; }
+#h4 .h4-ours i { font-family: var(--serif); font-style: italic; font-size: 1.08em; }
+#h4 .h4-ours .ic { color: var(--ink-2); }
+
+/* Bennett: the five stages as a ladder (a vertical line of nodes); Defense and Adaptation called out */
+#h4 .h4-steps { position: relative; display: grid; gap: 6px; padding-left: 40px; }
+#h4 .h4-steps::before { content: ""; position: absolute; left: 10px; top: 18px; bottom: 18px; width: 3px; border-radius: 2px; background: var(--line-2); }
+#h4 .h4-steps li { position: relative; display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 22px; align-items: baseline; }
+#h4 .h4-steps li::before {
+  content: ""; position: absolute; left: -40px; top: 7px; width: 18px; height: 18px; border-radius: 50%;
+  background: var(--bg); border: var(--sw-2) solid var(--ink-3);
+}
+#h4 .h4-sn { font: 620 var(--fs-min)/1.25 var(--sans); color: var(--ink-2); }
+#h4 .h4-call { font: 520 var(--fs-min)/1.25 var(--sans); color: var(--ink); text-wrap: pretty; }
+#h4 .h4-call .soft { color: var(--ink-3); }
+#h4 .nw { white-space: nowrap; }
+#h4 .h4-steps li.def .h4-sn { color: var(--amber); font-weight: 720; }
+#h4 .h4-steps li.def::before { border-color: var(--amber); background: var(--amber); }
+#h4 .h4-steps li.ad .h4-sn { color: var(--teal); font-weight: 720; }
+#h4 .h4-steps li.ad::before { border-color: var(--teal); background: var(--teal); }

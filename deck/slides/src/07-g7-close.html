@@ -1,0 +1,269 @@
+<!--
+  07-g7-close.html · owner: g7-close · slides: s20, h1, h4, s20e
+  Only <section class="slide"> elements. Order in the deck comes from manifest.json.
+  Contract and components: slides/src/DECK_SPEC.md.
+-->
+
+<!-- ===================================================================== S20 · close (bookend to S01) -->
+<section class="slide bare" id="s20" data-transition="fade" data-title="So — was that a big D or a little d?">
+  <!-- the proposal, in the S04b email-card style (.g-mail); the stamp lands in the card's reserved right end -->
+  <article class="card mail g-mail s20-mail" data-enter="notify" data-delay="200">
+    <p class="card-tag"><svg class="ic" aria-hidden="true"><use href="#ic-mail"/></svg>one last proposal</p>
+    <p class="mail-body">In your next group project, agree <b>HOW</b> you decide — before you decide.</p>
+    <div class="stamp stamp--D s20-stamp" data-triggered="d20" data-build="stamp"><b>D</b><span>no more<br>discussion!</span></div>
+    <p class="s20-outcome" data-print-only>stand-up — decided live</p>
+  </article>
+
+  <!-- click 1: the stand-up line; the stamp chip beside it (A clicks it only if nearly everyone stands) -->
+  <div class="s20-stand at" data-step="1" data-build="rise">
+    <p class="live s20-live"><span class="rec" aria-hidden="true"></span><span>Stand up if you’ll take this with you.</span></p>
+    <button class="hot hot--D" data-trigger="d20" data-set="s20.stand=D" data-print="hide" aria-label="Stamp D on the proposal">D</button>
+  </div>
+
+  <!-- click 2: three decisions (the S04b clock bars, one scale: 560 px = 2:00) -->
+  <div class="s20-three at stack" data-step="2" data-build="fade" data-duration="300">
+    <p class="kicker">Three decisions today</p>
+    <div class="s20-row">
+      <p class="s20-word amber">seconds</p>
+      <div class="s20-lane">
+        <i class="bar bar--amber s20-bar s20-bar--td" data-step="2" data-build="wipe" data-delay="100" data-duration="200"></i>
+        <p class="s20-meta"><b>#1</b> · one person</p>
+      </div>
+    </div>
+    <div class="s20-row">
+      <p class="s20-word teal">minutes</p>
+      <div class="s20-lane">
+        <span class="s20-bars" data-step="2" data-build="wipe" data-delay="300" data-duration="700">
+          <i class="bar bar--teal s20-bar" style="--s:120" data-show-if="!d2.elapsed || d2.elapsed_s>105"></i>
+          <i class="bar bar--teal s20-bar" style="--s:15" data-show-if="d2.elapsed_s>=0 &amp;&amp; d2.elapsed_s<=15"></i>
+          <i class="bar bar--teal s20-bar" style="--s:30" data-show-if="d2.elapsed_s>15 &amp;&amp; d2.elapsed_s<=30"></i>
+          <i class="bar bar--teal s20-bar" style="--s:45" data-show-if="d2.elapsed_s>30 &amp;&amp; d2.elapsed_s<=45"></i>
+          <i class="bar bar--teal s20-bar" style="--s:60" data-show-if="d2.elapsed_s>45 &amp;&amp; d2.elapsed_s<=60"></i>
+          <i class="bar bar--teal s20-bar" style="--s:75" data-show-if="d2.elapsed_s>60 &amp;&amp; d2.elapsed_s<=75"></i>
+          <i class="bar bar--teal s20-bar" style="--s:90" data-show-if="d2.elapsed_s>75 &amp;&amp; d2.elapsed_s<=90"></i>
+          <i class="bar bar--teal s20-bar" style="--s:105" data-show-if="d2.elapsed_s>90 &amp;&amp; d2.elapsed_s<=105"></i>
+          <i class="s20-track" data-print-only></i>
+        </span>
+        <p class="s20-meta"><b>#2</b> · the room<span data-show-if="d2.elapsed"> · <span class="num-tab" data-bind="d2.elapsed" data-print="up to 2:00">2:00</span></span><span data-print-only> · up to 2:00</span></p>
+      </div>
+    </div>
+    <div class="s20-row">
+      <p class="s20-word s20-word--ink">yours</p>
+      <div class="s20-lane">
+        <i class="bar bar--empty s20-bar s20-bar--yours" data-step="2" data-build="wipe" data-delay="650" data-duration="500"></i>
+        <p class="s20-meta"><b>#3</b> · your next team</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- click 2: D ? d return, the S01 lockup position (D on the title geometry; ? between) -->
+  <span class="glyph glyph--D g-glyph-D--title" data-morph="glyph-D" data-step="2" data-build="dropD" data-delay="900" aria-hidden="true">D</span>
+  <span class="s20-qm" data-step="2" data-build="fade" data-delay="1250" aria-hidden="true">?</span>
+  <span class="glyph glyph--d s20-d" data-morph="glyph-d" data-step="2" data-build="write" data-delay="1100" aria-hidden="true">d</span>
+  <h2 class="hl s20-hl at" data-step="2" data-build="rise" data-delay="1450">So — was that<br>a big <span class="D">D</span> or<br>a little <span class="d">d</span>?</h2>
+
+  <!-- click 3 -->
+  <p class="s20-qa at" data-step="3" data-build="rise">Q&amp;A runs on little <span class="d">d</span>.</p>
+
+  <button class="hot hot--goto at s20-hub" data-goto="h1" data-print="hide" aria-label="Q&amp;A hub: slide 36"><svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> 36</button>
+  <footer class="sf"><p>Meyer (2014), pp. 160–161</p></footer>
+</section>
+
+<!-- ===================================================================== H1 · Q&A hub (hidden) -->
+<section class="slide daylight" id="h1" data-transition="fade" data-hidden="backup" data-title="Q&amp;A hub">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">Q&amp;A · <b>Backup hub</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body h1-body">
+    <div class="h1-head stack">
+      <p class="kicker">Backups <span class="soft">· click a tile, or type its number and press Enter</span></p>
+      <h2 class="hl-2">Questions? Go deeper.</h2>
+    </div>
+
+    <div class="h1-grid">
+      <button class="h1-tile" data-goto="h2" data-enter="rise" data-delay="60" aria-label="Backup: Is consensus better? (slide 37)">
+        <span class="h1-top"><span class="h1-no">37</span><span class="h1-t">Is consensus better?</span>
+          <svg class="h1-art" viewBox="0 0 168 72" aria-hidden="true"><defs><pattern id="h1-hatch" width="9" height="9" patternUnits="userSpaceOnUse" patternTransform="rotate(-55)"><rect class="a-amber-f" width="3" height="9"/></pattern></defs><rect class="a-teal" x="4" y="14" width="64" height="14" rx="3"/><rect class="a-hatch" x="4" y="44" width="136" height="14" rx="3" fill="url(#h1-hatch)"/><path class="a-amber" d="M150 51h12M156 45l6 6-6 6"/><path class="a-teal-s" d="M78 21h12M84 15l6 6-6 6"/></svg></span>
+        <span class="h1-q">“So is consensus better — or top-down?”</span>
+        <span class="h1-what">Per vs Lencioni · the <i>ringi</i> ledger · Meyer’s own trade-off</span>
+      </button>
+      <button class="h1-tile" data-goto="h3" data-enter="rise" data-delay="120" aria-label="Backup: Country Mapping by region (slide 38)">
+        <span class="h1-top"><span class="h1-no">38</span><span class="h1-t">Country Mapping by region</span>
+          <svg class="h1-art" viewBox="0 0 168 72" aria-hidden="true"><defs><linearGradient id="h1-g" x1="0" x2="1"><stop offset="0" style="stop-color: var(--teal)"/><stop offset=".5" style="stop-color: var(--grey)"/><stop offset="1" style="stop-color: var(--amber)"/></linearGradient></defs><rect x="4" y="34" width="160" height="5" rx="2.5" fill="url(#h1-g)"/><circle class="a-dot" cx="14" cy="36.5" r="7"/><circle class="a-dot" cx="44" cy="36.5" r="7"/><circle class="a-dot" cx="84" cy="36.5" r="7"/><circle class="a-dot" cx="118" cy="36.5" r="7"/><circle class="a-dot" cx="152" cy="36.5" r="7"/></svg></span>
+        <span class="h1-q">“Where would you put [country X]?”</span>
+        <span class="h1-what">relative zones, no scores · Europe, Americas, Asia, Africa</span>
+      </button>
+      <button class="h1-tile" data-goto="h4" data-enter="rise" data-delay="180" aria-label="Backup: Course bridge (slide 39)">
+        <span class="h1-top"><span class="h1-no">39</span><span class="h1-t">Course bridge</span>
+          <svg class="h1-art" viewBox="0 0 168 72" aria-hidden="true"><path class="a-ink" d="M6 62h156M22 62V40M146 62V40M22 40C50 8 118 8 146 40"/><path class="a-ink-s" d="M46 26v36M84 16v46M122 26v36"/></svg></span>
+        <span class="h1-q">“How does this relate to Hofstede and GLOBE?”</span>
+        <span class="h1-what">Hofstede · GLOBE · Hall · Osland &amp; Bird · DMIS</span>
+      </button>
+      <button class="h1-tile" data-goto="h5" data-enter="rise" data-delay="240" aria-label="Backup: More rails (slide 40)">
+        <span class="h1-top"><span class="h1-no">40</span><span class="h1-t">More rails</span>
+          <svg class="h1-art" viewBox="0 0 168 72" aria-hidden="true"><path class="a-ink-s" d="M4 12h160"/><rect x="4" y="58" width="160" height="5" rx="2.5" fill="url(#h1-g)"/><path class="a-ink" d="M30 12 52 60M88 12 64 60M140 12 120 60"/></svg></span>
+        <span class="h1-q">“How can the US be egalitarian and top-down at the same time?”</span>
+        <span class="h1-what">Leading and Deciding · six more countries</span>
+      </button>
+    </div>
+  </div>
+
+  <p class="h1-qa at">Q&amp;A runs on little <span class="d">d</span>: we’ll revisit anything.</p>
+  <button class="hot hot--goto at h1-end" data-goto="s20/3" data-print="hide" aria-label="Back to the end slide (35)"><svg class="ic" aria-hidden="true"><use href="#ic-arrow-l"/></svg> end · 35</button>
+  <footer class="sf"><p>Backups 37–40: Meyer (2014) · Erin Meyer, Country Mapping 2022 · course script · Lecture I</p></footer>
+</section>
+
+<!-- ===================================================================== H4 · backup: course bridge (hidden) -->
+<section class="slide daylight" id="h4" data-transition="fade" data-hidden="backup" data-title="Backup: Course bridge">
+  <header class="rh">
+    <p class="rh-crumb vt-swap" data-morph="rh-crumb">Q&amp;A · <b>Backup</b></p>
+    <p class="rh-title" data-morph="rh-title">Big D or little d?</p>
+    <p class="rh-folio vt-swap" data-morph="rh-folio" data-folio-text="2"></p>
+  </header>
+
+  <div class="body h4-body">
+    <div class="h4-head">
+      <h2 class="hl-3">Deciding, through the course lenses.</h2>
+      <p class="h4-key"><i class="h4-dot h4-dot--t"></i>consensual side <i class="h4-dot h4-dot--a"></i>top-down side <span class="soft">· on Meyer’s scale</span></p>
+    </div>
+
+    <!-- left column: Hofstede, then Bennett -->
+    <div class="h4-col h4-col--l">
+      <section class="h4-blk h4-hof">
+        <h3 class="h4-bh"><span class="h4-who">Hofstede</span>doesn’t predict Deciding</h3>
+        <div class="h4-rows">
+          <p class="h4-rt">Strong UAI</p>
+          <p class="h4-cs"><span class="h4-c t">Japan</span><span class="h4-c a">South Korea</span><span class="h4-c a">Greece</span></p>
+          <p class="h4-rt">Weak UAI</p>
+          <p class="h4-cs"><span class="h4-c t">Sweden</span><span class="h4-c t">Denmark</span><span class="h4-c a">US</span></p>
+          <p class="h4-rt">Individualist</p>
+          <p class="h4-cs"><span class="h4-c t">Sweden</span><span class="h4-c t">Germany</span><span class="h4-c a">US</span></p>
+          <p class="h4-rt">Collectivist</p>
+          <p class="h4-cs"><span class="h4-c t">Japan</span><span class="h4-c a">China</span></p>
+        </div>
+        <p class="h4-note">Every list holds both ends of the scale.</p>
+      </section>
+
+      <section class="h4-blk h4-dmis">
+        <h3 class="h4-bh"><span class="h4-who">Bennett</span>DMIS</h3>
+        <ol class="h4-steps">
+          <li><span class="h4-sn">Denial</span></li>
+          <li class="def"><span class="h4-sn">Defense</span><span class="h4-call">e.g. Lencioni: “‘consensus’ is a <span class="nw">four-letter</span> word!” <span class="soft">(an illustration, not a diagnosis)</span></span></li>
+          <li><span class="h4-sn">Minimization</span></li>
+          <li><span class="h4-sn">Acceptance</span></li>
+          <li class="ad"><span class="h4-sn">Adaptation</span><span class="h4-call">asking “small <span class="d">d</span> or big <span class="D">D</span>?”: switching frames</span></li>
+        </ol>
+      </section>
+    </div>
+
+    <!-- right column: the Japan paradox, then GLOBE -->
+    <div class="h4-col h4-col--r">
+      <section class="h4-blk h4-jp">
+        <h3 class="h4-bh"><span class="h4-who">Osland &amp; Bird</span>cultural paradoxes</h3>
+        <p class="q h4-def">“contradictions between the culture’s values you expect to see based on your use of the frameworks … and what you actually observe”</p>
+        <div class="h4-jp-row">
+          <figure class="h4-mini" aria-label="Lecture I, slide 10, redrawn: the Leading and Deciding rows, Japan circled">
+            <div class="h4-rail h4-rail--lead">
+              <p class="h4-rn">Leading</p>
+              <div class="h4-track">
+                <i style="--f:.048"></i><i style="--f:.177"></i><i class="k" style="--f:.213"></i><i style="--f:.423"></i><i class="k" style="--f:.515"></i><i style="--f:.551"></i><i style="--f:.573"></i><i style="--f:.742"></i><i style="--f:.878"></i><i style="--f:.891"></i><i style="--f:.906"></i><i class="jp" style="--f:.924"></i>
+                <span class="h4-lab" style="--f:.213">US</span><span class="h4-lab" style="--f:.515">DE</span><span class="h4-lab jp" style="--f:.924">JP</span>
+              </div>
+              <p class="h4-ends"><span>egalitarian</span><span>hierarchical</span></p>
+            </div>
+            <div class="h4-rail h4-rail--dec">
+              <p class="h4-rn">Deciding</p>
+              <div class="h4-track">
+                <i class="jp" style="--f:.024"></i><i style="--f:.137"></i><i class="k" style="--f:.254"></i><i style="--f:.423"></i><i style="--f:.442"></i><i class="k" style="--f:.568"></i><i style="--f:.587"></i><i style="--f:.604"></i><i style="--f:.660"></i><i style="--f:.691"></i><i style="--f:.777"></i><i style="--f:.870"></i>
+                <span class="h4-lab jp" style="--f:.024">JP</span><span class="h4-lab" style="--f:.254">DE</span><span class="h4-lab" style="--f:.568">US</span>
+              </div>
+              <p class="h4-ends"><span class="teal">consensual</span><span class="amber">top-down</span></p>
+            </div>
+            <figcaption class="caption">Lecture I, slide 10 (after Meyer), redrawn</figcaption>
+          </figure>
+          <ul class="h4-ours">
+            <li><b>Power Distance</b> <svg class="ic" aria-hidden="true"><use href="#ic-approx"/></svg> Leading, not Deciding <span class="ours">ours</span></li>
+            <li><b>Hall</b>: Japan is high-context; <i>nemawashi</i> is that informal context <span class="ours">ours</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="h4-blk h4-globe">
+        <h3 class="h4-bh"><span class="h4-who">GLOBE</span>Institutional Collectivism comes closest</h3>
+        <div class="h4-vs">
+          <p class="h4-pole t"><span class="h4-pl">higher</span><span>Decisions are made by group consensus</span></p>
+          <p class="h4-pole a"><span class="h4-pl">lower</span><span>Decisions are made by individuals in power</span></p>
+        </div>
+        <blockquote class="quote h4-q">
+          <p class="q">“…in Anglo cultures, such as the United States, a leader is decisive if they can make a quick decision. Being quick is more important than being 100 percent accurate as long as you take action. Leaders from Germany or France probably will take a different approach since the tendency is to be deliberate and precise when making decisions.”</p>
+        </blockquote>
+      </section>
+    </div>
+  </div>
+
+  <button class="hot hot--goto at h4-back" data-goto="@back" data-print="hide" aria-label="Back to the last slide viewed"><svg class="ic" aria-hidden="true"><use href="#ic-arrow-l"/></svg> back</button>
+  <footer class="sf"><p>Course script pp. 13–14, 16, 18–19, 26, 31 · Lecture I, slide 10 · Meyer (2014), p. 145, Fig. 5.3 · CM 2022</p></footer>
+</section>
+
+<!-- ===================================================================== S20e · visible end copy (slide 41) -->
+<!-- S20's end state, static: catches a stray clicker press during the Q&A. No chip; a stamp fired on S20 is mirrored. -->
+<section class="slide bare" id="s20e" data-transition="none" data-title="So — was that a big D or a little d? (end copy)">
+  <article class="card mail g-mail s20-mail">
+    <p class="card-tag"><svg class="ic" aria-hidden="true"><use href="#ic-mail"/></svg>one last proposal</p>
+    <p class="mail-body">In your next group project, agree <b>HOW</b> you decide — before you decide.</p>
+    <div class="stamp stamp--D s20-stamp" data-show-if="s20.stand==D"><b>D</b><span>no more<br>discussion!</span></div>
+    <p class="s20-outcome" data-print-only>stand-up — decided live</p>
+  </article>
+
+  <div class="s20-stand at">
+    <p class="live s20-live"><span class="rec" aria-hidden="true"></span><span>Stand up if you’ll take this with you.</span></p>
+  </div>
+
+  <div class="s20-three at stack">
+    <p class="kicker">Three decisions today</p>
+    <div class="s20-row">
+      <p class="s20-word amber">seconds</p>
+      <div class="s20-lane">
+        <i class="bar bar--amber s20-bar s20-bar--td"></i>
+        <p class="s20-meta"><b>#1</b> · one person</p>
+      </div>
+    </div>
+    <div class="s20-row">
+      <p class="s20-word teal">minutes</p>
+      <div class="s20-lane">
+        <span class="s20-bars">
+          <i class="bar bar--teal s20-bar" style="--s:120" data-show-if="!d2.elapsed || d2.elapsed_s>105"></i>
+          <i class="bar bar--teal s20-bar" style="--s:15" data-show-if="d2.elapsed_s>=0 &amp;&amp; d2.elapsed_s<=15"></i>
+          <i class="bar bar--teal s20-bar" style="--s:30" data-show-if="d2.elapsed_s>15 &amp;&amp; d2.elapsed_s<=30"></i>
+          <i class="bar bar--teal s20-bar" style="--s:45" data-show-if="d2.elapsed_s>30 &amp;&amp; d2.elapsed_s<=45"></i>
+          <i class="bar bar--teal s20-bar" style="--s:60" data-show-if="d2.elapsed_s>45 &amp;&amp; d2.elapsed_s<=60"></i>
+          <i class="bar bar--teal s20-bar" style="--s:75" data-show-if="d2.elapsed_s>60 &amp;&amp; d2.elapsed_s<=75"></i>
+          <i class="bar bar--teal s20-bar" style="--s:90" data-show-if="d2.elapsed_s>75 &amp;&amp; d2.elapsed_s<=90"></i>
+          <i class="bar bar--teal s20-bar" style="--s:105" data-show-if="d2.elapsed_s>90 &amp;&amp; d2.elapsed_s<=105"></i>
+          <i class="s20-track" data-print-only></i>
+        </span>
+        <p class="s20-meta"><b>#2</b> · the room<span data-show-if="d2.elapsed"> · <span class="num-tab" data-bind="d2.elapsed" data-print="up to 2:00">2:00</span></span><span data-print-only> · up to 2:00</span></p>
+      </div>
+    </div>
+    <div class="s20-row">
+      <p class="s20-word s20-word--ink">yours</p>
+      <div class="s20-lane">
+        <i class="bar bar--empty s20-bar s20-bar--yours"></i>
+        <p class="s20-meta"><b>#3</b> · your next team</p>
+      </div>
+    </div>
+  </div>
+
+  <span class="glyph glyph--D g-glyph-D--title" data-morph="glyph-D" aria-hidden="true">D</span>
+  <span class="s20-qm" aria-hidden="true">?</span>
+  <span class="glyph glyph--d s20-d" data-morph="glyph-d" aria-hidden="true">d</span>
+  <h2 class="hl s20-hl at">So — was that<br>a big <span class="D">D</span> or<br>a little <span class="d">d</span>?</h2>
+
+  <p class="s20-qa at">Q&amp;A runs on little <span class="d">d</span>.</p>
+
+  <button class="hot hot--goto at s20-hub" data-goto="h1" data-print="hide" aria-label="Q&amp;A hub: slide 36"><svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg> 36</button>
+  <footer class="sf"><p>Meyer (2014), pp. 160–161</p></footer>
+</section>

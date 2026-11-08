@@ -1,0 +1,304 @@
+/*
+ * 05-g5-toolkit.css · owner: g5-toolkit · scope every rule to your slide ids: #s12a, #s12b, #s12c, #s13, #s14a, #s14m, #s14b, #s14c
+ * Theme tokens and components: slides/src/theme/ (read-only for builders), handbook: slides/src/DECK_SPEC.md.
+ * Colours only from tokens (color-mix for tints) so lit-room and paper recolour everything.
+ */
+
+/* ===================================================================== shared: move chips, column heads (S12a-c) */
+
+/* the column panel: an empty tinted plate (vt-shape: it stretches into the narrow side panel) */
+:is(#s12a, #s12b, #s12c) .col {
+  border: var(--sw-hair) solid var(--c-edge);
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--c-tint), transparent 85%), var(--card-fill);
+  box-shadow: var(--shadow-card);
+  z-index: 1;
+}
+:is(#s12a, #s12b, #s12c) .col--D { --c-edge: color-mix(in srgb, var(--teal) 50%, transparent); --c-tint: color-mix(in srgb, var(--teal) 9%, transparent); }
+:is(#s12a, #s12b, #s12c) .col--d { --c-edge: color-mix(in srgb, var(--amber) 50%, transparent); --c-tint: color-mix(in srgb, var(--amber) 8%, transparent); }
+
+/* column head: glyph + "Working with BIG D (consensual)" */
+:is(#s12a, #s12b, #s12c) .colh { display: flex; align-items: center; gap: 28px; z-index: 3; }
+:is(#s12a, #s12b, #s12c) .colh-g { font-size: 132px; }
+:is(#s12a, #s12b, #s12c) .colh--D .colh-g { margin-top: -6px; }
+:is(#s12a, #s12b, #s12c) .colh--d .colh-g { margin-top: -18px; padding-right: 10px; }
+:is(#s12a, #s12b, #s12c) .colh-t { display: flex; flex-direction: column; gap: 4px; font: 500 var(--fs-min)/1.15 var(--sans); color: var(--ink-2); }
+:is(#s12a, #s12b, #s12c) .colh-k { font: var(--w-kicker) var(--fs-min)/1.15 var(--sans); font-stretch: var(--wd-kicker); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2); }
+:is(#s12a, #s12b, #s12c) .colh-t b { font: 820 46px/1.05 var(--sans); font-stretch: 125%; letter-spacing: .04em; }
+:is(#s12a, #s12b, #s12c) .colh--D .colh-t b { color: var(--teal); }
+:is(#s12a, #s12b, #s12c) .colh--d .colh-t b { font: italic 500 58px/1 var(--serif); letter-spacing: 0; color: var(--amber); }
+:is(#s12a, #s12b, #s12c) .colh-t i { font: italic 460 34px/1.1 var(--serif); color: var(--ink-2); }
+
+/* the ten moves: chips with a number, the words and (four of them) a callback icon */
+:is(#s12a, #s12b, #s12c) .mvs { display: flex; flex-direction: column; gap: 18px; z-index: 3; }
+:is(#s12a, #s12b, #s12c) .mv-row { display: flex; align-items: center; gap: 22px; min-width: 0; }
+:is(#s12a, #s12b, #s12c) .mv {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  padding: 12px 26px 12px 14px;
+  border: var(--sw-1) solid var(--mv-edge);
+  border-radius: 18px;
+  background: var(--mv-fill);
+  font: 520 var(--fs-body)/1.22 var(--sans);
+  color: var(--ink);
+}
+:is(#s12a, #s12b, #s12c) .mv--D { --mv-edge: color-mix(in srgb, var(--teal) 55%, transparent); --mv-fill: color-mix(in srgb, var(--teal) 8%, var(--bg-raise)); --mv-c: var(--teal); }
+:is(#s12a, #s12b, #s12c) .mv--d { --mv-edge: color-mix(in srgb, var(--amber) 55%, transparent); --mv-fill: color-mix(in srgb, var(--amber) 7%, var(--bg-raise)); --mv-c: var(--amber); }
+:is(#s12a, #s12b, #s12c) .mv .num { flex: none; margin-top: 0; font-size: 30px; }
+:is(#s12a, #s12b, #s12c) .mv-t { min-width: 0; text-wrap: pretty; }
+:is(#s12a, #s12b, #s12c) .mv-ic { width: 40px; height: 40px; margin-left: 2px; color: var(--mv-c); stroke-width: 1.9; }
+:is(#s12a, #s12b, #s12c) .mv-cb { flex: none; font: italic 470 32px/1.1 var(--serif); color: var(--ink-3); }
+/* the glow ring that marks the matching chip (S12b / S12c answers) */
+:is(#s12b, #s12c) .mv-ring {
+  position: absolute;
+  inset: -11px;
+  border: var(--sw-3) solid var(--mv-c);
+  border-radius: 26px;
+  box-shadow: 0 0 34px color-mix(in srgb, var(--mv-c) calc(55% * var(--glow-a)), transparent), inset 0 0 22px color-mix(in srgb, var(--mv-c) calc(30% * var(--glow-a)), transparent);
+  pointer-events: none;
+}
+
+/* ===================================================================== S12a · Two rulebooks, ten moves */
+#s12a {
+  --lt-x: 460px;  --lt-y: 700px; --lt-s: .95;
+  --la-x: 1460px; --la-y: 700px; --la-s: .9;
+}
+/* flow: kicker, headline, then the two columns take the rest of the body (a longer headline pushes them down) */
+#s12a .s12a-body { grid-template-rows: auto auto minmax(0, 1fr); row-gap: 14px; align-content: stretch; }
+#s12a .s12a-cols { display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--gut); margin-top: 12px; min-height: 0; }
+/* plate and content share one grid cell: the plate (vt-shape, no text) stretches behind the content */
+#s12a .s12a-col { display: grid; min-height: 0; }
+#s12a .s12a-col > * { grid-area: 1 / 1; }
+#s12a .col-in { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 26px; padding: 26px 40px 30px; }
+#s12a .colh-g { font-size: 120px; }
+#s12a .colh { min-height: 150px; }   /* both heads the same height: the chip rows line up across the columns */
+#s12a .mvs { gap: 18px; }
+#s12a .mv { padding: 11px 26px 11px 12px; }
+
+/* ===================================================================== S12b / S12c · Quick-fire (columns as wings at the side edges) */
+:is(#s12b, #s12c) {
+  --lt-x: 240px;  --lt-y: 620px; --lt-s: .7;
+  --la-x: 1680px; --la-y: 620px; --la-s: .68;
+  --ls-x: 960px;  --ls-y: 520px; --ls-s: .85; --ls-o: .8;
+}
+:is(#s12b, #s12c) .col { --y: 112px; --w: 480px; --h: 712px; }
+:is(#s12b, #s12c) .col--D { --x: 72px; }
+:is(#s12b, #s12c) .col--d { --x: 1368px; }
+:is(#s12b, #s12c) .wing { --y: 112px; --w: 480px; z-index: 3; display: flex; flex-direction: column; gap: 26px; padding: 22px 24px 24px; }
+:is(#s12b, #s12c) .wing--D { --x: 72px; }
+:is(#s12b, #s12c) .wing--d { --x: 1368px; }
+:is(#s12b, #s12c) .colh { gap: 20px; }
+:is(#s12b, #s12c) .colh-g { font-size: 92px; }
+:is(#s12b, #s12c) .colh--d .colh-g { margin-top: -12px; padding-right: 6px; }
+:is(#s12b, #s12c) .colh-t b { font-size: 38px; }
+:is(#s12b, #s12c) .colh--d .colh-t b { font-size: 48px; }
+:is(#s12b, #s12c) .colh-t i { font-size: 32px; }
+:is(#s12b, #s12c) .mvs { gap: 18px; }
+:is(#s12b, #s12c) .mv-row { display: block; }
+:is(#s12b, #s12c) .mv { display: flex; width: 100%; gap: 12px; padding: 9px 16px 9px 10px; border-radius: 16px; font-size: 30px; line-height: 1.16; }
+:is(#s12b, #s12c) .mv-t { flex: 1; }
+:is(#s12b, #s12c) .mv-ic { width: 34px; height: 34px; }
+
+/* centre stage: kicker, headline, the quick-fire card and its answer, one flow column */
+:is(#s12b, #s12c) .qf-mid { --x: 584px; --y: 112px; --w: 752px; z-index: 4; display: flex; flex-direction: column; align-items: center; gap: 14px; text-align: center; }
+:is(#s12b, #s12c) .qf-hl { font-size: 88px; line-height: 1.02; }
+:is(#s12b, #s12c) .qf { align-self: stretch; margin-top: 14px; padding: 28px 40px 32px; background: var(--bg-raise); border-color: var(--line-2); text-align: left; }
+:is(#s12b, #s12c) .qf-tag { font: var(--w-kicker) var(--fs-min)/1 var(--sans); font-stretch: var(--wd-kicker); letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2); }
+:is(#s12b, #s12c) .qf-tag b { color: var(--ink); }
+:is(#s12b, #s12c) .qf-tag span { font: italic 460 30px/1 var(--serif); letter-spacing: 0; text-transform: none; color: var(--ink-3); }
+:is(#s12b, #s12c) .qf-body { margin-top: 16px; font: italic 460 44px/1.18 var(--serif); color: var(--ink); text-wrap: balance; }
+:is(#s12b, #s12c) .qf-ans { display: flex; flex-direction: column; align-items: center; gap: 2px; margin-top: 8px; }
+:is(#s12b, #s12c) .qf-g { font-size: 200px; line-height: .9; }
+#s12c .qf-g { margin-left: -36px; }
+:is(#s12b, #s12c) .qf-why { font: 520 var(--fs-sm)/1.25 var(--sans); color: var(--ink); text-wrap: balance; }
+:is(#s12b, #s12c) .qf-why b { font-weight: 760; }
+:is(#s12b, #s12c) .qf-why > span:not(.d):not(.D) { font: italic 460 32px/1 var(--serif); color: var(--ink-2); }
+:is(#s12b, #s12c) .sf .gesture .gest { width: 40px; height: 46px; }
+
+/* ===================================================================== S13 · Mixed team? Decide how to decide */
+#s13 {
+  --lt-x: 1460px; --lt-y: 800px; --lt-s: .8;
+  --la-x: 420px;  --la-y: 820px; --la-s: .75;
+  --ls-x: 1240px; --ls-y: 360px; --ls-s: .9; --ls-o: .55;
+}
+#s13 .s13-rules { z-index: 3; }
+#s13 .s13-recog { --x: 72px; --y: 558px; --w: 539px; display: flex; flex-direction: column; gap: 6px; font: italic 460 34px/1.15 var(--serif); color: var(--ink-2); }
+#s13 .s13-recog b { font: 700 var(--fs-min)/1.2 var(--sans); font-stretch: var(--wd-kicker); letter-spacing: .16em; text-transform: uppercase; color: var(--ink); }
+#s13 .s13-main { --x: 648px; --y: 100px; --w: 1200px; display: flex; flex-direction: column; gap: 20px; }
+#s13 .s13-hl { font-size: 66px; color: var(--ink); text-shadow: var(--glow-ink); }
+
+#s13 .s13-proto { padding: 22px 32px 24px; }
+#s13 .s13-proto-h { display: flex; align-items: baseline; gap: 18px; }
+#s13 .s13-proto-h i { font: italic 460 32px/1 var(--serif); color: var(--ink-2); }
+#s13 .s13-ours { margin-left: auto; font: 600 var(--fs-min)/1 var(--sans); letter-spacing: .04em; color: var(--ink-3); }
+#s13 .s13-list { display: grid; gap: 8px; margin-top: 14px; }
+#s13 .s13-list li { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; align-items: center; column-gap: 18px; font: 520 var(--fs-sm)/1.25 var(--sans); color: var(--ink); }
+#s13 .s13-cb { position: relative; width: 44px; height: 44px; color: var(--ink-2); }
+#s13 .s13-cb .ic { position: absolute; inset: 0; width: 44px; height: 44px; stroke-width: 1.8; }
+#s13 .s13-cb .s13-ck { inset: -4px -6px 4px 6px; color: var(--teal); stroke-width: 3; }
+#s13 .s13-r { display: flex; gap: 8px; justify-content: flex-end; min-width: 120px; }
+#s13 .s13-r .num { font-size: 30px; margin-top: 0; }
+#s13 .s13-r--now { font: 600 var(--fs-min)/1 var(--sans); color: var(--ink-3); }
+
+/* the two managers: glyph + speech bubble */
+#s13 .s13-say { --y: 650px; --w: 872px; display: flex; align-items: flex-end; gap: 24px; }
+#s13 .s13-say--d { --x: 72px; gap: 36px; }
+#s13 .s13-say--D { --x: 976px; }
+#s13 .s13-g { flex: none; z-index: 4; }
+#s13 .s13-say--d .s13-g { font-size: 210px; line-height: .8; margin-bottom: -4px; }
+#s13 .s13-say--D .s13-g { font-size: 156px; line-height: .78; }
+#s13 .s13-bub {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 44px;
+  padding: 18px 28px 20px;
+  border: var(--sw-2) solid var(--bub-c);
+  border-radius: 24px;
+  background: var(--bg-raise);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+#s13 .s13-bub::before {
+  content: "";
+  position: absolute;
+  left: -19px;
+  bottom: 22px;
+  width: 34px;
+  height: 34px;
+  border-left: var(--sw-2) solid var(--bub-c);
+  border-bottom: var(--sw-2) solid var(--bub-c);
+  background: var(--bg-raise);
+  rotate: 45deg;
+  border-bottom-left-radius: 6px;
+}
+#s13 .s13-bub--d { --bub-c: var(--amber); box-shadow: 0 0 40px color-mix(in srgb, var(--amber) calc(16% * var(--glow-a)), transparent); }
+#s13 .s13-bub--D { --bub-c: var(--teal); box-shadow: 0 0 40px color-mix(in srgb, var(--teal) calc(16% * var(--glow-a)), transparent); }
+#s13 .s13-bub .q { position: relative; color: var(--ink); }
+#s13 .s13-bub .who { font-size: var(--fs-min); }
+
+#s13 .s13-take { --x: 72px; --y: 900px; --w: 1520px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px; }
+#s13 .s13-take .q { color: var(--ink); }
+
+#s13 .s13-hint { --y: 862px; right: 114px; left: auto; font: 520 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); text-align: right; }
+#s13 .s13-hint b { font-weight: 800; font-stretch: 125%; }
+#s13 .s13-hint--M b { color: var(--amber); }
+#s13:has(.s13-hint--M:not(.is-if-off)) .s13-skip { color: var(--amber); border-style: solid; }
+
+/* ===================================================================== S14a / S14m · Apply */
+:is(#s14a, #s14m) {
+  --lt-x: 760px;  --lt-y: 420px; --lt-s: .9;
+  --la-x: 1600px; --la-y: 900px; --la-s: .6; --la-o: .35;
+  --ls-x: 960px;  --ls-y: 760px; --ls-s: 1.2; --ls-o: .5;
+}
+#s14m { --la-o: 1; --la-x: 1200px; --la-y: 420px; --la-s: .8; --lt-x: 620px; --lt-y: 460px; }
+:is(#s14a, #s14m) .s14-head { row-gap: 14px; }
+/* the S04b card, centred, with the stamp slot overlapping its right edge like a stamp on a document */
+:is(#s14a, #s14m) .s14-case { --x: 560px; --y: 318px; --w: 860px; display: flex; align-items: center; }
+:is(#s14a, #s14m) .s14-card { flex: none; width: 584px; }
+:is(#s14a, #s14m) .s14-out { position: relative; z-index: 6; flex: 1; min-width: 0; margin-left: -72px; display: grid; place-items: center start; min-height: 196px; }
+:is(#s14a, #s14m) .s14-dash {
+  display: grid;
+  place-items: center;
+  padding: 22px 42px;
+  border: var(--sw-2) dashed var(--ink-2);
+  border-radius: 18px;
+  background: var(--bg-raise);
+  box-shadow: 0 0 0 5px var(--bg-raise);
+  rotate: -5deg;
+  font: italic 470 46px/1.04 var(--serif);
+  color: var(--ink);
+  text-align: center;
+}
+:is(#s14a, #s14m) .s14-stamp { position: relative; }
+:is(#s14a, #s14m) .s14-res { position: absolute; left: 0; right: 0; bottom: -54px; font: 560 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); text-align: center; }
+:is(#s14a, #s14m) .s14-res b { font-variant-numeric: tabular-nums; color: var(--ink); }
+
+:is(#s14a, #s14m) .s14-call { --x: 72px; --y: 590px; --w: 1776px; font: 520 var(--fs-sm)/1.2 var(--sans); color: var(--ink-2); text-align: center; }
+:is(#s14a, #s14m) .s14-call b { color: var(--ink); }
+
+:is(#s14a, #s14m) .s14-moves { --x: 72px; --y: 662px; --w: 1776px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--gut); align-items: stretch; }
+:is(#s14a, #s14m) .s14-mv {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-content: start;
+  align-items: center;
+  column-gap: 20px;
+  row-gap: 10px;
+  padding: 28px 34px 34px;
+  border: var(--sw-1) solid var(--mv-edge, var(--card-edge));
+  border-radius: var(--radius);
+  background: var(--mv-fill, var(--card-fill));
+}
+:is(#s14a, #s14m) .s14-mv--D { --mv-edge: color-mix(in srgb, var(--teal) 55%, transparent); --mv-fill: color-mix(in srgb, var(--teal) 8%, var(--bg-raise)); }
+:is(#s14a, #s14m) .s14-mv .num { font-size: 30px; margin-top: 0; }
+:is(#s14a, #s14m) .s14-ic { width: 60px; height: 60px; color: var(--teal); stroke-width: 1.7; }
+#s14m .s14-ic { color: var(--ink); }
+:is(#s14a, #s14m) .s14-ic--D { display: flex; align-items: center; width: auto; height: 60px; font: 860 58px/1 var(--sans); font-stretch: 125%; color: var(--teal); }
+:is(#s14a, #s14m) .s14-ic--pair { display: flex; align-items: baseline; gap: 4px; width: auto; height: 60px; font-size: 58px; line-height: 1; }
+:is(#s14a, #s14m) .s14-mv-t { grid-column: 1 / -1; margin-top: 6px; font: 640 40px/1.12 var(--sans); color: var(--ink); text-wrap: balance; }
+:is(#s14a, #s14m) .s14-mv-t i { font: italic 500 44px/1 var(--serif); }
+:is(#s14a, #s14m) .s14-mv-s { grid-column: 1 / -1; font: italic 460 34px/1.2 var(--serif); color: var(--ink-2); text-wrap: pretty; }
+
+/* ===================================================================== S14b · Exam card */
+#s14b {
+  --lt-x: 420px;  --lt-y: 640px; --lt-s: .7;
+  --la-x: 1500px; --la-y: 640px; --la-s: .7;
+  --ls-x: 960px;  --ls-y: 300px; --ls-s: 1.2; --ls-o: .55;
+}
+#s14b .s14b-body { row-gap: 18px; }
+#s14b .s14b-q { font: italic 470 64px/1.1 var(--serif); color: var(--ink); text-wrap: balance; text-shadow: var(--glow-ink); }
+#s14b .s14b-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px var(--gut); margin-top: 10px; }
+#s14b .s14b-pt { display: flex; flex-direction: column; gap: 10px; padding: 22px 30px 24px; }
+#s14b .s14b-pt--D { border-color: color-mix(in srgb, var(--teal) 55%, transparent); }
+#s14b .s14b-pt--d { border-color: color-mix(in srgb, var(--amber) 55%, transparent); }
+#s14b .s14b-lab { display: flex; align-items: center; gap: 16px; font: 700 var(--fs-min)/1.1 var(--sans); font-stretch: var(--wd-kicker); letter-spacing: .16em; text-transform: uppercase; color: var(--ink); }
+#s14b .s14b-lab .num { font-size: 30px; margin-top: 0; letter-spacing: 0; }
+#s14b .s14b-lab .D,
+#s14b .s14b-lab .d { font-size: 44px; line-height: .8; letter-spacing: 0; text-transform: none; }
+#s14b .s14b-lab .d { font-size: 52px; }
+#s14b .s14b-lab .ic { width: 1.1em; height: 1.1em; stroke-width: 2.4; }
+#s14b .s14b-tx { font: 520 32px/1.3 var(--sans); color: var(--ink); text-wrap: pretty; }
+#s14b .s14b-tx .ic { width: .9em; height: .9em; stroke-width: 2.6; color: var(--ink-2); }
+#s14b .s14b-eg { font: 520 32px/1.3 var(--sans); color: var(--ink-2); }
+#s14b .s14b-eg i { font: italic 470 32px/1 var(--serif); }
+#s14b .s14b-photo { display: flex; align-items: center; gap: 14px; margin-top: 4px; font: italic 470 40px/1 var(--serif); color: var(--ink); }
+#s14b .s14b-photo .ic { width: 44px; height: 44px; stroke-width: 1.8; color: var(--ink-2); }
+
+/* ===================================================================== S14c · True or false? */
+#s14c {
+  --lt-x: 1500px; --lt-y: 760px; --lt-s: .7;
+  --la-x: 1500px; --la-y: 420px; --la-s: .7;
+  --ls-x: 760px;  --ls-y: 560px; --ls-s: 1.2; --ls-o: .6;
+}
+#s14c .s14c-body { row-gap: 10px; }
+#s14c .s14c-key { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 16px; font: 560 var(--fs-min)/1.2 var(--sans); color: var(--ink-2); }
+#s14c .s14c-thumb { width: 44px; height: 44px; fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; }
+#s14c .s14c-thumb--dn { rotate: 180deg; margin-left: 18px; }
+#s14c .s14c-st {
+  --x: 72px; --w: 1776px;
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  column-gap: 24px;
+  row-gap: 14px;
+  padding: 34px 480px 34px 36px;
+  z-index: 3;
+}
+#s14c .s14c-st--1 { --y: 336px; }
+#s14c .s14c-st--2 { --y: 648px; }
+#s14c .s14c-n { grid-row: 1 / 3; font: 760 72px/1 var(--sans); font-stretch: 125%; color: var(--ink-3); }
+#s14c .s14c-q { font-size: var(--fs-q-l); line-height: 1.12; color: var(--ink); }
+#s14c .s14c-why { display: flex; align-items: center; gap: 12px; font: 520 var(--fs-sm)/1.25 var(--sans); color: var(--ink-2); }
+#s14c .s14c-why .ic { width: 36px; height: 36px; stroke-width: 2; color: var(--ink-2); }
+#s14c .s14c-why i { font: italic 470 32px/1 var(--serif); color: var(--ink); }
+#s14c .s14c-stamp { right: 64px; top: 50%; translate: 0 -50%; }
+#s14c .s14c-stamp--t { --tilt: 4deg; }
+
+/* lit-room and paper: the ring / bubble glows scale with the theme's --glow-a (0 there); .col uses --shadow-card */
+
+/* Morph of the move chips and column heads S12a -> S12b: class .vt-rewrap (theme seam helper, motion.css) on
+   S12a + S12b; S12c keeps a plain pair (same chips). */

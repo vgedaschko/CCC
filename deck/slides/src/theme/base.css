@@ -1,0 +1,234 @@
+/*
+ * base.css: stage, the slide grid, the type scale, layout templates and small utilities.
+ *
+ * The slide is a CSS grid on the 1920x1080 canvas:
+ *   columns  [full-start] 72px [c-start] 1fr [c-end] 72px [full-end]
+ *   rows     [head-start] 64px [head-end] 48px [body-start] 1fr [body-end] 32px [foot-start] 64px [foot-end]
+ * so the running head (.rh) sits in y 0-64, the body (.body) in y 112-984 and x 72-1848,
+ * the source footer (.sf) in y 1016-1080. In story mode the head/footer bands are the letterbox bars.
+ * Free-placed objects (diagrams, morph objects) use .at with stage coordinates (--x, --y, --w, --h).
+ */
+
+/* ---------------------------------------------------------------- stage */
+html.deck-js:not(.deck-mode-presenter),
+html.deck-js:not(.deck-mode-presenter) body {
+  background: #000;
+}
+.deck-stage {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: var(--fs-body);
+  font-weight: var(--w-body);
+  line-height: 1.3;
+  font-optical-sizing: auto;
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+.deck-stage *,
+.deck-stage *::before,
+.deck-stage *::after {
+  box-sizing: border-box;
+}
+:where(.deck-stage) :where(p, h1, h2, h3, h4, h5, ol, ul, li, figure, blockquote, dl, dd) {
+  margin: 0;
+  padding: 0;
+}
+:where(.deck-stage) :where(ol, ul) {
+  list-style: none;
+}
+:where(.deck-stage) :where(button) {
+  font: inherit;
+  color: inherit;
+}
+
+/* ---------------------------------------------------------------- slide grid */
+.deck-stage .slide {
+  display: grid;
+  grid-template-columns: [full-start] var(--m) [c-start] minmax(0, 1fr) [c-end] var(--m) [full-end];
+  grid-template-rows: [head-start] var(--band) [head-end] 48px [body-start] minmax(0, 1fr) [body-end] 32px [foot-start] var(--band) [foot-end];
+  isolation: isolate;
+}
+
+/* body: a 12-column grid inside x 72-1848, y 112-984 */
+.slide > .body {
+  grid-column: c-start / c-end;
+  grid-row: body-start / body-end;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--gut);
+  row-gap: 24px;
+  align-content: start;
+  min-height: 0;
+}
+.slide > .body > * {
+  grid-column: var(--c, 1 / -1);
+  grid-row: var(--r, auto);
+  min-width: 0;
+}
+
+/* layout templates (on .body) */
+.body.L-center { align-content: center; justify-items: center; text-align: center; }
+.body.L-bottom { align-content: end; }
+.body.L-fill { align-content: stretch; grid-auto-rows: auto; }
+.body.L-split > .a { grid-column: 1 / 7; }
+.body.L-split > .b { grid-column: 7 / 13; }
+.body.L-split.s-5-7 > .a { grid-column: 1 / 6; }
+.body.L-split.s-5-7 > .b { grid-column: 6 / 13; }
+.body.L-split.s-7-5 > .a { grid-column: 1 / 8; }
+.body.L-split.s-7-5 > .b { grid-column: 8 / 13; }
+.body.L-split.s-4-8 > .a { grid-column: 1 / 5; }
+.body.L-split.s-4-8 > .b { grid-column: 5 / 13; }
+.body.L-split.s-8-4 > .a { grid-column: 1 / 9; }
+.body.L-split.s-8-4 > .b { grid-column: 9 / 13; }
+.body.L-3 > .a { grid-column: 1 / 5; }
+.body.L-3 > .b { grid-column: 5 / 9; }
+.body.L-3 > .c { grid-column: 9 / 13; }
+.body > .full { grid-column: 1 / -1; }
+/* a column that stacks its children with a rhythm */
+.stack { display: flex; flex-direction: column; gap: var(--gap, 24px); min-width: 0; }
+.row { display: flex; flex-wrap: wrap; align-items: var(--align, center); gap: var(--gap, 24px); min-width: 0; }
+
+/* free placement in stage coordinates (diagrams, morph objects) */
+.slide > .at,
+.slide .at-abs {
+  position: absolute;
+  left: var(--x, 0px);
+  top: var(--y, 0px);
+  width: var(--w, auto);
+  height: var(--h, auto);
+  z-index: var(--z, 2);
+}
+
+/* ---------------------------------------------------------------- type scale */
+.kicker {
+  font: var(--w-kicker) var(--fs-min)/1.2 var(--sans);
+  font-stretch: var(--wd-kicker);
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.kicker .soft,
+.kicker small {
+  font-weight: 500;
+  font-stretch: 100%;
+  letter-spacing: .01em;
+  text-transform: none;
+  font-size: inherit;
+  color: var(--ink-2);
+}
+.hl {
+  font: 500 var(--fs-h1)/1.02 var(--serif);
+  letter-spacing: -.012em;
+  color: var(--ink);
+  text-shadow: var(--glow-ink);
+  text-wrap: balance;
+}
+.hl-2 { font: 500 var(--fs-h2)/1.05 var(--serif); letter-spacing: -.01em; text-wrap: balance; }
+.hl-3 { font: 500 var(--fs-h3)/1.08 var(--serif); text-wrap: balance; }
+.display { font: 720 var(--fs-display)/1 var(--sans); letter-spacing: -.02em; }
+.lead { font: italic 450 var(--fs-lead)/1.2 var(--serif); color: var(--ink); text-wrap: pretty; }
+.text { font: var(--w-body) var(--fs-body)/1.3 var(--sans); text-wrap: pretty; }
+.text-sm { font: var(--w-body) var(--fs-sm)/1.3 var(--sans); text-wrap: pretty; }
+.label { font: 560 var(--fs-min)/1.25 var(--sans); color: var(--ink-2); text-wrap: balance; }
+.caps { font-weight: 700; font-stretch: var(--wd-kicker); letter-spacing: .14em; text-transform: uppercase; }
+.caption { font: 500 var(--fs-min)/1.3 var(--sans); color: var(--ink-3); }
+.ital { font-family: var(--serif); font-style: italic; font-weight: 470; }
+.num-tab { font-variant-numeric: tabular-nums; }
+.teal { color: var(--teal); }
+.amber { color: var(--amber); }
+.ink-2 { color: var(--ink-2); }
+.ink-3 { color: var(--ink-3); }
+.grey { color: var(--grey); }
+b, strong { font-weight: 720; }
+
+/* "ours" tag: marks our own device, not Meyer's */
+.ours {
+  display: inline-block;
+  margin-left: .4em;
+  padding: 4px 10px 3px;
+  border: var(--sw-hair) solid var(--ink-3);
+  border-radius: 8px;
+  font: 600 var(--fs-min)/1 var(--sans);
+  font-style: normal;
+  font-stretch: 112%;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  vertical-align: .12em;
+}
+
+/* ---------------------------------------------------------------- icons (template sprite) */
+/* <svg class="ic" aria-hidden="true"><use href="#ic-arrow-r"/></svg>  1em square, inherits colour */
+.ic {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  vertical-align: -.14em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+  flex: none;
+}
+.ic.ic-lg { width: 1.25em; height: 1.25em; vertical-align: -.24em; }
+.ic.ic-fill { fill: currentColor; stroke: none; }
+
+/* no-break span for one hyphenated compound or a short unit ("face-to-face", "top-down"): the shipped fonts
+   have no U+2011 non-breaking hyphen. Never around whole headlines, definitions or quotes. */
+.nb { white-space: nowrap; }
+
+/* screen-reader text: kept out of every visual check */
+.sr {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------------- placeholders (Part II, members) */
+/* [MEMBER 1 · name] slots: unmistakable, readable, easy to find and replace (search for class="ph") */
+.ph {
+  display: inline;
+  padding: 0 .28em;
+  border: var(--sw-hair) dashed currentColor;
+  border-radius: 6px;
+  background: repeating-linear-gradient(-45deg, rgba(243, 238, 228, .07) 0 6px, transparent 6px 12px);
+  color: var(--ink-2);
+  font-style: normal;
+  font-family: var(--sans);
+  font-weight: 560;
+  font-stretch: 100%;
+  letter-spacing: .02em;
+  text-transform: none;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* ---------------------------------------------------------------- stub marker (foundation stubs) */
+.stub-mark {
+  position: absolute;
+  right: var(--m);
+  top: 76px;
+  z-index: 5;
+  padding: 10px 22px;
+  border: var(--sw-1) dashed var(--amber);
+  border-radius: 999px;
+  font: 700 var(--fs-min)/1 var(--sans);
+  font-stretch: 112%;
+  letter-spacing: .14em;
+  color: var(--amber);
+}
+.stub-body { padding-right: 200px; }
+.stub-note {
+  font: 500 var(--fs-min)/1.35 var(--sans);
+  color: var(--ink-3);
+}

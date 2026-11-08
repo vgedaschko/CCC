@@ -1,0 +1,23 @@
+{
+  "_about": "Slide order (41 physical positions, BUILD_BRIEF §4 / script §2.7) and the group partials. Owned by the foundation. tools/assemble.cjs places each slide by this order, wherever its group file defines it.",
+  "template": "deck.template.html",
+  "groups": [
+    { "file": "00-foundation", "owner": "foundation" },
+    { "file": "01-g1-opening", "owner": "g1-opening" },
+    { "file": "02-g2-classification", "owner": "g2-classification" },
+    { "file": "03-g3-per", "owner": "g3-per" },
+    { "file": "04-g4-tokyo", "owner": "g4-tokyo" },
+    { "file": "05-g5-toolkit", "owner": "g5-toolkit" },
+    { "file": "06-g6-part2", "owner": "g6-part2" },
+    { "file": "07-g7-close", "owner": "g7-close" }
+  ],
+  "order": [
+    "s01", "s02", "s02m", "s03", "s04a", "s04b", "s04z", "s05",
+    "s06", "s07", "s08a", "s08b",
+    "s09a", "s09b",
+    "s10a", "s10b", "s11a", "s11b", "s11c", "s11d",
+    "s12a", "s12b", "s12c", "s13", "s14a", "s14m", "s14b", "s14c",
+    "s15", "s16", "s17", "s17b", "s18", "s19",
+    "s20", "h1", "h2", "h3", "h4", "h5", "s20e"
+  ]
+}

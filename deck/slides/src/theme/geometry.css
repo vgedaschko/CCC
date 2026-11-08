@@ -1,0 +1,62 @@
+/*
+ * geometry.css: the MORPH-KEY REGISTRY in CSS. Canonical stage geometry (1920 x 1080 px) of every
+ * persistent object that crosses slides or groups, so slides built in parallel meet at the seams.
+ * Use the class together with the registry key (data-morph) listed in DECK_SPEC.md. Do not restate
+ * these numbers in group CSS; if an object must sit elsewhere, it is a different state: ask the foundation.
+ *
+ * Binding ("stays put") objects:  clock-td (parked), clock-td-lbl, rule-card (large / parked), mail,
+ *                                 scn-T / scn-M, the running head (rh-*), the S04b/S04z clock band.
+ * Seam objects that may glide:    glyph-D / glyph-d, tile-ny / tile-mu, axis-dec (presets in countries.json).
+ */
+
+.g-abs { position: absolute; }
+
+/* ---------------------------------------------------------------- clock band (S02 … S04z, S05) */
+/* the amber sliver "#1 ≈ 3 s", parked bottom-left from S02 click 1 to S04z; 44 px = 3 s on the 2:00 track */
+.g-clock-td { position: absolute; left: 72px; top: 825px; width: 44px; height: 28px; z-index: 3; }
+.g-clock-td-lbl { position: absolute; left: 136px; top: 822px; z-index: 3; white-space: nowrap; }
+/* the 2:00 consensus track (S04b live, S04z full): 1776 px = 120 s */
+.g-clock-cons { position: absolute; left: 72px; top: 868px; width: 1776px; height: 72px; z-index: 3; }
+.g-clock-cons-lbl { position: absolute; right: 72px; top: 822px; z-index: 3; white-space: nowrap; }
+.g-clock-ticks { position: absolute; left: 72px; top: 952px; width: 1776px; z-index: 3; }
+.g-clock-num { position: absolute; right: 72px; top: 762px; z-index: 3; }
+/* the opaque "decided" cover over the track (the two labels above it stay visible) */
+.g-cover { left: 48px; top: 862px; width: 1824px; height: 144px; }
+
+/* S05 timelines (seam S05 -> S06): the discussion segments carry the clock keys */
+.g-tl-td-disc { position: absolute; left: 600px; top: 470px; width: 132px; height: 30px; }
+.g-tl-cons-disc { position: absolute; left: 600px; top: 836px; width: 720px; height: 30px; }
+.g-tl-td-impl { position: absolute; left: 872px; top: 474px; width: 920px; }
+.g-tl-cons-impl { position: absolute; left: 1536px; top: 840px; width: 256px; }
+
+/* ---------------------------------------------------------------- rules card (S04a, S04b, S13) */
+/* one em-sized card at two scales: the morph is a clean uniform scale */
+.rules { width: 18.6em; }
+.g-rules-parked { position: absolute; left: 72px; top: 96px; font-size: 29px; }
+.g-rules-large { position: absolute; left: 527px; top: 168px; font-size: 46px; }
+
+/* ---------------------------------------------------------------- cards (S04b, S04z; rhymes on S09a, S14a, S20) */
+.g-mail { position: absolute; left: 648px; top: 96px; width: 1200px; }
+.g-scn-T { position: absolute; left: 648px; top: 323px; width: 584px; }
+.g-scn-M { position: absolute; left: 1264px; top: 323px; width: 584px; }
+
+/* ---------------------------------------------------------------- D / d glyph pair */
+/* S01 (and the S20 / S20e bookend): the title lockup */
+.g-glyph-D--title { position: absolute; left: 70px; top: 236px; font-size: 560px; }
+.g-glyph-d--title { position: absolute; left: 676px; top: 384px; font-size: 430px; }
+/* S02: off stage (the glyphs slide out of the S01 lockup); mark them data-offstage */
+.g-glyph-D--off { position: absolute; left: -900px; top: 236px; font-size: 560px; }
+.g-glyph-d--off { position: absolute; left: 2100px; top: 384px; font-size: 430px; }
+/* S05: on the decision points of the two timelines (S06 may move them) */
+.g-glyph-d--tl { position: absolute; left: 736px; top: 296px; font-size: 250px; }
+.g-glyph-D--tl { position: absolute; left: 1338px; top: 728px; font-size: 196px; }
+
+/* ---------------------------------------------------------------- S01 tiles -> S02 tiles (g1 may restyle the S02 side) */
+.g-tile-ny { position: absolute; left: 72px; top: 150px; width: 864px; height: 560px; }
+.g-tile-mu { position: absolute; left: 984px; top: 150px; width: 864px; height: 560px; }
+
+/* ---------------------------------------------------------------- ringi (S11b-d, g4) */
+.g-ringisho { position: absolute; left: 420px; }
+.g-ringisho.lv-mid { top: 584px; }
+.g-ringisho.lv-senior { top: 399px; }
+.g-ringisho.lv-top { top: 214px; }

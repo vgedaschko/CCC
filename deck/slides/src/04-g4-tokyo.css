@@ -1,0 +1,239 @@
+/*
+ * 04-g4-tokyo.css · owner: g4-tokyo · scope every rule to your slide ids: #s10a, #s10b, #s11a, #s11b, #s11c, #s11d
+ * Theme tokens and components: slides/src/theme/ (read-only for builders), handbook: slides/src/DECK_SPEC.md.
+ *
+ * Layout of the chain: diagrams on the left (table -> classroom -> pyramid), words in the right columns
+ * (S10/S11a: grid columns 9-12, x 1278; S11b-d: columns 8-12, x 1127). Colours only through tokens.
+ */
+
+/* ===================================================================== light pools */
+#s10a { --lt-o: 0; --la-o: 0; --ls-x: 960px; --ls-y: 590px; --ls-s: .95; --ls-o: 1; }
+#s10b { --lt-x: 640px; --lt-y: 600px; --lt-s: .85; --lt-o: .95; --la-o: 0; --ls-x: 1560px; --ls-y: 560px; --ls-s: .8; --ls-o: .55; }
+#s11a { --lt-x: 640px; --lt-y: 640px; --lt-s: .8; --lt-o: .8; --la-o: 0; --ls-x: 1560px; --ls-y: 600px; --ls-s: .8; --ls-o: .55; }
+#s11b { --lt-x: 640px; --lt-y: 703px; --lt-s: .62; --lt-o: 1; --la-o: 0; --ls-x: 640px; --ls-y: 700px; --ls-s: .7; --ls-o: .8; }
+#s11c { --lt-x: 640px; --lt-y: 516px; --lt-s: .7; --lt-o: 1; --la-o: 0; --ls-x: 640px; --ls-y: 520px; --ls-s: .7; --ls-o: .8; }
+#s11d { --lt-x: 640px; --lt-y: 358px; --lt-s: .95; --lt-o: 1; --la-o: 0; --ls-x: 640px; --ls-y: 360px; --ls-s: .75; --ls-o: .8; }
+
+/* ===================================================================== shared diagram parts (g4) */
+:is(#s10a, #s10b, #s11a) .g4-lbl { font: 560 var(--fs-min)/1.25 var(--sans); color: var(--ink-2); text-wrap: balance; }
+:is(#s10a, #s10b, #s11a) .g4-lbl b { font-weight: 700; color: var(--ink); }
+:is(#s10a, #s10b, #s11a) .g4-lbl i { font: italic 470 32px/1.15 var(--serif); color: var(--ink-2); }
+:is(#s10a, #s10b, #s11a) .g4-lbl--c { text-align: center; }
+:is(#s10a, #s10b, #s11a) .g4-lbl--r { text-align: right; }
+:is(#s10a, #s10b, #s11a) .g4-lbl.teal { color: var(--teal); }
+
+/* Sheldon's seat: neutral ink (the book gives no nationality), his monogram inside */
+:is(#s10a, #s10b, #s11a) .g4-js {
+  --z: 4;
+  --w: 60px;
+  --h: 60px;
+  display: grid;
+  place-items: center;
+  font: 760 var(--fs-min)/1 var(--sans);
+  letter-spacing: .02em;
+  color: var(--ink);
+}
+:is(#s10a, #s10b, #s11a) .seat { --z: 3; --w: 56px; --h: 56px; }
+
+/* ===================================================================== S10a / S10b · the Tokyo table */
+:is(#s10a, #s10b) .s10-body { grid-template-rows: auto 1fr; }
+:is(#s10a, #s10b) .s10-head { grid-column: 1 / 13; grid-row: 1; --gap: 14px; }
+:is(#s10a, #s10b) .s10-hl { font-size: 84px; line-height: 1.05; }
+
+:is(#s10a, #s10b) .g4-table {
+  border: var(--sw-1) solid var(--ink-3);
+  border-radius: 44px;
+  background: var(--glass-2);
+}
+:is(#s10a, #s10b) .g4-bar {
+  border-radius: 7px;
+  background: var(--ink);
+  box-shadow: var(--glow-tile);
+  z-index: 3;
+}
+:is(#s10a, #s10b) .g4-barlbl { color: var(--ink-2); }
+:is(#s10a, #s10b) .g4-barlbl b { color: var(--ink); }
+
+/* S10a click 1: Sheldon's seat rises from the end of his three weeks into its place */
+#s10a .deck-anim[data-build="glide"] {
+  animation-name: deck-g4-glide;
+  animation-timing-function: var(--ease);
+}
+@keyframes deck-g4-glide {
+  from { opacity: 0; translate: 0 300px; }
+  30% { opacity: 1; }
+}
+
+/* S10b click 1: the two quotes */
+#s10b .s10b-quotes { grid-column: 9 / 13; grid-row: 2; align-self: start; margin-top: 36px; gap: 22px; }
+#s10b .s10b-aligned { margin-top: 2px; }
+
+/* S10b click 2: the rewind scrubber (a teal core running back along the bar) and the roots */
+#s10b .g4-scrub {
+  border-radius: 3px;
+  background: var(--teal);
+  box-shadow: var(--glow-bar-teal);
+  z-index: 4;
+}
+#s10b .g4-knob {
+  --w: 52px;
+  --h: 52px;
+  display: grid;
+  place-items: center;
+  border: var(--sw-2) solid var(--teal);
+  border-radius: 50%;
+  background: var(--bg-raise);
+  color: var(--teal);
+  z-index: 5;
+}
+#s10b .g4-knob svg { width: 24px; height: 24px; margin-left: -2px; fill: currentColor; }
+#s10b .g4-roots {
+  overflow: visible;
+  fill: none;
+  stroke: var(--teal);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .85;
+  --z: 1;
+}
+#s10b .g4-roots .rt { stroke-width: 3; }
+#s10b .g4-roots .rb { stroke-width: 2; }
+html.deck-lit #s10b .g4-roots { opacity: 1; }
+html.deck-lit #s10b .g4-roots .rt { stroke-width: 4; }
+html.deck-lit #s10b .g4-roots .rb { stroke-width: 3; }
+
+/* ===================================================================== S11a · the seminar */
+#s11a .s11a-body { grid-template-rows: auto 1fr; }
+#s11a .s11-hl { grid-row: 1; }
+#s11a .s11a-mori { grid-column: 9 / 13; grid-row: 2; align-self: center; gap: 22px; }
+#s11a .g4-divider { border-radius: 2px; background: var(--ink-3); }
+#s11a .g4-lectern {
+  border: var(--sw-1) solid var(--ink-3);
+  border-radius: 12px;
+  background: var(--glass-2);
+}
+#s11a .g4-desk { height: 12px; border-radius: 6px; background: var(--ink-3); }
+#s11a .g4-sm { --z: 5; --w: 64px; --h: 64px; background: var(--bg-raise); box-shadow: 0 0 0 6px var(--bg); }
+
+/* ===================================================================== S11b-d · ringi pyramid */
+:is(#s11b, #s11c, #s11d) .s11-body { grid-template-rows: auto 1fr; }
+:is(#s11b, #s11c, #s11d) .s11-hl { grid-row: 1; }
+:is(#s11b, #s11c, #s11d) .s11-col { grid-column: 8 / 13; grid-row: 2; align-self: start; margin-top: 40px; --gap: 44px; }
+:is(#s11b, #s11c) .s11-def { --gap: 14px; }
+:is(#s11b, #s11c) .s11-def .text { color: var(--ink); }
+:is(#s11b, #s11c) .s11-mori { gap: 20px; }
+
+/* tiers: filled bands with a solid stroke (not a hairline: survives the beamer washout) */
+:is(#s11b, #s11c, #s11d) .g4-tier { overflow: visible; }
+:is(#s11b, #s11c, #s11d) .g4-tier polygon {
+  fill: var(--glass-2);
+  stroke: var(--ink-3);
+  stroke-width: var(--sw-1);
+  stroke-linejoin: round;
+}
+:is(#s11b, #s11c, #s11d) .g4-tier.is-on polygon {
+  fill: var(--teal-a);
+  stroke: var(--teal);
+  stroke-width: var(--sw-2);
+}
+
+/* tier labels: one rule for all four, left-aligned in the margin column, centred on their tier */
+:is(#s11b, #s11c, #s11d) .g4-tl {
+  --x: 72px;
+  --w: max-content;
+  max-width: 260px;
+  font: 560 30px/1.2 var(--sans);
+  color: var(--ink-2);
+}
+:is(#s11b, #s11c, #s11d) .g4-tl--mid { font-weight: 720; color: var(--ink); }
+:is(#s11b, #s11c, #s11d) .g4-tl.is-on { font-weight: 720; color: var(--teal); }
+
+/* the ringisho: compact (one text line) so it sits inside its tier and the climb trail stays visible */
+:is(#s11b, #s11c, #s11d) .g4-ring { --z: 6; --w: 312px; padding: 16px 18px; }
+:is(#s11b, #s11c, #s11d) .g4-ring .ringisho-ln { margin-top: 12px; }
+:is(#s11b, #s11c, #s11d) .g4-ring .seals { gap: 7px; margin-top: 14px; }
+:is(#s11b, #s11c, #s11d) .g4-ring .seals > span { width: 40px; height: 40px; }
+:is(#s11b, #s11c, #s11d) .g4-ring .hanko::before { inset: 5px; }
+:is(#s11b, #s11c, #s11d) .g4-ring .hanko.hanko--D { inset: -8px; }
+
+/* climb trail (dotted) and hollow markers on the levels the ringisho has passed */
+:is(#s11c, #s11d) .g4-trail {
+  --x: 636px;
+  --w: 8px;
+  --z: 3;
+  background: radial-gradient(circle, var(--teal) 0 2.6px, transparent 3.2px) center top / 8px 13px repeat-y;
+}
+:is(#s11c, #s11d) .g4-mk {
+  --x: 625px;
+  --w: 30px;
+  --h: 30px;
+  --z: 4;
+  border: var(--sw-2) solid var(--teal);
+  border-radius: 50%;
+  background: var(--bg);
+}
+
+/* S11d: the last stamp is a teal capital D; it slams, then its width settles from condensed to 125 % */
+#s11d .g4-dseal.deck-anim {
+  animation-name: deck-g4-dstamp;
+  animation-duration: 1100ms;
+  animation-timing-function: linear;
+}
+#s11d .g4-dseal.deck-anim b { animation: g4-dset 1100ms linear 860ms backwards; }
+@keyframes deck-g4-dstamp {
+  0% { opacity: 0; scale: 1.9; animation-timing-function: cubic-bezier(.5, 0, .75, .4); }
+  28% { opacity: 1; scale: .96; animation-timing-function: ease-out; }
+  40%, 100% { opacity: 1; scale: 1; }
+}
+@keyframes g4-dset {
+  0% { font-stretch: 62%; }
+  28% { font-stretch: 66%; animation-timing-function: cubic-bezier(.65, .05, .25, 1); }
+  100% { font-stretch: 125%; }
+}
+
+/* S11d right column: Meyer, nemawashi, Sheldon */
+#s11d .s11d-meyer { display: flex; align-items: center; gap: 28px; }
+#s11d .s11d-meyer .quote { gap: 8px; }
+#s11d .s11d-seal {
+  flex: none;
+  width: 96px;
+  height: 96px;
+  display: grid;
+  place-items: center;
+  border: var(--sw-2) solid var(--teal);
+  border-radius: 50%;
+  font: var(--w-heavy) 52px/1 var(--sans);
+  font-stretch: 125%;
+  color: var(--teal);
+  box-shadow: var(--glow-stamp);
+}
+#s11d .s11d-nema { display: flex; align-items: center; gap: 30px; }
+#s11d .s11d-plant {
+  flex: none;
+  width: 152px;
+  height: 200px;
+  overflow: visible;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+#s11d .pl-stem { stroke: var(--ink); stroke-width: 3; }
+#s11d .pl-soil { stroke: var(--ink-3); stroke-width: 3; }
+#s11d .pl-roots { stroke: var(--ink-2); stroke-width: 2.4; }
+#s11d .pl-bind { stroke: var(--teal); stroke-width: 3.4; }
+html.deck-lit #s11d :is(.pl-stem, .pl-soil, .pl-bind) { stroke-width: 4; }
+#s11d .s11d-nema-tx { --gap: 10px; min-width: 0; }
+#s11d .s11d-word { font: italic 480 66px/1 var(--serif); color: var(--ink); }
+#s11d .s11d-eq { font: italic 470 48px/1.1 var(--serif); color: var(--ink); }
+#s11d .s11d-eqs { margin-right: 6px; font: 500 40px/1 var(--sans); font-style: normal; color: var(--ink-2); }
+#s11d .s11d-sheldon { gap: 14px; }
+#s11d .s11d-sheldon .who { margin-top: 6px; }
+
+/* optional nemawashi reveal: chip (mouse only) and the card it shows */
+#s11d .g4-hook { --z: 7; }
+#s11d .g4-reveal { --z: 8; display: flex; flex-direction: column; gap: 12px; }
+
+/* morph: named objects with no partner on the next slide carry the theme seam helper .vt-leave (motion.css) */
+
+/* modes: the seat glow and the sheet shadow are theme tokens (--glow-seat, --shadow-sheet): lit-room and paper
+   swap them for a clean edge */

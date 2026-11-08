@@ -1,0 +1,322 @@
+/*
+ * 03-g3-per.css · owner: g3-per · scope every rule to your slide ids: #s09a, #s09b, #h2
+ * Theme tokens and components: slides/src/theme/ (read-only for builders), handbook: slides/src/DECK_SPEC.md.
+ * Colour logic: Per / consensus = teal, Meyer / Lencioni (the American, top-down reflex) = amber.
+ */
+
+/* ===================================================================== S09a · Per's inbox */
+/* hyphenated compounds use the theme's .nb (base.css): never broken at the hyphen */
+#s09a {
+  --lt-x: 1260px; --lt-y: 700px; --lt-s: .9;     /* teal: the replies, the group at work */
+  --la-x: 300px;  --la-y: 560px; --la-s: .75;    /* amber: Meyer's thought */
+  --ls-x: 1240px; --ls-y: 250px; --ls-s: .9; --ls-o: .9;   /* key light on the email */
+}
+
+/* left column: Per, then Meyer's reaction (click 1) */
+#s09a .s09a-left { --x: 72px; --y: 112px; --w: 528px; --gap: 64px; }
+#s09a .s09a-per { --gap: 22px; }
+#s09a .s09a-id { display: flex; align-items: center; gap: 26px; }
+#s09a .s09a-chip { flex: none; color: var(--teal); box-shadow: var(--glow-bar-teal); }
+#s09a .s09a-idtext { --gap: 6px; }
+#s09a .s09a-name { font: 500 54px/1.02 var(--serif); color: var(--ink); }
+#s09a .s09a-role { font: italic 470 32px/1.18 var(--serif); color: var(--ink-2); text-wrap: balance; }
+
+/* the thought bubble (amber: Meyer's top-down reflex) */
+#s09a .s09a-think { display: grid; gap: 62px; }
+#s09a .s09a-bubble {
+  position: relative;
+  padding: 26px 34px 30px;
+  border: var(--sw-1) solid var(--amber);
+  border-radius: 44px;
+  background: var(--amber-a);
+  box-shadow: var(--glow-pill);
+  color: var(--ink);
+}
+#s09a .s09a-bubble::before,
+#s09a .s09a-bubble::after {
+  content: "";
+  position: absolute;
+  border: var(--sw-1) solid var(--amber);
+  border-radius: 50%;
+  background: var(--amber-a);
+}
+#s09a .s09a-bubble::before { left: 46px; bottom: -30px; width: 24px; height: 24px; }
+#s09a .s09a-bubble::after { left: 30px; bottom: -52px; width: 13px; height: 13px; }
+
+#s09a .s09a-poll {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 18px 30px 20px 24px;
+  border: var(--sw-1) dashed var(--ink-3);
+  border-radius: 24px;
+  color: var(--ink);
+}
+#s09a .s09a-pollt { display: grid; gap: 6px; }
+#s09a .s09a-pollk { font: 740 var(--fs-min)/1 var(--sans); font-stretch: 125%; letter-spacing: .2em; text-transform: uppercase; color: var(--ink-2); }
+#s09a .s09a-pollq { font: italic 480 36px/1.15 var(--serif); color: var(--ink); text-wrap: pretty; }
+#s09a .s09a-hand { width: 56px; height: 56px; stroke-width: 1.8; color: var(--ink); }
+
+/* right column: one flow grid inside x 648-1848, y 96-984 (the S04b mail card sits at its top) */
+#s09a .s09a-right {
+  --x: 648px; --y: 96px; --w: 1200px; --h: 888px;
+  display: grid;
+  grid-template-rows: auto auto auto minmax(0, 1fr);
+  align-content: start;
+}
+#s09a .s09a-mail { padding-bottom: 30px; }
+#s09a .s09a-mailtext { display: grid; gap: 8px; max-width: 1080px; }
+#s09a .s09a-tag-soft { font-weight: 520; color: var(--ink-3); }
+#s09a .s09a-mail .card-tag { color: var(--ink); }
+
+/* DELETE: Meyer's reflex, an amber stamp on the card's corner */
+#s09a .s09a-del {
+  --tilt: -6deg;
+  right: 36px;
+  bottom: -64px;
+  gap: 18px;
+  padding: 14px 30px 14px 24px;
+  color: var(--amber);
+}
+#s09a .s09a-del b { font-size: 60px; letter-spacing: .12em; margin-right: -.12em; }
+#s09a .s09a-del .ic { width: 58px; height: 58px; stroke-width: 2.4; }
+
+/* the replies (click 2): two cards in the S04b scenario columns */
+#s09a .s09a-replies {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: var(--gut);
+  align-items: stretch;
+  margin-top: 104px;
+}
+#s09a .s09a-re { display: grid; align-content: start; gap: 12px; padding: 22px 30px 26px; }
+#s09a .s09a-av {
+  display: inline-grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: var(--sw-1) solid var(--teal);
+  border-radius: 50%;
+  font: 720 var(--fs-min)/1 var(--sans);
+  color: var(--teal);
+}
+#s09a .s09a-tag-who { font-weight: 720; color: var(--ink); }
+#s09a .s09a-retext { font: italic 450 34px/1.22 var(--serif); color: var(--ink); text-wrap: pretty; }
+
+/* the counter: envelopes pile up one by one */
+#s09a .s09a-count { display: flex; align-items: center; flex-wrap: wrap; gap: 14px 34px; margin-top: 26px; }
+#s09a .s09a-pile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 24px 10px 20px;
+  border: var(--sw-hair) solid color-mix(in srgb, var(--teal) 45%, transparent);
+  border-radius: 999px;
+  background: var(--teal-a);
+  color: var(--teal);
+}
+#s09a .s09a-pile .ic { width: 44px; height: 44px; stroke-width: 1.9; }
+#s09a .s09a-plus { margin-left: 6px; font: 760 34px/1 var(--sans); color: var(--teal); }
+#s09a .s09a-slow { font: italic 470 34px/1.2 var(--serif); color: var(--ink-2); }
+
+/* click 3: scrim + Per's personal email, centre stage */
+#s09a .s09a-scrim {
+  --x: 0px; --y: 64px; --w: 1920px; --h: 952px; --z: 20;
+  background: color-mix(in srgb, var(--bg) 66%, transparent);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+#s09a .s09a-focus { --x: 420px; --y: 236px; --w: 1080px; --z: 21; --gap: 30px; }
+#s09a .s09a-dm {
+  padding: 30px 40px 36px;
+  border: var(--sw-1) solid var(--teal);
+  background: var(--bg-raise);
+  box-shadow: var(--glow-bar-teal), var(--shadow-card);
+}
+#s09a .s09a-dm .card-tag { color: var(--ink); }
+#s09a .s09a-dmin { display: grid; }
+#s09a .s09a-to { width: 30px; height: 30px; color: var(--teal); }
+#s09a .s09a-dmtext { display: grid; gap: 10px; font-size: 52px; line-height: 1.16; }
+
+/* click 4: the draft she wanted to send — typed in, then struck out */
+#s09a .s09a-draft {
+  display: grid;
+  gap: 14px;
+  margin-left: 64px;
+  padding: 24px 36px 30px;
+  border: var(--sw-1) dashed var(--amber);
+  background: var(--bg-raise);
+  box-shadow: var(--shadow-card);
+}
+#s09a .s09a-draft .card-tag { color: var(--amber); }
+#s09a .s09a-em { width: 58px; height: 58px; }
+#s09a .s09a-drafttext { --g3-strike: 100%; font: italic 450 40px/1.26 var(--serif); color: var(--ink); text-wrap: pretty; }
+#s09a .s09a-drafttext > span {
+  background: linear-gradient(var(--amber), var(--amber)) 0 60% / var(--g3-strike) 5px no-repeat;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+@property --g3-strike {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 100%;
+}
+/* "g3-draft": the draft is wiped in (typed), then every line is struck through left to right */
+#s09a .s09a-drafttext.deck-anim[data-build="g3-draft"] {
+  animation-name: deck-g3-draft;
+  animation-duration: var(--deck-duration, 1900ms);
+  animation-timing-function: linear;
+}
+@keyframes deck-g3-draft {
+  0% { clip-path: inset(-12% 100% -12% 0); --g3-strike: 0%; animation-timing-function: cubic-bezier(.35, .1, .4, 1); }
+  52% { clip-path: inset(-12% -2% -12% 0); --g3-strike: 0%; }
+  64% { clip-path: inset(-12% -2% -12% 0); --g3-strike: 0%; animation-timing-function: cubic-bezier(.5, 0, .3, 1); }
+  100% { clip-path: inset(-12% -2% -12% 0); --g3-strike: 100%; }
+}
+
+/* ===================================================================== S09b · Consensus: a four-letter word? */
+#s09b {
+  --lt-x: 460px;  --lt-y: 560px; --lt-s: .95;    /* teal behind Per */
+  --la-x: 1460px; --la-y: 560px; --la-s: .95;    /* amber behind Lencioni */
+}
+#s09b .s09b-body { row-gap: 0; grid-template-rows: auto auto auto auto minmax(0, 1fr); }
+#s09b .s09b-hl { grid-column: 1 / -1; margin-top: 8px; margin-bottom: 60px; }
+
+/* the censor bar (click 2): an opaque ink block over the word, like a bleeped swear word */
+#s09b .s09b-cw { position: relative; display: inline-block; }
+#s09b .s09b-censor {
+  position: absolute;
+  left: -.06em;
+  right: -.03em;
+  top: -.09em;
+  bottom: .17em;
+  display: grid;
+  place-items: center;
+  border-radius: 4px;
+  background: var(--ink);
+  rotate: -1deg;
+  padding-left: .16em;
+  font: 820 .46em/1 var(--sans);
+  font-stretch: 112%;
+  letter-spacing: .16em;
+  text-shadow: none;
+  color: var(--bg);
+}
+
+/* the two panels */
+#s09b .s09b-panel { display: grid; align-content: start; gap: 30px; padding: 34px 44px 44px; }
+#s09b .s09b-perin { display: grid; align-content: start; gap: 30px; }
+#s09b .s09b-per { grid-column: 1 / 7; }
+#s09b .s09b-len { grid-column: 7 / 13; }
+#s09b .s09b-tag { gap: 18px; color: var(--ink); font-weight: 680; }
+#s09b .s09b-on { display: block; margin-top: 2px; font: italic 470 32px/1.1 var(--serif); letter-spacing: 0; color: var(--ink-2); }
+#s09b .s09b-qs { --gap: 26px; }
+#s09b .s09b-per .q { font-size: 50px; line-height: 1.16; }
+#s09b .s09b-per { box-shadow: var(--glow-bar-teal), var(--shadow-card); }
+#s09b .s09b-lq { font-size: 76px; line-height: 1.08; }
+
+/* the bar between them (click 3) */
+#s09b .s09b-ethno {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: start;
+  column-gap: 30px;
+}
+#s09b .s09b-arm { height: 64px; border: var(--sw-3) solid; border-top: 0; }
+#s09b .s09b-arm--l { margin-left: 120px; border-right: 0; border-color: var(--teal); border-radius: 0 0 0 14px; }
+#s09b .s09b-arm--r { margin-right: 120px; border-left: 0; border-color: var(--amber); border-radius: 0 0 14px 0; }
+#s09b .s09b-word {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-top: 30px;
+  padding: 10px 30px 12px;
+  border: var(--sw-1) solid var(--ink-2);
+  border-radius: 999px;
+  background: var(--bg-raise);
+  font: 760 40px/1 var(--sans);
+  font-stretch: 118%;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+#s09b .s09b-word .ic { width: 36px; height: 36px; stroke-width: 2.6; color: var(--ink-2); }
+#s09b .s09b-lecture {
+  grid-column: 1 / -1;
+  justify-self: center;
+  margin-top: 64px;
+  font: italic 470 38px/1.2 var(--serif);
+  color: var(--ink);
+  text-align: center;
+  text-wrap: balance;
+}
+#s09b .s09b-lsrc {
+  margin-left: .5em;
+  font: 600 var(--fs-min)/1 var(--sans);
+  font-style: normal;
+  letter-spacing: .06em;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* ===================================================================== H2 · backup: Is consensus better? */
+#h2 {
+  --lt-x: 300px;  --lt-y: 640px; --lt-s: .8;
+  --la-x: 1560px; --la-y: 260px; --la-s: .8;
+}
+#h2 .h2-body { row-gap: 44px; }
+#h2 .h2-head { grid-column: 1 / 6; --gap: 10px; align-self: end; }
+#h2 .h2-short { font: italic 470 44px/1.15 var(--serif); color: var(--ink-2); }
+#h2 .h2-rules { grid-column: 6 / 13; align-self: end; gap: 12px; }
+#h2 .h2-rules .q { font-size: 44px; }
+
+#h2 .h2-lenses { grid-column: 1 / 6; --gap: 18px; }
+#h2 .h2-lenses > .kicker { margin-bottom: 2px; color: var(--ink-2); }
+#h2 .h2-lens { display: grid; gap: 6px; padding: 18px 28px 22px; }
+#h2 .h2-lens .card-tag { gap: 12px; }
+#h2 .h2-dot { width: 14px; height: 14px; border-radius: 50%; background: currentColor; flex: none; }
+#h2 .h2-lens .q { font-size: 34px; }
+
+#h2 .h2-right { grid-column: 6 / 13; --gap: 30px; }
+#h2 .h2-ledger { padding: 26px 36px 32px; }
+#h2 .h2-lh {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 24px;
+  padding-bottom: 14px;
+  border-bottom: 6px double var(--line-2);
+}
+#h2 .h2-lt { font: 500 48px/1.05 var(--serif); color: var(--ink); }
+#h2 .h2-lt i { font-style: italic; }
+#h2 .h2-ls { font: 560 var(--fs-min)/1.2 var(--sans); color: var(--ink-3); }
+#h2 .h2-cols {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 64px;
+  margin-top: 18px;
+}
+#h2 .h2-cols::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  border-left: var(--sw-hair) solid var(--line-2);
+}
+#h2 .h2-col { display: grid; align-content: start; gap: 14px; }
+#h2 .h2-col li {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: baseline;
+  font: 520 32px/1.22 var(--sans);
+  color: var(--ink);
+  text-wrap: pretty;
+}
+#h2 .h2-sign { font: 760 40px/1 var(--sans); color: var(--ink-2); }
+#h2 .h2-col li.h2-colh { display: block; font: 680 var(--fs-min)/1.2 var(--sans); font-stretch: 118%; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-3); }
+#h2 .h2-astellas { gap: 10px; padding-right: 220px; }
+#h2 .h2-astellas .q { font-size: 32px; }
+#h2 .h2-astellas .mono .ic { width: 34px; height: 34px; stroke-width: 1.8; }

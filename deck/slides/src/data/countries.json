@@ -1,0 +1,289 @@
+{
+  "_about": "The ONE shared country-position file. Rendered by <!--@axis {...}--> at assemble time (tools/lib/axis.cjs). Positions are fractions of the axis: 0 = consensual arrow tip, 1 = top-down arrow tip. Never print a score; never add a country by guess. Owned by the foundation; corrections to cm2022 go through the foundation (report them).",
+  "sets": {
+    "fig53": {
+      "source": "Meyer (2014), Fig. 5.3",
+      "method": "Measured on the scan of Fig. 5.3 (book p. 150, PDF page 5): centre of each country label as a fraction of the arrow-tip-to-arrow-tip length. Labels keep the book's two staggered rows (row up / row lo).",
+      "status": "measured",
+      "countries": [
+        {
+          "k": "jp",
+          "name": "Japan",
+          "f": 0.0576,
+          "row": "lo"
+        },
+        {
+          "k": "se",
+          "name": "Sweden",
+          "f": 0.1157,
+          "row": "up"
+        },
+        {
+          "k": "nl",
+          "name": "Netherlands",
+          "f": 0.1952,
+          "row": "lo"
+        },
+        {
+          "k": "de",
+          "name": "Germany",
+          "f": 0.3383,
+          "row": "up"
+        },
+        {
+          "k": "uk",
+          "name": "UK",
+          "f": 0.4555,
+          "row": "lo"
+        },
+        {
+          "k": "us",
+          "name": "US",
+          "f": 0.5606,
+          "row": "up"
+        },
+        {
+          "k": "br",
+          "name": "Brazil",
+          "f": 0.6096,
+          "row": "lo"
+        },
+        {
+          "k": "fr",
+          "name": "France",
+          "f": 0.6465,
+          "row": "up"
+        },
+        {
+          "k": "it",
+          "name": "Italy",
+          "f": 0.6888,
+          "row": "lo"
+        },
+        {
+          "k": "ru",
+          "name": "Russia",
+          "f": 0.793,
+          "row": "lo"
+        },
+        {
+          "k": "in",
+          "name": "India",
+          "f": 0.8347,
+          "row": "up"
+        },
+        {
+          "k": "cn",
+          "name": "China",
+          "f": 0.8748,
+          "row": "lo"
+        },
+        {
+          "k": "ng",
+          "name": "Nigeria",
+          "f": 0.9382,
+          "row": "up"
+        }
+      ]
+    },
+    "cm2022": {
+      "source": "Erin Meyer, Country Mapping 2022",
+      "method": "Deciding dot read on the Country Mapping 2022 PDF (0 = left end of the bar, 1 = right end); first by eye (SOURCE_DIGEST §3), then re-read on the PDF by the builders of S07/S08b/H3/H5 and S15-S18 (pixel-measured, agree within 0.01).",
+      "status": "verified: true where the PDF re-read confirms the value; Italy is not confirmed (hidden dot). Never print a score; state zones.",
+      "countries": [
+        {
+          "k": "se",
+          "name": "Sweden",
+          "f": 0.03,
+          "page": "Europe I",
+          "verified": true
+        },
+        {
+          "k": "jp",
+          "name": "Japan",
+          "f": 0.05,
+          "page": "Asia IV",
+          "verified": true
+        },
+        {
+          "k": "dk",
+          "name": "Denmark",
+          "f": 0.175,
+          "page": "Europe I",
+          "verified": true
+        },
+        {
+          "k": "nl",
+          "name": "Netherlands",
+          "f": 0.18,
+          "page": "Europe III",
+          "verified": true
+        },
+        {
+          "k": "be",
+          "name": "Belgium",
+          "f": 0.257,
+          "page": "Europe III",
+          "verified": true
+        },
+        {
+          "k": "de",
+          "name": "Germany",
+          "f": 0.29,
+          "page": "Europe III",
+          "verified": true
+        },
+        {
+          "k": "vn",
+          "name": "Vietnam",
+          "f": 0.29,
+          "page": "Asia V",
+          "verified": true
+        },
+        {
+          "k": "uk",
+          "name": "UK",
+          "f": 0.45,
+          "page": "Europe II",
+          "verified": true,
+          "note": "dot partly hidden by a neighbour on the PDF; position approximate (two independent re-reads agree within 0.01)"
+        },
+        {
+          "k": "il",
+          "name": "Israel",
+          "f": 0.48,
+          "page": "Asia I",
+          "verified": true
+        },
+        {
+          "k": "br",
+          "name": "Brazil",
+          "f": 0.56,
+          "page": "America II",
+          "verified": true
+        },
+        {
+          "k": "us",
+          "name": "US",
+          "f": 0.63,
+          "page": "America I",
+          "verified": true
+        },
+        {
+          "k": "it",
+          "name": "Italy",
+          "f": 0.64,
+          "page": "Europe V",
+          "verified": false,
+          "note": "hidden behind Portugal/Greece on Europe V; consistent with 0.64 (not confirmed)"
+        },
+        {
+          "k": "fr",
+          "name": "France",
+          "f": 0.66,
+          "page": "Europe III",
+          "verified": true
+        },
+        {
+          "k": "sg",
+          "name": "Singapore",
+          "f": 0.71,
+          "page": "Asia IV",
+          "verified": true
+        },
+        {
+          "k": "ru",
+          "name": "Russia",
+          "f": 0.75,
+          "page": "Europe IV",
+          "verified": true
+        },
+        {
+          "k": "in",
+          "name": "India",
+          "f": 0.84,
+          "page": "Asia III",
+          "verified": true,
+          "note": "dot partly hidden by a neighbour on the PDF; position approximate (two independent re-reads agree within 0.01)"
+        },
+        {
+          "k": "cn",
+          "name": "China",
+          "f": 0.86,
+          "page": "Asia IV",
+          "verified": true
+        },
+        {
+          "k": "kr",
+          "name": "Korea",
+          "f": 0.92,
+          "page": "Asia IV",
+          "verified": true
+        },
+        {
+          "k": "ng",
+          "name": "Nigeria",
+          "f": 0.93,
+          "page": "Africa II",
+          "verified": true
+        }
+      ]
+    }
+  },
+  "presets": {
+    "_about": "Canonical axis geometry (stage px). x0/x1 = the two arrow tips, y = the rail. rowUp/rowLo = label row offsets above the rail. The registry in DECK_SPEC.md lists who uses which.",
+    "title": {
+      "x0": 120,
+      "x1": 1800,
+      "y": 968,
+      "thin": true,
+      "ends": true,
+      "endSize": 30
+    },
+    "rails": {
+      "x0": 120,
+      "x1": 1800,
+      "y": 760,
+      "rowUp": 154,
+      "rowLo": 86
+    },
+    "map": {
+      "x0": 120,
+      "x1": 1800,
+      "y": 690,
+      "rowUp": 154,
+      "rowLo": 86
+    },
+    "room": {
+      "x0": 120,
+      "x1": 1800,
+      "y": 640,
+      "rowUp": 154,
+      "rowLo": 86
+    },
+    "strip": {
+      "x0": 120,
+      "x1": 1800,
+      "y": 930,
+      "thin": true,
+      "ends": false
+    }
+  },
+  "colors": {
+    "teal": [
+      63,
+      216,
+      198
+    ],
+    "grey": [
+      150,
+      152,
+      158
+    ],
+    "amber": [
+      255,
+      181,
+      74
+    ]
+  }
+}
