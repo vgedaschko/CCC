@@ -686,7 +686,7 @@ Together the cuts at ①, ② and ③ save about 2:23 (2:13 without the optional
   - `!!d` and `!!D` drop onto the decision points. They are separate glyph objects, scaled to about 300%.
   - Click 1: the implementation segments wipe in. The amber one is long, with three ↺ loops fading in 0.2 s apart; the first loop is labelled *our CEO's flip*. The teal one is short and straight.
   - Click 2: top-down row text. Click 3: consensual row text. Click 4: mnemonic chips. Click 5: gesture key.
-  - Daylight mode. The teal bar is drawn at the 2:00 cap, so **say the real elapsed time aloud.**
+  - Daylight mode. The teal bar is drawn at the 2:00 cap; the label *Decision #2 · consensus rules · m:ss* shows the real time the room took (stored by the S04b stamp; it reads *minutes* in the static exports and when no stamp was clicked), so **read the time off the label**.
 - **Talking points:**
   - The kicker, then both definitions [SCREEN], verbatim from the Fig. 5.3 legend.
   - **Consensual (Fig. 5.1), cue:** the discussion is long because everyone is consulted. Implementation is rapid because everyone has bought in, and the decision is [SCREEN] "fixed and inflexible—a decision with a capital D". The moment of deciding is the pivot of the whole process.

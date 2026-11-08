@@ -9,7 +9,7 @@ Topic: Erin Meyer, *The Culture Map*, Chapter 5 "Deciding" (Big D or little d: w
 | 2a. Design directions (4 coded prototypes, 8 key slides each) | [`design/directions/`](design/directions/) | Noir chosen |
 | 2b. Deck engine (offline HTML, presenter timer without notes, PDF + .pptx export) | [`deck/`](deck/) ([README](deck/README.md)) | Working; `npm test` in `deck/` |
 | 2c. Full deck (Noir) | [`deck/slides/big-d.html`](deck/slides/big-d.html) → offline file `deck/dist/big-d.html` (`npm run deck:all`) | Built; Part II slots wait for the members |
-| 3. Speaking texts per member | – | After the deck |
+| 3. Speaking texts (English, roles A/B, swappable) | [`docs/02_speaking_texts.md`](docs/02_speaking_texts.md) · word counter [`docs/tools/count_words.py`](docs/tools/count_words.py) | Reviewed against the deck; Part II P slides are fill-in templates |
 
 Submission: email the deck (PDF + .pptx export, no speaker notes) to the professor by the evening of 05.01.2027.
 The format question (browser deck vs. PowerPoint) goes into the mid-December email.
